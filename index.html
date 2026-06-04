@@ -12,242 +12,373 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI-102 Exam Simulator</title>
 <style>
+/* ============ RESET & BASE ============ */
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f0f0;color:#1d1d1f;min-height:100vh;font-size:14px}
-#app{max-width:100%;margin:0 auto;min-height:100vh}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f7;color:#1d1d1f;min-height:100vh;overflow-x:hidden}
+#app{width:100%;max-width:100%;margin:0 auto;min-height:100vh}
 .screen{display:none}.screen.active{display:block}
+button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!important}/* 16px prevents iOS zoom */
 
-/* ============ HOME SCREEN ============ */
-#home{background:#f5f5f7;min-height:100vh;max-width:640px;margin:0 auto;padding-bottom:32px}
-.hero{padding:28px 16px 16px;text-align:center}
-.hero-icon{width:64px;height:64px;border-radius:18px;background:#e3f2fd;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:32px}
-.hero h2{font-size:22px;font-weight:700;color:#1d1d1f;margin-bottom:6px}
+/* ============ HOME ============ */
+#home{background:#f5f5f7;min-height:100vh;padding-bottom:40px;max-width:600px;margin:0 auto}
+.hero{padding:24px 16px 12px;text-align:center}
+.hero-icon{width:56px;height:56px;border-radius:16px;background:#e3f2fd;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:28px}
+.hero h2{font-size:20px;font-weight:700;color:#1d1d1f;margin-bottom:5px}
 .hero p{font-size:13px;color:#6e6e73;line-height:1.5}
-.badge-row{margin-top:12px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px}
+.badge-row{margin-top:10px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
 .badge-blue{background:#e3f2fd;color:#1565c0}
 .badge-green{background:#e8f5e9;color:#1b5e20}
-.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 16px 0}
-.sc{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-.sv{font-size:24px;font-weight:700;color:#1d1d1f}.sl{font-size:11px;color:#6e6e73;margin-top:3px}
-.prog-wrap{margin:14px 16px 0;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-.prog-bar-bg{height:8px;background:#e5e5ea;border-radius:4px;overflow:hidden;margin-bottom:6px}
-.prog-bar-fill{height:100%;background:#2e7d32;border-radius:4px}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 16px 0}
+.sc{background:#fff;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.sv{font-size:22px;font-weight:700;color:#1d1d1f}
+.sl{font-size:11px;color:#6e6e73;margin-top:2px}
+.prog-wrap{margin:12px 16px 0;background:#fff;border-radius:10px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.prog-bar-bg{height:7px;background:#e5e5ea;border-radius:4px;overflow:hidden;margin-bottom:5px}
+.prog-bar-fill{height:100%;background:#2e7d32;border-radius:4px;transition:width .4s}
 .prog-label{font-size:11px;color:#6e6e73;text-align:right}
-.mlist{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
-.mbtn{display:flex;align-items:center;gap:14px;padding:16px;border-radius:12px;border:1.5px solid #e5e5ea;background:#fff;cursor:pointer;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,0.06);transition:all 0.15s;width:100%}
-.mbtn:hover{background:#f5f5f7;border-color:#c7c7cc;transform:translateY(-1px)}
-.mico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.mt{font-size:14px;font-weight:600;color:#1d1d1f}.md{font-size:12px;color:#6e6e73;margin-top:2px}
-.domain-grid{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+.mlist{padding:10px 16px;display:flex;flex-direction:column;gap:8px}
+.mbtn{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1.5px solid #e5e5ea;background:#fff;cursor:pointer;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,0.06);transition:all .15s;width:100%}
+.mbtn:active{transform:scale(0.98);background:#f5f5f7}
+.mico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.mt{font-size:13.5px;font-weight:600;color:#1d1d1f}
+.md{font-size:12px;color:#6e6e73;margin-top:1px}
+
+/* Domain cards */
+.domain-card{background:#fff;border-radius:12px;border:1.5px solid #e5e5ea;margin-bottom:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.domain-card-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.domain-card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.domain-card-title{flex:1;min-width:0}
+.domain-card-name{font-size:13px;font-weight:600;color:#1d1d1f;line-height:1.3}
+.domain-card-meta{font-size:11px;color:#6e6e73;margin-top:1px}
+.domain-card-weight{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:#e3f2fd;color:#0C447C;flex-shrink:0;white-space:nowrap}
+.domain-card-chevron{font-size:13px;color:#c7c7cc;transition:transform .2s;flex-shrink:0}
+.domain-card-chevron.open{transform:rotate(180deg)}
+.domain-card-actions{padding:0 10px 10px;display:none;flex-direction:column;gap:6px}
+.domain-card-actions.open{display:flex}
+.domain-action-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.dact-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;border:1.5px solid #e5e5ea;background:#f9f9f9;cursor:pointer;font-size:12px;font-weight:600;color:#1d1d1f;transition:all .15s;text-align:left;width:100%}
+.dact-btn:active{background:#f0f0f0;transform:scale(0.98)}
+.dact-btn .dact-icon{font-size:15px;flex-shrink:0}
+.dact-btn .dact-count{font-size:10px;color:#6e6e73;font-weight:400;margin-top:1px}
+.dact-btn.full-width{grid-column:1/-1}
 
 /* ============ EXAM SHELL ============ */
-#quiz{display:flex;flex-direction:column;height:100vh;background:#fff}
-.exam-topbar{background:#1a73e8;color:#fff;padding:0 16px;height:40px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.exam-topbar .left{display:flex;align-items:center;gap:12px}
+#quiz{display:flex;flex-direction:column;height:100vh;height:100dvh;background:#fff;overflow:hidden}
+.exam-topbar{background:#1a73e8;color:#fff;padding:0 12px;height:44px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .exam-topbar .qnum{font-size:13px;font-weight:700}
-.exam-topbar .topic{font-size:13px;font-style:italic;font-weight:400}
-.exam-topbar .right{display:flex;align-items:center;gap:12px}
-.exam-topbar .timer-badge{font-size:12px;background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:20px;font-weight:600}
-.exam-topbar .exit-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:12px;font-weight:600;padding:4px 12px;border-radius:4px;cursor:pointer}
-.exam-topbar .exit-btn:hover{background:rgba(255,255,255,0.35)}
+.exam-topbar .topic{font-size:12px;font-style:italic;font-weight:400}
+.exam-topbar .timer-badge{font-size:12px;background:rgba(255,255,255,0.2);padding:3px 9px;border-radius:20px;font-weight:600}
+.exam-topbar .exit-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:4px;cursor:pointer;min-height:32px}
+.exam-pbar{height:3px;background:#c5d9f5;flex-shrink:0}
+.exam-pfill{height:100%;background:#fff;transition:width .3s}
 
-/* Progress bar */
-.exam-pbar{height:4px;background:#c5d9f5;flex-shrink:0}
-.exam-pfill{height:100%;background:#fff;transition:width 0.3s}
-
-/* Main split layout */
+/* Split layout — MOBILE: no left nav (hidden), full width content */
 .exam-body{display:flex;flex:1;overflow:hidden;min-height:0}
+.nav-pane{display:none} /* hidden on mobile, shown on wide screens */
+.content-pane{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;min-width:0}
 
-/* LEFT NAV PANE */
-.nav-pane{width:180px;flex-shrink:0;background:#f8f9fa;border-right:1px solid #dee2e6;overflow-y:auto;display:flex;flex-direction:column}
-.nav-section-title{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.08em;padding:10px 12px 4px}
-.nav-btn{display:block;width:100%;text-align:left;padding:8px 14px;font-size:12px;font-weight:500;color:#333;background:none;border:none;cursor:pointer;border-left:3px solid transparent;transition:all 0.1s;line-height:1.3}
-.nav-btn:hover{background:#e9ecef;color:#1a73e8}
-.nav-btn.active{background:#e3f0fd;color:#1a73e8;border-left-color:#1a73e8;font-weight:600}
-.nav-divider{height:1px;background:#dee2e6;margin:6px 0}
-.nav-question-btn{display:block;width:100%;text-align:left;padding:8px 14px;font-size:12px;font-weight:600;color:#1a73e8;background:#e3f0fd;border:none;cursor:pointer;border-left:3px solid #1a73e8}
-
-/* CONTENT PANE */
-.content-pane{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
-
-/* Case study reading panel */
-.case-reading{padding:20px 24px;flex:1;line-height:1.75;color:#1d1d1f;display:none}
+/* Case study sections */
+.case-reading{padding:16px;flex:1;line-height:1.7;color:#1d1d1f;display:none;font-size:14px}
 .case-reading.active{display:block}
-.case-reading h3{font-size:14px;font-weight:700;margin-bottom:2px;color:#1d1d1f}
-.case-reading p{margin-bottom:6px;font-size:13.5px;line-height:1.75}
-.case-reading ul{margin:4px 0 8px 20px}
-.case-reading ul li{font-size:13.5px;margin-bottom:3px;line-height:1.7}
-.case-reading table{border-collapse:collapse;margin:10px 0;font-size:13px}
-.case-reading table th{background:#f0f0f0;font-weight:700;padding:7px 14px;border:1px solid #ccc;text-align:left}
-.case-reading table td{padding:7px 14px;border:1px solid #ccc}
-.case-reading pre{background:#f8f8f8;border:1px solid #ddd;padding:12px;font-size:12px;line-height:1.5;overflow-x:auto;border-radius:4px;margin:8px 0;font-family:monospace}
-.case-reading .section-header{font-weight:700;margin:14px 0 2px;font-size:14px}
-.case-reading .subsection-header{font-weight:700;margin:10px 0 2px;font-size:13.5px;color:#333}
+.case-reading h3{font-size:14px;font-weight:700;margin-bottom:2px}
+.case-reading p{margin-bottom:6px;font-size:13.5px;line-height:1.7}
+.case-reading ul{margin:4px 0 8px 18px}
+.case-reading ul li{font-size:13.5px;margin-bottom:3px;line-height:1.6}
+.case-reading table{border-collapse:collapse;margin:8px 0;font-size:12px;width:100%;display:block;overflow-x:auto}
+.case-reading table th{background:#f0f0f0;font-weight:700;padding:6px 10px;border:1px solid #ccc}
+.case-reading table td{padding:6px 10px;border:1px solid #ccc}
+.case-reading pre{background:#f8f8f8;border:1px solid #ddd;padding:10px;font-size:11px;line-height:1.5;overflow-x:auto;border-radius:4px;margin:6px 0;font-family:monospace;-webkit-overflow-scrolling:touch}
+.case-reading .section-header{font-weight:700;margin:12px 0 2px;font-size:14px}
+.case-reading .subsection-header{font-weight:700;margin:8px 0 2px;font-size:13.5px;color:#333}
+
+/* Case study nav — mobile: horizontal scrolling tabs at top */
+.case-nav-tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;background:#f8f9fa;border-bottom:1px solid #dee2e6;flex-shrink:0;scrollbar-width:none}
+.case-nav-tabs::-webkit-scrollbar{display:none}
+.case-nav-tab{padding:10px 14px;font-size:12px;font-weight:500;color:#333;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.case-nav-tab.active{color:#1a73e8;border-bottom-color:#1a73e8;font-weight:600}
+.case-nav-tab.question-tab{color:#1a73e8;font-weight:700}
 
 /* Question panel */
-.question-panel{padding:20px 24px;display:none;flex-direction:column;gap:0}
+.question-panel{padding:14px 16px;display:none;flex-direction:column;gap:0}
 .question-panel.active{display:flex}
-.qp-label{font-size:13px;font-weight:700;margin-bottom:4px;color:#1d1d1f}
-.qp-type{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:6px}
+.qp-label{font-size:13px;font-weight:700;margin-bottom:3px;color:#1d1d1f}
+.qp-type{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:5px}
 .qp-context{font-size:13px;line-height:1.75;margin-bottom:6px;color:#1d1d1f}
-.qp-instruction{font-size:13px;margin-bottom:10px;color:#1d1d1f;line-height:1.6}
+.qp-instruction{font-size:14px;line-height:1.65;margin-bottom:8px;color:#1d1d1f;font-weight:500}
 .qp-note{font-size:12px;color:#555;margin-bottom:8px}
 
 /* Domain tag */
-.dtag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px}
+.dtag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:8px}
 .d1{background:#e3f2fd;color:#0C447C}.d2{background:#e8f5e9;color:#1b5e20}
 .d3{background:#ede7f6;color:#311b92}.d4{background:#fff3e0;color:#e65100}
 .d5{background:#e0f7fa;color:#006064}.d6{background:#fce4ec;color:#880e4f}
 .d7{background:#e3f2fd;color:#0C447C}
-.mbadge2{font-size:10px;padding:3px 8px;border-radius:20px;background:#fff3e0;color:#e65100;font-weight:600;margin-left:6px}
+.mbadge2{font-size:10px;padding:2px 7px;border-radius:20px;background:#fff3e0;color:#e65100;font-weight:600;margin-left:5px}
 
-/* ---- STANDARD MCQ ---- */
-.mcq-opts{display:flex;flex-direction:column;gap:7px;margin-top:8px}
-.mcq-opt{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border:1.5px solid #ccc;border-radius:6px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:13px;transition:all 0.15s;line-height:1.5}
-.mcq-opt:hover:not(:disabled){background:#f5f5f7;border-color:#999}
+/* MCQ options */
+.mcq-opts{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.mcq-opt{display:flex;align-items:flex-start;gap:10px;padding:13px 14px;border:1.5px solid #ccc;border-radius:8px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:14px;line-height:1.5;min-height:48px;-webkit-tap-highlight-color:transparent}
+.mcq-opt:active{background:#f5f5f7}
 .mcq-opt.selected{border-color:#1a73e8;background:#e8f2fd}
 .mcq-opt.correct{border-color:#2e7d32;background:#e8f5e9}
 .mcq-opt.wrong{border-color:#c62828;background:#ffebee}
 .mcq-opt.reveal{border-color:#2e7d32;background:#e8f5e9}
-.mcq-ltr{font-weight:700;color:#555;min-width:20px;flex-shrink:0}
+.mcq-ltr{font-weight:700;color:#555;min-width:22px;flex-shrink:0;font-size:14px}
 .mcq-opt.correct .mcq-ltr{color:#2e7d32}
 .mcq-opt.wrong .mcq-ltr{color:#c62828}
 .mcq-opt.reveal .mcq-ltr{color:#2e7d32}
 
-/* ---- YES/NO ---- */
-.yn-opts{display:flex;flex-direction:column;gap:7px;margin-top:8px}
-.yn-opt{display:flex;align-items:center;gap:10px;padding:11px 16px;border:1.5px solid #ccc;border-radius:6px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:13px;transition:all 0.15s}
-.yn-opt:hover:not(:disabled){background:#f5f5f7;border-color:#999}
+/* Yes/No options */
+.yn-opts{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.yn-opt{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid #ccc;border-radius:8px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:15px;min-height:52px;-webkit-tap-highlight-color:transparent}
+.yn-opt:active{background:#f5f5f7}
 .yn-opt.selected{border-color:#1a73e8;background:#e8f2fd}
 .yn-opt.correct{border-color:#2e7d32;background:#e8f5e9;color:#2e7d32;font-weight:600}
 .yn-opt.wrong{border-color:#c62828;background:#ffebee;color:#c62828}
 .yn-opt.reveal{border-color:#2e7d32;background:#e8f5e9;color:#2e7d32;font-weight:600}
-.yn-ltr{font-weight:700;color:#555;min-width:18px}
+.yn-ltr{font-weight:700;color:#555;min-width:20px;font-size:14px}
 
-/* ---- DRAG & DROP (Select and Place) ---- */
-.dnd-layout{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
-.dnd-services{width:170px;flex-shrink:0}
-.dnd-services-label{font-size:12px;font-weight:700;margin-bottom:6px;color:#1d1d1f}
-.dnd-pool{display:flex;flex-direction:column;gap:6px;min-height:60px}
-.dnd-item{padding:8px 12px;background:#fff;border:1.5px solid #aaa;border-radius:4px;font-size:12.5px;cursor:grab;user-select:none;line-height:1.4;transition:all 0.12s}
-.dnd-item:hover{border-color:#1a73e8;background:#e8f2fd}
-.dnd-item.dragging{opacity:0.4;cursor:grabbing}
-.dnd-item.placed-away{opacity:0.3;cursor:default;background:#f0f0f0}
-
-.dnd-answer-area{flex:1;min-width:0}
-.dnd-answer-label{font-size:12px;font-weight:700;margin-bottom:8px;color:#1d1d1f}
-.dnd-pipeline{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:4px}
-.dnd-stage{display:flex;flex-direction:column;align-items:center}
-.dnd-stage-label{font-size:12px;font-weight:700;margin-bottom:6px;text-align:center;color:#1d1d1f;min-width:120px}
-.dnd-drop-target{width:120px;min-height:54px;border:1.5px solid #aaa;border-radius:4px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;color:#bbb;padding:6px;text-align:center;transition:all 0.12s;position:relative}
-.dnd-drop-target.drag-over{border-color:#1a73e8;background:#e3f0fd;color:#1a73e8}
-.dnd-drop-target.filled{color:#1d1d1f;font-size:12px;background:#e8f2fd;border-color:#1a73e8;cursor:pointer}
-.dnd-drop-target.correct-drop{background:#e8f5e9;border-color:#2e7d32;color:#2e7d32}
-.dnd-drop-target.wrong-drop{background:#ffebee;border-color:#c62828;color:#c62828}
-.dnd-arrow{font-size:18px;color:#666;align-self:center;margin:0 4px;padding-top:28px;flex-shrink:0}
-
-/* Multi-select table drag-drop */
-.dnd-table-wrap{overflow-x:auto;margin-top:10px}
-.dnd-table{border-collapse:collapse;font-size:13px;width:100%}
-.dnd-table th{background:#f0f0f0;font-weight:700;padding:8px 12px;border:1px solid #ccc;text-align:left}
-.dnd-table td{padding:8px 12px;border:1px solid #ccc;vertical-align:middle}
-.dnd-table-target{min-width:160px;min-height:36px;border:1.5px dashed #aaa;border-radius:4px;background:#fafafa;display:flex;align-items:center;justify-content:center;font-size:12px;color:#bbb;padding:4px 8px;cursor:default;transition:all 0.12s}
-.dnd-table-target.drag-over{border-color:#1a73e8;background:#e3f0fd}
-.dnd-table-target.filled{border-style:solid;border-color:#1a73e8;background:#e8f2fd;color:#1d1d1f;font-size:12.5px;cursor:pointer}
-.dnd-table-target.correct-drop{background:#e8f5e9;border-color:#2e7d32;color:#2e7d32}
-.dnd-table-target.wrong-drop{background:#ffebee;border-color:#c62828;color:#c62828}
-
-/* ---- EXPLANATION ---- */
-.exp-box{margin-top:14px;padding:12px 14px;background:#f0f4ff;border-radius:8px;border-left:3px solid #1a73e8;font-size:13px;line-height:1.65;color:#333;display:none}
-.exp-box.show{display:block}
-
-/* ---- BOTTOM BAR ---- */
-.exam-bottombar{background:#f8f9fa;border-top:1px solid #dee2e6;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.bottom-left{display:flex;gap:8px;align-items:center}
-.bottom-right{display:flex;gap:8px;align-items:center}
-.eb-btn{padding:9px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #ccc;background:#fff;color:#333;transition:all 0.15s}
-.eb-btn:hover:not(:disabled){background:#f0f0f0}
-.eb-btn:disabled{opacity:0.4;cursor:default}
-.eb-btn.primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
-.eb-btn.primary:hover:not(:disabled){background:#1557b0}
-.eb-btn.reveal-sol{background:#1a73e8;color:#fff;border-color:#1a73e8}
-.eb-btn.reveal-sol:hover:not(:disabled){background:#1557b0}
-.eb-btn.reveal-sol:disabled{background:#ccc;border-color:#ccc;opacity:1}
-.plbl-small{font-size:12px;color:#666}
-
-/* ---- RESULTS ---- */
-#results{background:#f5f5f7;min-height:100vh;max-width:640px;margin:0 auto;padding:20px 16px}
-.scirc{width:120px;height:120px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid #1a73e8;background:#fff}
-.spct{font-size:30px;font-weight:700;color:#1d1d1f}
-.slbl{font-size:11px;color:#6e6e73}
-.pass-ring{border-color:#2e7d32!important}
-.fail-ring{border-color:#c62828!important}
-.rcard{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px}
-.rrow{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
-.rrow:last-child{border-bottom:none}
-.rlbl{font-size:13px;color:#666}.rval{font-size:13px;font-weight:600}
-.dsec{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;margin:14px 0 6px}
-.rbtn-row{display:flex;gap:8px}
-
-/* ---- HINT ---- */
+/* Hint */
 .hint-box{padding:8px 12px;background:#fff3e0;border-radius:6px;font-size:12px;color:#e65100;margin-bottom:8px;display:none}
 .hint-box.show{display:block}
 
-/* domain picker */
-#dpick{background:#f5f5f7;min-height:100vh;max-width:640px;margin:0 auto;padding-bottom:32px}
-.dpick-hdr{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #e5e5ea;background:#fff;position:sticky;top:0;z-index:10}
-.dpick-hdr h1{font-size:15px;font-weight:600;flex:1}
-.dpick-back{background:none;border:none;cursor:pointer;color:#6e6e73;font-size:22px;line-height:1;padding:0}
+/* Explanation */
+.exp-box{margin-top:12px;padding:12px 14px;background:#f0f4ff;border-radius:8px;border-left:3px solid #1a73e8;font-size:13px;line-height:1.65;color:#333;display:none}
+.exp-box.show{display:block}
 
+/* Bottom bar */
+.exam-bottombar{background:#f8f9fa;border-top:1px solid #dee2e6;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.bottom-left{font-size:12px;color:#666}
+.bottom-right{display:flex;gap:8px}
+.eb-btn{padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid #ccc;background:#fff;color:#333;min-height:44px;-webkit-tap-highlight-color:transparent}
+.eb-btn:active{background:#f0f0f0}
+.eb-btn:disabled{opacity:0.4;cursor:default}
+.eb-btn.primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.eb-btn.primary:active{background:#1557b0}
+.eb-btn.reveal-sol{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.eb-btn.reveal-sol:disabled{background:#ccc;border-color:#ccc;opacity:1}
+
+/* ============ DRAG & DROP ============ */
+.dnd-layout{display:flex;flex-direction:column;gap:14px;margin-top:10px}
+.dnd-col-label{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:6px}
+.dnd-pool-col{width:100%}
+.dnd-pool{display:flex;flex-direction:column;gap:5px}
+.dnd-answer-col{width:100%}
+.dnd-slots{display:flex;flex-direction:column;gap:5px}
+.dnd-item{padding:12px 14px;background:#fff;border:1.5px solid #1a73e8;border-radius:6px;font-size:14px;cursor:grab;user-select:none;line-height:1.45;color:#1d1d1f;min-height:48px;display:flex;align-items:center;touch-action:none}
+.dnd-item:active{background:#e8f2fd;cursor:grabbing}
+.dnd-item.used{opacity:0.35;cursor:default;background:#f5f5f5;border-color:#ccc}
+.dnd-slot-target{width:100%;min-height:52px;border:1.5px solid #1a73e8;border-radius:6px;background:#fff;display:flex;align-items:center;padding:10px 14px;font-size:14px;color:#bbb;line-height:1.45;transition:all .12s;word-break:break-word}
+.dnd-slot-target.drag-over{background:#e3f0fd;border-color:#0d47a1}
+.dnd-slot-target.filled{color:#1d1d1f;background:#fff;border-color:#1a73e8;cursor:pointer}
+.dnd-slot-target.filled:active{background:#e8f2fd}
+.dnd-slot-target.correct-slot{background:#e8f5e9;border-color:#2e7d32;color:#2e7d32;cursor:default}
+.dnd-slot-target.wrong-slot{background:#ffebee;border-color:#c62828;color:#c62828;cursor:default}
+
+/* ============ HOTSPOT ============ */
+.hotspot-wrap{margin-top:10px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.hotspot-code{font-family:'Courier New',Courier,monospace;font-size:12px;line-height:2;background:#fafafa;border:1px solid #d0d0d0;border-radius:4px;padding:14px;white-space:pre-wrap;word-break:break-word;color:#1d1d1f;min-width:0}
+.hs-select{display:inline-block;vertical-align:middle;width:min(260px,80vw);position:relative;font-family:'Courier New',Courier,monospace}
+.hs-select select{width:100%;padding:5px 24px 5px 7px;font-family:'Courier New',Courier,monospace;font-size:13px;border:1px solid #999;border-radius:2px;background:#e8e8e8;color:#1d1d1f;-webkit-appearance:none;appearance:none;cursor:pointer;outline:none;min-height:36px}
+.hs-select select:focus{border-color:#1a73e8;background:#e3f0fd}
+.hs-select select.correct{border-color:#2e7d32;background:#e8f5e9;color:#1b5e20}
+.hs-select select.wrong{border-color:#c62828;background:#ffebee;color:#b71c1c}
+.hs-select select:disabled{cursor:default}
+.hs-arrow{position:absolute;right:6px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:10px;color:#555}
+
+/* ============ YES/NO CASE STUDY ============ */
+.q-topic-bar{background:#1a73e8;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;border-radius:8px 8px 0 0;margin-top:12px;margin-left:0;margin-right:0}
+.case-note{background:#fff;border:1px solid #e5e5ea;border-top:none;padding:12px 14px;font-size:13px;line-height:1.75;color:#2c2c2c}
+.case-note p{margin-bottom:5px}
+.q-body{background:#fff;border:1px solid #e5e5ea;border-top:none;padding:12px 14px;border-radius:0 0 8px 8px}
+
+/* ============ RESULTS ============ */
+#results{background:#f5f5f7;min-height:100vh;padding:0}
+#results > div{max-width:600px;margin:0 auto;padding:16px}
+.scirc{width:100px;height:100px;border-radius:50%;margin:0 auto 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid #1a73e8;background:#fff}
+.spct{font-size:26px;font-weight:700;color:#1d1d1f}
+.slbl{font-size:11px;color:#6e6e73}
+.pass-ring{border-color:#2e7d32!important}
+.fail-ring{border-color:#c62828!important}
+.rcard{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:14px}
+.rrow{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
+.rrow:last-child{border-bottom:none}
+.rlbl{font-size:13px;color:#666}
+.rval{font-size:13px;font-weight:600}
+.dsec{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;margin:12px 0 6px}
+.rbtn-row{display:flex;gap:8px}
+
+/* ============ DOMAIN PICKER (legacy, hidden) ============ */
+#dpick{display:none!important}
+
+/* ============ SIMULATION PORTAL ============ */
+#simScreen{background:#f3f2f1;min-height:100vh;height:100dvh;display:none;flex-direction:column;overflow:hidden}
+#simScreen.active{display:flex}
+.sim-topbar{background:#1a73e8;color:#fff;padding:0 12px;height:44px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.sim-topbar-left{font-size:13px;font-weight:700}
+.sim-topbar-right{display:flex;gap:8px;align-items:center}
+.sim-timer{font-size:12px;background:rgba(255,255,255,0.2);padding:3px 9px;border-radius:20px;font-weight:600}
+.sim-exit{background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:4px;cursor:pointer;min-height:32px}
+.sim-scenario{background:#fff;border-bottom:1px solid #edebe9;padding:12px 14px;font-size:13px;line-height:1.6;flex-shrink:0}
+.sim-scenario-title{font-size:10px;font-weight:700;color:#605e5c;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.sim-scenario p,.sim-scenario{color:#323130}
+.sim-portal{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#f3f2f1;min-height:0}
+.az-topbar{background:#0078d4;min-height:44px;display:flex;align-items:center;padding:0 10px;gap:10px;flex-shrink:0;flex-wrap:nowrap}
+.az-logo{color:#fff;font-size:13px;font-weight:700;white-space:nowrap}
+.az-search{flex:1;min-width:0;background:rgba(255,255,255,0.15);border:none;border-radius:4px;padding:6px 10px;color:#fff;font-size:14px;outline:none}
+.az-search::placeholder{color:rgba(255,255,255,0.7)}
+.az-icons{display:flex;gap:12px;flex-shrink:0}
+.az-icon{color:#fff;font-size:18px;cursor:pointer}
+.az-breadcrumb{background:#fff;padding:7px 14px;font-size:12px;color:#605e5c;border-bottom:1px solid #edebe9;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.az-breadcrumb span{color:#0078d4;cursor:pointer}
+.az-layout{display:flex;flex:1;overflow:hidden;min-height:0}
+.az-leftnav{width:140px;background:#fff;border-right:1px solid #edebe9;overflow-y:auto;flex-shrink:0;padding:6px 0;min-width:120px}
+.az-nav-item{padding:8px 14px;font-size:13px;color:#323130;cursor:pointer;display:flex;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent}
+.az-nav-item:active,.az-nav-item:hover{background:#f3f2f1}
+.az-nav-item.active{background:#e1effa;color:#0078d4;font-weight:600}
+.az-nav-item i{font-size:15px;color:#605e5c}
+.az-nav-item.active i{color:#0078d4}
+.az-nav-section{padding:8px 14px 3px;font-size:10px;font-weight:700;color:#605e5c;text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+.az-main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;min-width:0}
+.az-page-title{font-size:18px;font-weight:600;color:#323130;margin-bottom:3px}
+.az-page-sub{font-size:12px;color:#605e5c;margin-bottom:12px}
+.az-form-section{background:#fff;border:1px solid #edebe9;border-radius:4px;padding:14px;margin-bottom:10px}
+.az-form-section-title{font-size:13px;font-weight:600;color:#323130;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid #edebe9}
+.az-field{margin-bottom:10px}
+.az-label{font-size:12px;font-weight:600;color:#323130;margin-bottom:4px;display:block}
+.az-label .req{color:#a4262c;margin-left:2px}
+.az-input{width:100%;padding:8px 10px;border:1px solid #8a8886;border-radius:2px;font-size:14px!important;color:#323130;outline:none;background:#fff;min-height:40px}
+.az-input:focus{border-color:#0078d4;box-shadow:0 0 0 1px #0078d4}
+.az-input.correct{border-color:#107c10;background:#f1f8f1}
+.az-input.error{border-color:#a4262c;background:#fdf3f4}
+.az-select{width:100%;padding:8px 10px;border:1px solid #8a8886;border-radius:2px;font-size:14px!important;color:#323130;background:#fff;-webkit-appearance:none;appearance:none;outline:none;cursor:pointer;min-height:40px}
+.az-btn{padding:8px 16px;font-size:13px;font-weight:600;border-radius:2px;cursor:pointer;border:1px solid transparent;min-height:40px;-webkit-tap-highlight-color:transparent}
+.az-btn-primary{background:#0078d4;color:#fff;border-color:#0078d4}
+.az-btn-primary:active{background:#106ebe}
+.az-btn-primary:disabled{background:#c8c6c4;border-color:#c8c6c4;cursor:default}
+.az-btn-secondary{background:#fff;color:#0078d4;border-color:#0078d4}
+.az-tabs{display:flex;border-bottom:2px solid #edebe9;margin-bottom:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.az-tabs::-webkit-scrollbar{display:none}
+.az-tab{padding:9px 14px;font-size:13px;font-weight:600;color:#605e5c;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.az-tab.active{color:#0078d4;border-bottom-color:#0078d4}
+.az-notification{padding:9px 12px;border-radius:4px;font-size:13px;margin-bottom:10px;display:none;align-items:center;gap:8px}
+.az-notification.show{display:flex}
+.az-notification.success{background:#dff6dd;color:#107c10;border:1px solid #107c10}
+.az-notification.error{background:#fde7e9;color:#a4262c;border:1px solid #a4262c}
+.az-notification.info{background:#e1effa;color:#0078d4;border:1px solid #0078d4}
+.sim-tasks{padding:10px 14px;background:#fff;border-top:1px solid #edebe9;flex-shrink:0}
+.sim-task-title{font-size:10px;font-weight:700;color:#605e5c;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.sim-task-steps{display:flex;flex-direction:column;gap:4px}
+.sim-step{display:flex;align-items:center;gap:8px;font-size:12px;color:#605e5c}
+.sim-step.done{color:#107c10;font-weight:600}
+.sim-step.active{color:#0078d4;font-weight:600}
+.sim-step-icon{width:18px;height:18px;border-radius:50%;border:2px solid #c8c6c4;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;color:#c8c6c4}
+.sim-step.done .sim-step-icon{background:#107c10;border-color:#107c10;color:#fff}
+.sim-step.active .sim-step-icon{border-color:#0078d4;color:#0078d4}
+.sim-bottombar{background:#fff;border-top:1px solid #edebe9;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;gap:8px}
+.sim-bottombar>div:first-child{font-size:12px;color:#605e5c;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ============ RESPONSIVE — tablets & wider ============ */
+@media(min-width:640px){
+  .nav-pane{display:flex;width:180px;flex-shrink:0;background:#f8f9fa;border-right:1px solid #dee2e6;overflow-y:auto;flex-direction:column}
+  .nav-section-title{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.08em;padding:10px 12px 4px}
+  .nav-btn{display:block;width:100%;text-align:left;padding:8px 14px;font-size:12px;font-weight:500;color:#333;background:none;border:none;cursor:pointer;border-left:3px solid transparent}
+  .nav-btn:hover{background:#e9ecef;color:#1a73e8}
+  .nav-btn.active{background:#e3f0fd;color:#1a73e8;border-left-color:#1a73e8;font-weight:600}
+  .nav-divider{height:1px;background:#dee2e6;margin:6px 0}
+  .nav-question-btn{display:block;width:100%;text-align:left;padding:8px 14px;font-size:12px;font-weight:600;color:#1a73e8;background:#e3f0fd;border:none;cursor:pointer;border-left:3px solid #1a73e8}
+  .case-nav-tabs{display:none}
+  .dnd-layout{flex-direction:row;align-items:flex-start}
+  .dnd-pool-col{width:200px;flex-shrink:0}
+  .dnd-answer-col{flex:1}
+  .az-leftnav{width:220px}
+  .exam-topbar{height:40px}
+  .hotspot-code{font-size:13px}
+}
+
+@media(min-width:900px){
+  #home{max-width:640px}
+  .question-panel{padding:20px 24px}
+  .case-reading{padding:20px 24px}
+}
+
+/* ============ MISC ============ */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:#c7c7cc;border-radius:2px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.case-reading.active,.question-panel.active{animation:fadeIn 0.15s ease}
+.case-reading.active,.question-panel.active{animation:fadeIn .15s ease}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- ==================== HOME ==================== -->
+<!-- ==================== HOME ====================  -->
 <div id="home" class="screen active">
   <div class="hero">
     <div class="hero-icon">&#x1F9E0;</div>
     <h2>AI-102 Exam Simulator</h2>
     <p>Microsoft Azure AI Engineer Associate<br>Designing &amp; Implementing Azure AI Solutions</p>
     <div class="badge-row">
-      <span class="badge badge-blue">&#x2713; Full question bank</span>
+      <span class="badge badge-blue">&#x2713; 333 questions</span>
       <span class="badge badge-green">&#x1F4CA; Microsoft exam style</span>
     </div>
   </div>
+
   <div class="prog-wrap">
     <div class="prog-bar-bg"><div class="prog-bar-fill" id="totalProg" style="width:0%"></div></div>
     <div class="prog-label" id="totalProgLabel">Loading...</div>
   </div>
+
   <div class="sgrid">
     <div class="sc"><div class="sv" id="totalQ">0</div><div class="sl">Questions</div></div>
     <div class="sc"><div class="sv" id="sb">—</div><div class="sl">Best score</div></div>
     <div class="sc"><div class="sv" id="sa">0</div><div class="sl">Attempted</div></div>
-    <div class="sc"><div class="sv">7</div><div class="sl">Domains</div></div>
+    <div class="sc"><div class="sv">6</div><div class="sl">Domains</div></div>
   </div>
-  <div class="mlist">
-    <button class="mbtn" onclick="startMode('full')"><div class="mico" style="background:#e3f2fd">&#x1F4CB;</div><div><div class="mt">Full practice exam</div><div class="md">All questions · timed</div></div></button>
-    <button class="mbtn" onclick="startMode('quick')"><div class="mico" style="background:#e8f5e9">&#x26A1;</div><div><div class="mt">Quick quiz</div><div class="md">20 random questions</div></div></button>
-    <button class="mbtn" onclick="startMode('domain')"><div class="mico" style="background:#ede7f6">&#x1F5C2;&#xFE0F;</div><div><div class="mt">By domain</div><div class="md">Focus on one exam area</div></div></button>
-    <button class="mbtn" onclick="startMode('dragdrop')"><div class="mico" style="background:#e8f5e9">&#x1F500;</div><div><div class="mt">Drag &amp; Drop / Sequence</div><div class="md">Order-the-steps questions</div></div></button>
-    <button class="mbtn" onclick="startMode('yesno')"><div class="mico" style="background:#fff3e0">&#x2705;</div><div><div class="mt">Yes / No questions</div><div class="md">Does this meet the goal?</div></div></button>
-    <button class="mbtn" onclick="startMode('multi')"><div class="mico" style="background:#fce4ec">&#x1F4DD;</div><div><div class="mt">Multi-select only</div><div class="md">Select all correct answers</div></div></button>
-    <button class="mbtn" onclick="startMode('casestudy')"><div class="mico" style="background:#e8f5e9">&#x1F4D6;</div><div><div class="mt">Case Study mode</div><div class="md">Full scenario + navigation pane</div></div></button>
-    <button class="mbtn" onclick="startMode('review')"><div class="mico" style="background:#fce4ec">&#x1F516;</div><div><div class="mt">Review mistakes</div><div class="md" id="wrongCount">No wrong answers yet</div></div></button>
+
+  <!-- Quick actions -->
+  <div style="padding:14px 16px 0">
+    <div style="font-size:11px;font-weight:600;color:#6e6e73;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Quick Start</div>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+      <button class="mbtn" style="padding:10px 8px" onclick="startMode('full')">
+        <div class="mico" style="background:#e3f2fd;width:36px;height:36px">&#x1F4CB;</div>
+        <div><div class="mt" style="font-size:13px">Full exam</div><div class="md">All 333 questions</div></div>
+      </button>
+      <button class="mbtn" style="padding:10px 8px" onclick="startMode('quick')">
+        <div class="mico" style="background:#e8f5e9;width:36px;height:36px">&#x26A1;</div>
+        <div><div class="mt" style="font-size:13px">Quick quiz</div><div class="md">20 random</div></div>
+      </button>
+      <button class="mbtn" style="padding:10px 8px" onclick="startMode('review')">
+        <div class="mico" style="background:#fce4ec;width:36px;height:36px">&#x1F516;</div>
+        <div><div class="mt" style="font-size:13px">Mistakes</div><div class="md" id="wrongCount">None yet</div></div>
+      </button>
+      <button class="mbtn" style="padding:10px 8px" onclick="startMode('casestudy')">
+        <div class="mico" style="background:#e8f5e9;width:36px;height:36px">&#x1F4D6;</div>
+        <div><div class="mt" style="font-size:13px">Case study</div><div class="md">Scenario mode</div></div>
+      </button>
+      <button class="mbtn" style="padding:12px" onclick="startSimulation(701)" id="simBtn701">
+        <div class="mico" style="background:#ede7f6;width:36px;height:36px">&#x1F9EA;</div>
+        <div><div class="mt" style="font-size:13px">Simulation 1</div><div class="md">Create Cognitive Service</div></div>
+      </button>
+      <button class="mbtn" style="padding:12px" onclick="startSimulation(708)" id="simBtn708">
+        <div class="mico" style="background:#e0f7fa;width:36px;height:36px">&#x2728;</div>
+        <div><div class="mt" style="font-size:13px">Simulation 2</div><div class="md">Deploy GPT in AI Foundry</div></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Domain cards -->
+  <div style="padding:14px 16px 0">
+    <div style="font-size:11px;font-weight:600;color:#6e6e73;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Study by Domain</div>
+    <div id="domainCards"></div>
   </div>
 </div>
 
-<!-- ==================== DOMAIN PICKER ==================== -->
-<div id="dpick" class="screen">
-  <div class="dpick-hdr">
-    <button class="dpick-back" onclick="showScreen('home')">&#8592;</button>
-    <h1>Choose a domain</h1>
-  </div>
-  <div class="domain-grid" id="dlist"></div>
-</div>
+<!-- Domain picker replaced by home screen cards -->
+<div id="dpick" class="screen" style="display:none"></div>
 
 <!-- ==================== EXAM QUIZ SCREEN ==================== -->
 <div id="quiz" class="screen">
@@ -266,8 +397,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <div class="exam-pbar"><div class="exam-pfill" id="prog" style="width:0%"></div></div>
 
   <!-- Body: nav + content -->
+  <!-- Mobile: horizontal tab bar for case study nav -->
+  <div class="case-nav-tabs" id="caseNavTabs" style="display:none"></div>
   <div class="exam-body">
-    <!-- Left navigation pane -->
+    <!-- Left navigation pane (shown on tablet+) -->
     <div class="nav-pane" id="navPane">
       <!-- filled dynamically -->
     </div>
@@ -431,6 +564,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
         <!-- MCQ options -->
         <div class="mcq-opts" id="mcqOpts" style="display:none"></div>
 
+        <!-- HOTSPOT dropdowns -->
+        <div id="hotspotSection" style="display:none">
+          <div class="hotspot-wrap">
+            <div class="hotspot-code" id="hotspotCode"></div>
+          </div>
+          <button class="eb-btn reveal-sol" id="hsRevealBtn" onclick="revealHotspot()" style="margin-top:14px" disabled>Reveal Solution</button>
+        </div>
+
         <!-- Yes/No options -->
         <div id="ynSection" style="display:none">
           <div class="yn-opts" id="ynOpts"></div>
@@ -439,16 +580,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           </div>
         </div>
 
-        <!-- Drag & Drop pipeline -->
+        <!-- Drag & Drop (Microsoft exam style) -->
         <div id="dndSection" style="display:none">
           <div class="dnd-layout">
-            <div class="dnd-services">
-              <div class="dnd-services-label">Services</div>
+            <div class="dnd-pool-col">
+              <div class="dnd-col-label" id="dndPoolLabel">Actions</div>
               <div class="dnd-pool" id="dndPool"></div>
             </div>
-            <div class="dnd-answer-area">
-              <div class="dnd-answer-label">Answer Area</div>
-              <div class="dnd-pipeline" id="dndPipeline"></div>
+            <div class="dnd-answer-col">
+              <div class="dnd-col-label">Answer Area</div>
+              <div class="dnd-slots" id="dndSlots"></div>
             </div>
           </div>
           <button class="eb-btn reveal-sol" id="dndRevealBtn" onclick="revealDND()" style="margin-top:14px" disabled>Reveal Solution</button>
@@ -479,6 +620,45 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     <div class="rbtn-row">
       <button class="eb-btn" onclick="showScreen('home')">Home</button>
       <button class="eb-btn primary" onclick="retryWrong()">Retry wrong</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==================== SIMULATION SCREEN ==================== -->
+<div id="simScreen" class="screen">
+  <!-- Top bar -->
+  <div class="sim-topbar">
+    <div class="sim-topbar-left">&#x1F9EA; AI-102 Simulation</div>
+    <div class="sim-topbar-right">
+      <span class="sim-timer" id="simTimer">00:00</span>
+      <button class="sim-exit" onclick="exitSim()">&#x2715; Exit</button>
+    </div>
+  </div>
+
+  <!-- Scenario panel -->
+  <div class="sim-scenario">
+    <div class="sim-scenario-title">Simulation Task</div>
+    <div id="simScenarioText"></div>
+  </div>
+
+  <!-- Azure portal mockup -->
+  <div class="sim-portal" id="simPortal">
+    <!-- Dynamic portal content injected by JS -->
+  </div>
+
+  <!-- Task checklist -->
+  <div class="sim-tasks">
+    <div class="sim-task-title">Task progress</div>
+    <div class="sim-task-steps" id="simTaskSteps"></div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="sim-bottombar">
+    <div style="font-size:12px;color:#605e5c" id="simHint"></div>
+    <div style="display:flex;gap:8px">
+      <button class="az-btn az-btn-secondary" onclick="exitSim()">Exit simulation</button>
+      <button class="az-btn az-btn-primary" id="simNextBtn" onclick="simNext()" disabled>Next &#8594;</button>
     </div>
   </div>
 </div>
@@ -827,38 +1007,81 @@ const Q=[
 {id:548,d:"D6",q:"You build a multi-turn chatbot with Azure OpenAI. Each new API call has no memory of previous turns. How should you maintain conversation context?",o:["Enable stateful mode in the API", "Include the full conversation history in the messages array on each call", "Use a system prompt only", "Store history in a database and fine-tune the model"],a:1,m:false,e:"Azure OpenAI is stateless. You must include the full conversation history in the messages array of each new API request."},
 {id:623,d:"D7",q:"You use Azure AI Content Safety to moderate user-generated text. The API returns a severity score of 4 for the Hate category. What does this indicate?",o:["No hateful content detected", "Low-severity hateful content", "Medium-severity hateful content", "High-severity hateful content"],a:2,m:false,e:"Azure AI Content Safety uses severity levels 0, 2, 4, 6. A score of 4 indicates medium-severity content in the specified category."},
 {id:624,d:"D7",q:"You need to detect whether user prompts to your Azure OpenAI chatbot contain attempts to bypass safety instructions. Which Azure AI Content Safety feature should you use?",o:["Blocklists", "Groundedness detection", "Prompt Shields", "Protected material detection"],a:2,m:false,e:"Prompt Shields specifically detects direct jailbreak attacks in user prompts and indirect prompt injection in documents passed to the model."},
-{id:625,d:"D7",q:"App1 uses Azure AI Content Safety to analyze images. You submit a benign landscape photo. What severity score should the API return for all harm categories?",o:["0", "2", "4", "6"],a:0,m:false,e:"A benign image with no harmful content returns a severity score of 0 across all harm categories including Hate, SelfHarm, Sexual, and Violence."}
+{id:625,d:"D7",q:"App1 uses Azure AI Content Safety to analyze images. You submit a benign landscape photo. What severity score should the API return for all harm categories?",o:["0", "2", "4", "6"],a:0,m:false,e:"A benign image with no harmful content returns a severity score of 0 across all harm categories including Hate, SelfHarm, Sexual, and Violence."},
+// === SIMULATION questions ===
+{id:701,d:"D1",q:"SIMULATION: Create a Cognitive Services resource named captions12345678 using the Free pricing tier for image captioning. Four actions in sequence?",o:["Sign in to Azure portal \u2192 Search for Cognitive Services \u2192 Click Create \u2192 Enter name captions12345678, select Free F0 tier, click Review+create", "Open Azure portal \u2192 Navigate to Storage \u2192 Create blob container \u2192 Upload image files", "Create resource \u2192 Configure networking \u2192 Add RBAC role \u2192 Deploy container", "Sign in to Azure portal \u2192 Open Cloud Shell \u2192 Run az cognitiveservices account create command \u2192 Verify deployment"],a:0,m:false,e:"Create Cognitive Services via portal: Search Cognitive Services → Create → set name captions12345678, kind=CognitiveServices, SKU=F0 (Free), region=your region → Review+create."},
+{id:702,d:"D1",q:"SIMULATION: Create a Text Analytics resource named Text12345678 and enable diagnostic logging to a Log Analytics workspace. Five actions in sequence?",o:["Sign in to Azure portal \u2192 Search Text Analytics \u2192 Create resource named Text12345678 \u2192 Navigate to Monitoring > Diagnostic settings \u2192 Add diagnostic setting and select Log Analytics workspace", "Create resource \u2192 Configure VNet \u2192 Enable CMK \u2192 Set retention \u2192 Create alert", "Open Azure portal \u2192 Create resource group \u2192 Deploy ARM template \u2192 Enable logging \u2192 Restart service", "Sign in to portal \u2192 Search Log Analytics \u2192 Create workspace \u2192 Link to Text Analytics \u2192 Enable metrics"],a:0,m:false,e:"Create Text Analytics resource, then go to resource > Monitoring > Diagnostic settings > +Add diagnostic setting > select AllLogs, choose Log Analytics workspace destination > Save."},
+{id:703,d:"D4",q:"SIMULATION: Create Azure AI Search service named search12345678 that indexes a Cosmos DB database named hotels-sample, ensuring only English language fields are retrievable. Six actions in sequence?",o:["Create search service search12345678 \u2192 Click Import data \u2192 Select Cosmos DB hotels-sample \u2192 Configure index (set English analyzer, mark fields as Retrievable) \u2192 Create indexer \u2192 Run indexer", "Create search service \u2192 Configure VNet \u2192 Import CSV \u2192 Add custom skill \u2192 Publish \u2192 Test", "Create Cosmos DB \u2192 Create search service \u2192 Link accounts \u2192 Import data \u2192 Add synonym map \u2192 Query", "Create search service \u2192 Create index manually \u2192 Write indexer JSON \u2192 Deploy \u2192 Configure firewall \u2192 Test"],a:0,m:false,e:"Create search service search12345678 → Import data wizard → Cosmos DB hotels-sample data source → Index configuration (set language analyzer to en.microsoft, mark Retrievable fields) → Create indexer → Run."},
+{id:704,d:"D4",q:"SIMULATION: Use Form Recognizer Sample Labeling Tool to analyze an invoice from C:\\Resources\\Invoices folder and save results as C:\\Resources\\Invoices\\Results.json. Eight actions in sequence?",o:["Sign in to Azure portal \u2192 Navigate to fott-2-1.azurewebsites.net \u2192 Select Use prebuilt model \u2192 Select Invoice as form type \u2192 Paste invoice URL in Source field and click Fetch \u2192 Choose file from C:\\Resources\\Invoices \u2192 Click Run analysis \u2192 Save results as Results.json", "Open Form Recognizer Studio \u2192 Upload training files \u2192 Label fields \u2192 Train model \u2192 Test \u2192 Export \u2192 Save \u2192 Close", "Create Form Recognizer resource \u2192 Get endpoint and key \u2192 Write Python script \u2192 Run locally \u2192 Parse JSON \u2192 Save file \u2192 Verify \u2192 Upload", "Sign in to portal \u2192 Open Cloud Shell \u2192 Install CLI tools \u2192 Run analyze command \u2192 Download results \u2192 Convert to JSON \u2192 Save \u2192 Verify"],a:0,m:false,e:"Steps: Azure portal login → fott-2-1.azurewebsites.net → Use prebuilt model → Invoice type → Source URL + Fetch → Choose file from C:\\Resources\\Invoices → Run analysis → Save Results.json."},
+{id:705,d:"D2",q:"SIMULATION: Create a Custom Vision object detection project, train it with sample images, and publish the model endpoint. Five actions in sequence?",o:["Sign in to customvision.ai \u2192 Create new Object Detection project \u2192 Upload and tag sample images \u2192 Click Train \u2192 Publish model to prediction endpoint", "Create Computer Vision resource \u2192 Upload images to blob \u2192 Configure indexer \u2192 Train model \u2192 Deploy", "Open Azure ML studio \u2192 Create dataset \u2192 Label images \u2192 Run training pipeline \u2192 Register model \u2192 Deploy", "Sign in to portal \u2192 Create Custom Vision resource \u2192 Download SDK \u2192 Write training code \u2192 Run locally \u2192 Publish"],a:0,m:false,e:"customvision.ai → New Project (Object Detection) → Upload+tag images → Train → Performance tab → Publish → copy Prediction URL and key."},
+{id:706,d:"D3",q:"SIMULATION: Create a LUIS app, add a Flight Booking intent with sample utterances, train and publish it. Five actions in sequence?",o:["Sign in to luis.ai \u2192 Create new app \u2192 Add intent named BookFlight \u2192 Add sample utterances \u2192 Train \u2192 Publish to production slot", "Create LUIS resource in Azure portal \u2192 Download authoring key \u2192 Run CLI train command \u2192 Export model \u2192 Import to production", "Open Language Studio \u2192 Create CLU project \u2192 Add utterances \u2192 Train \u2192 Deploy \u2192 Test endpoint", "Create LUIS app \u2192 Add prebuilt domain \u2192 Train \u2192 Export as container \u2192 Deploy to Kubernetes \u2192 Publish"],a:0,m:false,e:"luis.ai → New app → Add intent BookFlight → Add example utterances (e.g. 'Book a flight to Paris') → Train → Publish → Production slot."},
+{id:707,d:"D5",q:"SIMULATION: Create a QnA Maker knowledge base from a FAQ URL, test it, and publish it. Five actions in sequence?",o:["Sign in to qnamaker.ai \u2192 Create knowledge base \u2192 Link Azure QnA service \u2192 Enter FAQ URL as data source \u2192 Save and train \u2192 Test \u2192 Publish", "Create Language resource \u2192 Open Language Studio \u2192 Create custom Q&A project \u2192 Import FAQ \u2192 Train \u2192 Deploy \u2192 Test", "Open Azure portal \u2192 Create Cognitive Services \u2192 Create Bot \u2192 Link QnA Maker \u2192 Add FAQ \u2192 Train \u2192 Publish", "Sign in to portal \u2192 Create QnA resource \u2192 Download SDK \u2192 Write code to populate KB \u2192 Train via API \u2192 Publish via REST"],a:0,m:false,e:"qnamaker.ai → Create KB → Connect Azure QnA service → Add FAQ URL → Save and train → Test panel → Publish → get endpoint + key for bot integration."},
+{id:708,d:"D6",q:"SIMULATION: Deploy a GPT-35-Turbo model in Azure AI Foundry and test it in the Chat playground. Four actions in sequence?",o:["Sign in to ai.azure.com \u2192 Open your project \u2192 Go to Deployments \u2192 Click Deploy model \u2192 Select gpt-35-turbo \u2192 Configure capacity \u2192 Click Deploy \u2192 Open Chat playground and test", "Open Azure portal \u2192 Create OpenAI resource \u2192 Navigate to Keys \u2192 Copy API key \u2192 Run Python script \u2192 Test output", "Sign in to Azure portal \u2192 Create Cognitive Services \u2192 Select GPT model \u2192 Deploy to AKS \u2192 Configure ingress \u2192 Test via curl", "Open ai.azure.com \u2192 Create hub \u2192 Create compute \u2192 Launch JupyterLab \u2192 Run notebook \u2192 Deploy model \u2192 Test"],a:0,m:false,e:"ai.azure.com → Project → Deployments → Deploy model → gpt-35-turbo → set name and capacity → Deploy → Chat playground → enter system message and test."},
+{id:709,d:"D1",q:"SIMULATION: Configure a private endpoint for an Azure AI Services resource to prevent internet access. Four actions in sequence?",o:["Navigate to Azure AI Services resource \u2192 Networking tab \u2192 Select Disabled (no internet access) \u2192 Private endpoint connections \u2192 Add private endpoint \u2192 Select VNet and subnet \u2192 Create", "Create NSG \u2192 Add inbound deny rule \u2192 Attach to subnet \u2192 Restart service", "Open Firewall settings \u2192 Add IP rule \u2192 Disable public access \u2192 Create service endpoint", "Navigate to resource \u2192 Access control \u2192 Add deny assignment \u2192 Configure conditional access"],a:0,m:false,e:"Resource → Networking → set Allow access from = Disabled → Private endpoint connections tab → +Add → select VNet/subnet → Create. The resource is now only accessible via private IP."},
+{id:710,d:"D1",q:"SIMULATION: Enable diagnostic logging for an Azure AI Services resource and create a metric alert for call rate exceeding 1000 per day. Five actions in sequence?",o:["Navigate to resource \u2192 Monitoring > Diagnostic settings \u2192 Add setting \u2192 Select AllMetrics \u2192 Send to Log Analytics workspace \u2192 Navigate to Monitoring > Alerts \u2192 Create alert rule \u2192 Select Total Calls metric > 1000 \u2192 Create", "Create storage account \u2192 Link to resource \u2192 Enable audit log \u2192 Create Logic App \u2192 Configure trigger \u2192 Deploy", "Open Azure Monitor \u2192 Create workspace \u2192 Link subscription \u2192 Configure data collection rule \u2192 Create alert \u2192 Notify", "Navigate to resource \u2192 Activity log \u2192 Export \u2192 Create automation runbook \u2192 Configure schedule \u2192 Alert"],a:0,m:false,e:"Resource → Diagnostic settings → Add → select AllMetrics/AllLogs → Log Analytics workspace → Save. Then Alerts → Create → select resource → Condition: Total Calls > 1000 → action group → Create."}
 ];;
 
 
-const DOMAINS={D1:"Plan & manage AI",D2:"Computer Vision",D3:"Natural Language",D4:"Knowledge mining",D5:"Conversational AI",D6:"Generative AI",D7:"Content Safety"};
-const DFULL={D1:"Plan & manage AI solutions",D2:"Computer Vision",D3:"Natural Language Processing",D4:"Knowledge mining & search",D5:"Conversational AI",D6:"Generative AI & OpenAI",D7:"Content Safety & Case Studies"};
+const DOMAINS={D1:"Plan & manage AI",D2:"Computer Vision",D3:"NLP",D4:"Knowledge mining",D5:"Conversational AI",D6:"Generative AI",D7:"Agentic Solutions"};
+const DFULL={
+  D1:"Plan and manage an Azure AI solution",
+  D2:"Implement computer vision solutions",
+  D3:"Implement natural language processing solutions",
+  D4:"Implement knowledge mining and information extraction",
+  D5:"Implement NLP — Conversational AI",
+  D6:"Implement generative AI solutions",
+  D7:"Implement an agentic solution"
+};
+const DWEIGHT={D1:"20–25%",D2:"10–15%",D3:"15–20%",D4:"15–20%",D5:"15–20%",D6:"15–20%",D7:"5–10%"};
 const DCLS={D1:"d1",D2:"d2",D3:"d3",D4:"d4",D5:"d5",D6:"d6",D7:"d7"};
-const DICONS={D1:"⚙️",D2:"👁️",D3:"💬",D4:"🔍",D5:"🤖",D6:"✨",D7:"🛡️"};
-const DCOLORS={D1:"#e3f2fd",D2:"#e8f5e9",D3:"#ede7f6",D4:"#fff3e0",D5:"#e0f7fa",D6:"#fce4ec",D7:"#e3f2fd"};
+const DICONS={D1:"⚙️",D2:"👁️",D3:"💬",D4:"🔍",D5:"🤖",D6:"✨",D7:"🤖"};
+const DCOLORS={D1:"#e3f2fd",D2:"#e8f5e9",D3:"#ede7f6",D4:"#fff3e0",D5:"#e0f7fa",D6:"#fce4ec",D7:"#e8f5e9"};
 
 let state={mode:"",questions:[],idx:0,answers:{},wrong:[],multiSel:[],startTime:0,tiv:null,best:null,attempted:0,dndSlots:[],ynSel:null,isCaseStudy:false};
 
 /* -------- helpers -------- */
-function isDragDrop(q){return /sequence|in sequence|Three actions|Four actions|Five actions|DRAG DROP|Select and Place/i.test(q.q);}
+function isDragDrop(q){return /sequence|in sequence|Three actions|Four actions|Five actions|Six actions|Eight actions|DRAG DROP|Select and Place/i.test(q.q);}
+function isSimulation(q){return q.q.startsWith('SIMULATION:');}
+function isHotspot(q){
+  /* Hotspot = code completion with slash-separated options (BOX1/BOX2) */
+  if(q.m)return false;
+  if(isDragDrop(q)||isYesNo(q))return false;
+  const slashOpts=q.o.filter(o=>o.includes(' / '));
+  const isCodeQ=/complete|Complete|BOX\d|Complete code|Complete the|Complete command|Complete URI|Complete Speech|docker run|az type|completion type|response type|print value|method and|credential and|provider and|role and param|options type|data source/i.test(q.q);
+  return slashOpts.length>=2&&isCodeQ;
+}
 function isYesNo(q){return q.o.length===2&&q.o[0]==="Yes"&&q.o[1]==="No";}
 function isMulti(q){return q.m===true;}
 function shuffle(a){return[...a].sort(()=>Math.random()-0.5);}
-function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>{
+    s.classList.remove("active");
+    if(s.id==='simScreen') s.style.display='none';
+  });
+  const el=document.getElementById(id);
+  if(el){
+    el.classList.add("active");
+    if(id==='simScreen') el.style.display='flex';
+  }
+}
 
 function init(){
   document.getElementById("totalQ").textContent=Q.length;
   document.getElementById("totalProg").style.width=Math.min(Math.round(Q.length/350*100),100)+"%";
   document.getElementById("totalProgLabel").textContent=Q.length+" questions loaded";
   updateWrongCount();
+  buildDomainCards();
 }
 init();
-function updateWrongCount(){document.getElementById("wrongCount").textContent=state.wrong.length?state.wrong.length+" to review":"No wrong answers yet";}
+function updateWrongCount(){
+  const el=document.getElementById("wrongCount");
+  if(el)el.textContent=state.wrong.length?state.wrong.length+" to review":"None yet";
+}
 
 /* -------- mode start -------- */
 function startMode(m){
   clearInterval(state.tiv);
-  if(m==="domain"){buildDomainPicker();showScreen("dpick");return;}
+  if(m==="domain"){showScreen("home");return;}
   if(m==="review"){if(!state.wrong.length){alert("No wrong answers yet!");return;}startQuiz("Review mistakes",shuffle(Q.filter(q=>state.wrong.includes(q.id))),false);return;}
   if(m==="dragdrop"){const qs=Q.filter(isDragDrop);startQuiz("Drag & Drop / Sequence",shuffle(qs),false);return;}
   if(m==="yesno"){const qs=Q.filter(isYesNo);startQuiz("Yes / No",shuffle(qs),false);return;}
@@ -868,15 +1091,128 @@ function startMode(m){
   if(m==="quick")startQuiz("Quick quiz",shuffle(Q).slice(0,20),false);
 }
 
-function buildDomainPicker(){
-  document.getElementById("dlist").innerHTML=Object.entries(DOMAINS).map(([k,v])=>{
-    const all=Q.filter(q=>q.d===k),cnt=all.length;
-    const dd=all.filter(isDragDrop).length,yn=all.filter(isYesNo).length,ms=all.filter(q=>isMulti(q)&&!isDragDrop(q)&&!isYesNo(q)).length,mcq=cnt-dd-yn-ms;
-    let sub=[];if(mcq>0)sub.push(mcq+" MCQ");if(ms>0)sub.push(ms+" multi");if(dd>0)sub.push(dd+" sequence");if(yn>0)sub.push(yn+" yes/no");
-    return`<button class="mbtn" onclick="startDomain('${k}')"><div class="mico" style="background:${DCOLORS[k]}">${DICONS[k]}</div><div><div class="mt">${DFULL[k]}</div><div class="md">${cnt} questions · ${sub.join(" · ")}</div></div></button>`;
-  }).join("");
+function buildDomainCards(){
+  /* Build the domain cards on the home screen */
+  /* New exam blueprint: merge D3+D5 under NLP umbrella but keep separate for practice */
+  const domainOrder=['D1','D6','D7','D2','D3','D5','D4'];
+  const container=document.getElementById('domainCards');
+  if(!container)return;
+  container.innerHTML='';
+
+  /* Group D3 and D5 together under NLP */
+  const nlpLabel='Implement natural language processing solutions';
+  const rendered=new Set();
+
+  domainOrder.forEach(k=>{
+    if(rendered.has(k))return;
+    const all=Q.filter(q=>q.d===k);
+    const cnt=all.length;
+    const dd=all.filter(isDragDrop).length;
+    const yn=all.filter(isYesNo).length;
+    const hs=all.filter(isHotspot).length;
+    const ms=all.filter(q=>isMulti(q)&&!isDragDrop(q)&&!isYesNo(q)&&!isHotspot(q)).length;
+    const mcq=cnt-dd-yn-hs-ms;
+
+    const card=document.createElement('div');
+    card.className='domain-card';
+    card.id='dcard-'+k;
+
+    /* Header */
+    const hdr=document.createElement('div');
+    hdr.className='domain-card-header';
+    hdr.innerHTML=`
+      <div class="domain-card-icon" style="background:${DCOLORS[k]}">${DICONS[k]}</div>
+      <div class="domain-card-title">
+        <div class="domain-card-name">${DFULL[k]}</div>
+        <div class="domain-card-meta">${cnt} questions</div>
+      </div>
+      <span class="domain-card-weight">${DWEIGHT[k]}</span>
+      <span class="domain-card-chevron" id="chev-${k}">&#9660;</span>`;
+    hdr.onclick=()=>toggleDomainCard(k);
+    card.appendChild(hdr);
+
+    /* Actions panel */
+    const acts=document.createElement('div');
+    acts.className='domain-card-actions';
+    acts.id='dacts-'+k;
+
+    /* All questions button (full width) */
+    acts.innerHTML+=`<button class="dact-btn full-width" onclick="startDomain('${k}','all')">
+      <span class="dact-icon">&#x1F4CB;</span>
+      <div><div>All ${cnt} questions</div><div class="dact-count">Mixed practice</div></div>
+    </button>`;
+
+    /* Action row */
+    let row1='';
+    if(mcq+ms>0) row1+=`<button class="dact-btn" onclick="startDomain('${k}','mcq')">
+      <span class="dact-icon">&#x1F4DD;</span>
+      <div><div>MCQ</div><div class="dact-count">${mcq+ms} questions</div></div>
+    </button>`;
+
+    if(yn>0) row1+=`<button class="dact-btn" onclick="startDomain('${k}','yesno')">
+      <span class="dact-icon">&#x2705;</span>
+      <div><div>Yes / No</div><div class="dact-count">${yn} questions</div></div>
+    </button>`;
+
+    if(row1) acts.innerHTML+=`<div class="domain-action-row">${row1}</div>`;
+
+    let row2='';
+    if(dd>0) row2+=`<button class="dact-btn" onclick="startDomain('${k}','dragdrop')">
+      <span class="dact-icon">&#x1F500;</span>
+      <div><div>Sequence</div><div class="dact-count">${dd} questions</div></div>
+    </button>`;
+
+    if(hs>0) row2+=`<button class="dact-btn" onclick="startDomain('${k}','hotspot')">
+      <span class="dact-icon">&#x1F4BB;</span>
+      <div><div>Hotspot</div><div class="dact-count">${hs} questions</div></div>
+    </button>`;
+
+    if(row2) acts.innerHTML+=`<div class="domain-action-row">${row2}</div>`;
+
+    /* Case study button */
+    acts.innerHTML+=`<button class="dact-btn full-width" onclick="startDomain('${k}','casestudy')">
+      <span class="dact-icon">&#x1F4D6;</span>
+      <div><div>Case study mode</div><div class="dact-count">Full scenario navigation</div></div>
+    </button>`;
+
+    card.appendChild(acts);
+    container.appendChild(card);
+    rendered.add(k);
+  });
 }
-function startDomain(d){startQuiz(DFULL[d],shuffle(Q.filter(q=>q.d===d)),false);}
+
+function toggleDomainCard(k){
+  const acts=document.getElementById('dacts-'+k);
+  const chev=document.getElementById('chev-'+k);
+  const isOpen=acts.classList.contains('open');
+  /* Close all others */
+  document.querySelectorAll('.domain-card-actions').forEach(el=>el.classList.remove('open'));
+  document.querySelectorAll('.domain-card-chevron').forEach(el=>el.classList.remove('open'));
+  if(!isOpen){
+    acts.classList.add('open');
+    chev.classList.add('open');
+  }
+}
+
+function buildDomainPicker(){
+  /* Legacy — redirect to home domain cards */
+  buildDomainCards();
+}
+
+function startDomain(d, type){
+  type=type||'all';
+  let qs=Q.filter(q=>q.d===d);
+  let title=DFULL[d];
+
+  if(type==='yesno'){qs=qs.filter(isYesNo);title+=' — Yes/No';}
+  else if(type==='dragdrop'){qs=qs.filter(isDragDrop);title+=' — Sequences';}
+  else if(type==='hotspot'){qs=qs.filter(isHotspot);title+=' — Hotspot';}
+  else if(type==='mcq'){qs=qs.filter(q=>!isDragDrop(q)&&!isYesNo(q)&&!isHotspot(q));title+=' — MCQ';}
+  else if(type==='casestudy'){startQuiz(title+' — Case Study',shuffle(qs).slice(0,15),true);return;}
+
+  if(!qs.length){alert('No questions of this type in '+DFULL[d]);return;}
+  startQuiz(title,shuffle(qs),false);
+}
 
 function startQuiz(title,qs,isCaseStudy){
   state={...state,mode:title,questions:qs,idx:0,answers:{},startTime:Date.now(),dndSlots:[],ynSel:null,isCaseStudy};
@@ -891,7 +1227,15 @@ function updateTimer(){const s=Math.floor((Date.now()-state.startTime)/1000);doc
 /* -------- Nav pane -------- */
 function buildNavPane(isCaseStudy){
   const nav=document.getElementById("navPane");
+  const mobileTabs=document.getElementById("caseNavTabs");
+
   if(isCaseStudy){
+    const sections=[
+      {id:"caseIntro",label:"Intro"},
+      {id:"caseOverview",label:"Overview"},
+      {id:"caseRequirements",label:"Requirements"},
+      {id:"caseProductJSON",label:"JSON Sample"}
+    ];
     nav.innerHTML=`
       <div class="nav-section-title">Case Study</div>
       <button class="nav-btn" onclick="showCaseSection('caseIntro',this)">Introductory Info</button>
@@ -901,23 +1245,26 @@ function buildNavPane(isCaseStudy){
       <div class="nav-divider"></div>
       <div class="nav-section-title">Questions</div>
       <button class="nav-question-btn" onclick="showQuestion(this)" id="navQBtn">&#x1F4AC; Question</button>`;
+    /* Mobile tabs */
+    mobileTabs.style.display='flex';
+    mobileTabs.innerHTML=sections.map(s=>`<button class="case-nav-tab" onclick="showCaseSection('${s.id}',null)">${s.label}</button>`).join('')+
+      `<button class="case-nav-tab question-tab" onclick="showQuestion(null)" id="mobileQBtn">&#x1F4AC; Question</button>`;
   } else {
     nav.innerHTML=`
       <div class="nav-section-title">Navigation</div>
       <button class="nav-question-btn" onclick="showQuestion(this)" id="navQBtn">&#x1F4AC; Question</button>
       <div class="nav-divider"></div>
       <div class="nav-section-title">Progress</div>
-      <div style="padding:8px 14px;font-size:12px;color:#666" id="navProgress">1 / ${state.questions.length}</div>`;
+      <div style="padding:8px 14px;font-size:12px;color:#666;display:none" id="navProgress">1 / ${state.questions.length}</div>`;
+    mobileTabs.style.display='none';
   }
 }
 
 function showCaseSection(sectionId, btn){
-  // hide all reading sections and question panel
   document.querySelectorAll(".case-reading,.question-panel").forEach(el=>{el.classList.remove("active");el.style.display="none";});
   document.getElementById(sectionId).style.display="block";
   document.getElementById(sectionId).classList.add("active");
-  // update nav active
-  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".nav-btn,.case-nav-tab").forEach(b=>b.classList.remove("active"));
   if(btn)btn.classList.add("active");
 }
 
@@ -925,8 +1272,11 @@ function showQuestion(btn){
   document.querySelectorAll(".case-reading,.question-panel").forEach(el=>{el.classList.remove("active");el.style.display="none";});
   const qp=document.getElementById("questionPanel");
   qp.style.display="flex";qp.classList.add("active");
-  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".nav-btn,.case-nav-tab").forEach(b=>b.classList.remove("active"));
   if(btn)btn.classList.add("active");
+  /* highlight mobile question tab */
+  const mqb=document.getElementById("mobileQBtn");
+  if(mqb)mqb.classList.add("active");
 }
 
 /* -------- Render question -------- */
@@ -963,6 +1313,8 @@ function renderQ(){
     renderYesNo(q);
   } else if(isDragDrop(q)){
     renderDND(q);
+  } else if(isHotspot(q)){
+    renderHotspot(q);
   } else {
     renderMCQ(q);
   }
@@ -1078,105 +1430,131 @@ function submitMulti(){
   showExp(ok,q.e);document.getElementById("bnext").disabled=false;document.getElementById("bskip").disabled=true;
 }
 
-/* ---- DRAG & DROP (pipeline style) ---- */
-let dndDragEl=null,dndDragFrom=null;
+/* ---- DRAG & DROP (Microsoft exam style: Actions left, ordered slots right) ---- */
+let dndDragEl=null,dndDragFrom=null; /* dragFrom: 'pool' | 'slot:N' */
 
 function renderDND(q){
-  document.getElementById("qpLabel").textContent="Question";
-  document.getElementById("qpType").textContent="DRAG DROP -";
-  document.getElementById("qpType").style.display="block";
-  document.getElementById("qpInstruction").textContent=q.q;
-  document.getElementById("qpNote").textContent="NOTE: Each correct selection is worth one point.";
-  document.getElementById("qpNote").style.display="block";
-  document.getElementById("dndSection").style.display="block";
-  document.getElementById("hint").textContent='Drag items from Services to the Answer Area stages. Click a placed item to return it to the pool.';
-  document.getElementById("hint").classList.add("show");
+  /* Set up question panel display */
+  document.getElementById('qpLabel').textContent='Question';
+  document.getElementById('qpType').textContent='DRAG DROP -';
+  document.getElementById('qpType').style.display='block';
+  document.getElementById('qpInstruction').textContent=q.q;
+  document.getElementById('qpNote').textContent='NOTE: Each correct selection is worth one point. Select and Place:';
+  document.getElementById('qpNote').style.display='block';
+  document.getElementById('dndSection').style.display='block';
+  document.getElementById('hint').textContent='Drag items from the left column to the Answer Area. Click a placed item to return it.';
+  document.getElementById('hint').classList.add('show');
 
-  // Detect if pipeline-style (Source→Cracking→Preparation→Destination) or sequence
   const correctArr=Array.isArray(q.a)?q.a:[q.a];
-  const stages=detectStages(q);
-  state.dndSlots=new Array(stages.length).fill(null);
+  const numSlots=correctArr.length;
 
-  // Build pool
-  const poolEl=document.getElementById("dndPool");
-  poolEl.innerHTML="";
-  const shuffled=shuffle(q.o.map((text,i)=>({text,origIdx:i})));
-  shuffled.forEach((item)=>{
-    const div=document.createElement("div");
-    div.className="dnd-item";div.draggable=true;div.dataset.orig=item.origIdx;div.textContent=item.text;
-    div.ondragstart=e=>{dndDragEl=div;dndDragFrom="pool";div.classList.add("dragging");e.dataTransfer.effectAllowed="move";};
-    div.ondragend=e=>{div.classList.remove("dragging");};
-    poolEl.appendChild(div);
+  /* Set left column label based on question content */
+  const poolLabel=document.getElementById('dndPoolLabel');
+  if(/service|value|code/i.test(q.q)) poolLabel.textContent='Values';
+  else poolLabel.textContent='Actions';
+
+  /* Build shuffled pool — each option gets a unique pool-id */
+  const shuffled=[...q.o.map((text,origIdx)=>({text,origIdx}))].sort(()=>Math.random()-0.5);
+  const poolEl=document.getElementById('dndPool');
+  poolEl.innerHTML='';
+  shuffled.forEach(item=>{
+    poolEl.appendChild(makeDndItem(item.text,item.origIdx,'pool'));
   });
 
-  // Build pipeline stages
-  const pipe=document.getElementById("dndPipeline");
-  pipe.innerHTML="";
-  stages.forEach((label,i)=>{
-    if(i>0){const arr=document.createElement("div");arr.className="dnd-arrow";arr.textContent="→";pipe.appendChild(arr);}
-    const stage=document.createElement("div");stage.className="dnd-stage";
-    const lbl=document.createElement("div");lbl.className="dnd-stage-label";lbl.textContent=label;
-    const target=document.createElement("div");target.className="dnd-drop-target";target.id="dndSlot"+i;target.textContent="Drop here";
-    target.ondragover=e=>{e.preventDefault();target.classList.add("drag-over");};
-    target.ondragleave=e=>{target.classList.remove("drag-over");};
-    target.ondrop=e=>{e.preventDefault();target.classList.remove("drag-over");dndDrop(i);};
-    target.onclick=()=>{if(target.classList.contains("filled"))dndReturn(i);};
-    stage.appendChild(lbl);stage.appendChild(target);pipe.appendChild(stage);
-  });
-
-  document.getElementById("dndRevealBtn").disabled=true;
-}
-
-function detectStages(q){
-  // If pipeline question (Source/Cracking/Preparation/Destination keywords)
-  if(/source|cracking|preparation|destination/i.test(q.q))return["Source","Cracking","Preparation","Destination"];
-  if(/collect|process|store|serve/i.test(q.q))return["Collect","Process","Store","Serve"];
-  // Default: numbered sequence steps
-  const count=Array.isArray(q.a)?q.a.length:1;
-  return Array.from({length:count},(_,i)=>"Step "+(i+1));
-}
-
-function dndDrop(slotIdx){
-  if(!dndDragEl)return;
-  const origIdx=parseInt(dndDragEl.dataset.orig);
-  const text=dndDragEl.textContent;
-  // return old item if slot occupied
-  if(state.dndSlots[slotIdx]!==null)dndReturnItem(state.dndSlots[slotIdx],slotIdx,false);
-  state.dndSlots[slotIdx]={origIdx,text};
-  // remove from pool or old slot
-  if(dndDragFrom==="pool"){
-    dndDragEl.remove();
-  } else if(dndDragFrom&&dndDragFrom.startsWith("slot")){
-    const old=parseInt(dndDragFrom.replace("slot",""));
-    state.dndSlots[old]=null;
-    const oldTarget=document.getElementById("dndSlot"+old);
-    oldTarget.className="dnd-drop-target";oldTarget.textContent="Drop here";oldTarget.draggable=false;oldTarget.ondragstart=null;
+  /* Build answer slots */
+  state.dndSlots=new Array(numSlots).fill(null);
+  const slotsEl=document.getElementById('dndSlots');
+  slotsEl.innerHTML='';
+  for(let s=0;s<numSlots;s++){
+    const target=document.createElement('div');
+    target.className='dnd-slot-target';
+    target.id='dndSlot'+s;
+    target.textContent='';
+    target.ondragover=e=>{e.preventDefault();target.classList.add('drag-over');};
+    target.ondragleave=e=>{target.classList.remove('drag-over');};
+    target.ondrop=e=>{e.preventDefault();target.classList.remove('drag-over');dropOnSlot(s);};
+    target.onclick=()=>{if(target.classList.contains('filled'))returnToPool(s);};
+    slotsEl.appendChild(target);
   }
-  // fill slot
-  const target=document.getElementById("dndSlot"+slotIdx);
-  target.className="dnd-drop-target filled";target.textContent=text;target.draggable=true;
-  target.ondragstart=e=>{dndDragEl=target;dndDragFrom="slot"+slotIdx;target.classList.add("dragging");e.dataTransfer.effectAllowed="move";};
-  target.ondragend=e=>{target.classList.remove("dragging");};
-  dndDragEl=null;dndDragFrom=null;
-  const allFilled=state.dndSlots.every(x=>x!==null);
-  document.getElementById("dndRevealBtn").disabled=!allFilled;
+  document.getElementById('dndRevealBtn').disabled=true;
 }
 
-function dndReturn(slotIdx){
+function makeDndItem(text,origIdx,from){
+  const div=document.createElement('div');
+  div.className='dnd-item';
+  div.draggable=true;
+  div.dataset.orig=origIdx;
+  div.dataset.text=text;
+  div.textContent=text;
+  div.ondragstart=e=>{
+    dndDragEl=div;
+    dndDragFrom=from;
+    setTimeout(()=>div.classList.add('dragging'),0);
+    e.dataTransfer.effectAllowed='move';
+  };
+  div.ondragend=e=>{div.classList.remove('dragging');};
+  return div;
+}
+
+function dropOnSlot(slotIdx){
+  if(!dndDragEl)return;
+  const text=dndDragEl.dataset.text;
+  const origIdx=parseInt(dndDragEl.dataset.orig);
+
+  /* If slot already filled — return its current item to pool */
+  if(state.dndSlots[slotIdx]!==null) returnToPool(slotIdx,true);
+
+  /* Remove drag source */
+  if(dndDragFrom==='pool'){
+    dndDragEl.remove();
+  } else if(dndDragFrom&&dndDragFrom.startsWith('slot:')){
+    const oldSlot=parseInt(dndDragFrom.split(':')[1]);
+    state.dndSlots[oldSlot]=null;
+    const oldTarget=document.getElementById('dndSlot'+oldSlot);
+    oldTarget.className='dnd-slot-target';
+    oldTarget.textContent='';
+    oldTarget.draggable=false;
+    oldTarget.ondragstart=null;
+    oldTarget.ondragend=null;
+  }
+
+  /* Fill target slot */
+  state.dndSlots[slotIdx]={origIdx,text};
+  const target=document.getElementById('dndSlot'+slotIdx);
+  target.className='dnd-slot-target filled';
+  target.textContent=text;
+  target.draggable=true;
+  target.ondragstart=e=>{
+    dndDragEl=target;
+    dndDragFrom='slot:'+slotIdx;
+    setTimeout(()=>target.classList.add('dragging'),0);
+    e.dataTransfer.effectAllowed='move';
+  };
+  target.ondragend=e=>{target.classList.remove('dragging');};
+
+  dndDragEl=null; dndDragFrom=null;
+  updateDndRevealBtn();
+}
+
+function returnToPool(slotIdx, silent){
   if(state.dndSlots[slotIdx]===null)return;
-  dndReturnItem(state.dndSlots[slotIdx],slotIdx,true);
+  const {origIdx,text}=state.dndSlots[slotIdx];
   state.dndSlots[slotIdx]=null;
-  document.getElementById("dndRevealBtn").disabled=true;
+  if(!silent){
+    const target=document.getElementById('dndSlot'+slotIdx);
+    target.className='dnd-slot-target';
+    target.textContent='';
+    target.draggable=false;
+    target.ondragstart=null;
+  }
+  const item=makeDndItem(text,origIdx,'pool');
+  document.getElementById('dndPool').appendChild(item);
+  updateDndRevealBtn();
 }
 
-function dndReturnItem(item,slotIdx,clearSlot){
-  const pool=document.getElementById("dndPool");
-  const div=document.createElement("div");
-  div.className="dnd-item";div.draggable=true;div.dataset.orig=item.origIdx;div.textContent=item.text;
-  div.ondragstart=e=>{dndDragEl=div;dndDragFrom="pool";div.classList.add("dragging");e.dataTransfer.effectAllowed="move";};
-  div.ondragend=e=>{div.classList.remove("dragging");};
-  pool.appendChild(div);
-  if(clearSlot){const t=document.getElementById("dndSlot"+slotIdx);if(t){t.className="dnd-drop-target";t.textContent="Drop here";t.draggable=false;t.ondragstart=null;}}
+function updateDndRevealBtn(){
+  const allFilled=state.dndSlots.every(x=>x!==null);
+  document.getElementById('dndRevealBtn').disabled=!allFilled;
 }
 
 function revealDND(){
@@ -1186,21 +1564,167 @@ function revealDND(){
   const ok=JSON.stringify(userOrder)===JSON.stringify(correctArr);
   state.answers[q.id]=userOrder;
   if(!ok&&!state.wrong.includes(q.id))state.wrong.push(q.id);
+
+  /* Colour each slot */
   state.dndSlots.forEach((item,i)=>{
-    const t=document.getElementById("dndSlot"+i);if(!t)return;
-    t.draggable=false;t.onclick=null;t.ondragstart=null;
-    if(item){
-      const correct=item.origIdx===correctArr[i];
-      t.className="dnd-drop-target "+(correct?"correct-drop":"wrong-drop");
+    const t=document.getElementById('dndSlot'+i);
+    if(!t||!item)return;
+    t.draggable=false; t.onclick=null; t.ondragstart=null;
+    t.className='dnd-slot-target '+(item.origIdx===correctArr[i]?'correct-slot':'wrong-slot');
+  });
+
+  /* Disable pool items */
+  document.querySelectorAll('#dndPool .dnd-item').forEach(el=>{
+    el.draggable=false; el.classList.add('used');
+  });
+
+  /* Show correct answer if wrong */
+  const corrLines=correctArr.map((ci,i)=>`<strong>Step ${i+1}:</strong> ${q.o[ci]}`).join('<br>');
+  showExp(ok, q.e + (ok?'':'<br><br><strong>Correct order:</strong><br>'+corrLines));
+  document.getElementById('dndRevealBtn').disabled=true;
+  document.getElementById('bnext').disabled=false;
+  document.getElementById('bskip').disabled=true;
+}
+
+/* ---- HOTSPOT (dropdown selects in code) ---- */
+function renderHotspot(q){
+  document.getElementById('qpLabel').textContent='Question';
+  document.getElementById('qpType').textContent='HOTSPOT -';
+  document.getElementById('qpType').style.display='block';
+  document.getElementById('qpInstruction').textContent=q.q;
+  document.getElementById('qpNote').textContent='NOTE: Each correct selection is worth one point.';
+  document.getElementById('qpNote').style.display='block';
+  document.getElementById('hotspotSection').style.display='block';
+  document.getElementById('hint').textContent='Select the correct value for each dropdown, then click Reveal Solution.';
+  document.getElementById('hint').classList.add('show');
+  document.getElementById('hsRevealBtn').disabled=false;
+  document.getElementById('bnext').disabled=false;
+
+  /* Split options on ' / ' to get per-dropdown values */
+  const rows=q.o.map(opt=>opt.split(' / ').map(s=>s.trim()));
+  const numDropdowns=rows[0].length;
+
+  /* Build unique option lists per dropdown position */
+  const dropLists=[];
+  for(let d=0;d<numDropdowns;d++){
+    const vals=[...new Set(rows.map(r=>r[d]||''))].filter(Boolean);
+    /* shuffle */
+    vals.sort(()=>Math.random()-0.5);
+    dropLists.push(vals);
+  }
+
+  /* Build code block HTML with inline dropdowns */
+  /* Generate placeholder code context from question text */
+  const codeLines=buildHotspotCode(q,numDropdowns,dropLists);
+  document.getElementById('hotspotCode').innerHTML=codeLines;
+
+  /* Enable reveal when any dropdown changed */
+  document.querySelectorAll('.hs-dd').forEach(sel=>{
+    sel.addEventListener('change',()=>{
+      document.getElementById('hsRevealBtn').disabled=false;
+    });
+  });
+}
+
+const HOTSPOT_TEMPLATES={
+  12:{code:"PUT https://management.azure.com/.../providers/\n  Microsoft.CognitiveServices/accounts/{name}\n{\n  \"sku\": { \"name\": \"S0\" },\n  \"kind\": \"[BLANK_0]\",\n  \"location\": \"westus\"\n}",blanks:["Resource kind", "Method"]},
+  130:{code:"[BLANK_0] https://westus.api.cognitive.microsoft.com/vision/v3.0/analyze\n  ?visualFeatures=[BLANK_1]\n  &language=en",blanks:["HTTP method", "Visual feature"]},
+  142:{code:"docker run --rm -it -p 5000:5000 --memory 8g --cpus 1 \\\n  [BLANK_0] \\\n  Eula=accept \\\n  Billing=[BLANK_1] \\\n  ApiKey=xxxxxxxxxxxxxxxxxxxx",blanks:["Image", "Billing"]},
+  148:{code:"var audioFormat = [BLANK_0](AudioStreamContainerFormat.MP3);\n\nvar speechConfig = SpeechConfig.FromSubscription(\n  \"18c51a87-3a69-47a8-aedc-a54745f708a1\", \"westus\");\n\nvar audioConfig = AudioConfig.FromStreamInput(\n  pushStream, audioFormat);\n\nusing (var recognizer = new [BLANK_1](speechConfig, audioConfig))\n{\n    var result = await recognizer.RecognizeOnceAsync();\n    var text = result.Text;\n}",blanks:["audioFormat value", "recognizer type"]},
+  243:{code:"var phraselistId = await client.Features.[BLANK_0](\n  appId, versionId, new [BLANK_1]\n  {\n    EnabledForAllModels = false,\n    IsExchangeable = true,\n    Name = \"PL1\",\n    Phrases = \"item1,item2,item3,item4,item5\"\n  });",blanks:["Method", "Object type"]},
+  247:{code:"var response = await client.GetAsync(\n  \"https://[BLANK_0]/[BLANK_1]?to=en\");",blanks:["Endpoint", "Path"]},
+  253:{code:"var response = await client.GetStringAsync(\n  $\"https://[BLANK_0]/[BLANK_1]\" +\n  \"?api-version=3.0&to=es\");",blanks:["Endpoint", "Path"]},
+  255:{code:"var config = SpeechTranslationConfig.FromSubscription(key, region);\nconfig.[BLANK_0] = \"en-US\";\nconfig.[BLANK_1](\"de\");",blanks:["Property 1", "Method"]},
+  257:{code:"var config = SpeechTranslationConfig.FromSubscription(key, region);\nconfig.[BLANK_0] = \"fr-FR\";\nconfig.[BLANK_1](\"de\");",blanks:["Property 1", "Method"]},
+  329:{code:"POST https://di1.cognitiveservices.azure.com/formrecognizer/\n  documentModels/[BLANK_0]:analyze?api-version=2022-08-31\n\nHeaders:\n  [BLANK_1]: {your-key}\n  Content-Type: application/json",blanks:["Model", "Auth header"]},
+  332:{code:"var operation = await client.AnalyzeDocumentAsync(\n  WaitUntil.Completed, \"[BLANK_0]\", fileStream);\n\nforeach (var word in operation.Value.Pages\n    .SelectMany(p => p.Words)\n    .Where(w => w.Confidence > [BLANK_1]))\n{\n    Console.WriteLine(word.Content);\n}",blanks:["Model", "Confidence threshold"]},
+  440:{code:"// Activity type shown in emulator: [BLANK_0]\n\n// First AttachmentLayout value:  [BLANK_1]\n\n// Second AttachmentLayout value: [BLANK_2]",blanks:["BOX1", "BOX2", "BOX3"]},
+  443:{code:"az [BLANK_0] deploy \\\n  --resource-group myRG \\\n  --name app1 \\\n  --src-path ./app.zip \\\n  --type [BLANK_1]",blanks:["az type", "Deployment source"]},
+  517:{code:"var messages = new List<ChatMessage>\n{\n    new ChatMessage([BLANK_0], systemPrompt),\n    new ChatMessage(\"user\", userInput)\n};\nvar options = new ChatCompletionsOptions\n{\n    [BLANK_1] = 0.9f\n};",blanks:["Role", "Parameter"]},
+  521:{code:"az cognitiveservices account create \\\n  --name myAI --resource-group myRG \\\n  --kind [BLANK_0] --sku S0 \\\n  --location eastus \\\n  [BLANK_1]",blanks:["Provider", "Identity property"]},
+  522:{code:"var options = new [BLANK_0]\n{\n    DeploymentName = deploymentName,\n    AzureExtensionsOptions = new AzureChatExtensionsOptions\n    {\n        Extensions = { new [BLANK_1]\n        {\n            SearchEndpoint = searchEndpoint,\n            IndexName = indexName\n        }}\n    }\n};",blanks:["Options type", "Extension config type"]},
+  523:{code:"var client = new OpenAIClient(\n  new Uri(openAIEndpoint),\n  new AzureKeyCredential([BLANK_0]));\n\nvar response = await client.GetEmbeddingsAsync(\n  \"[BLANK_1]\", new EmbeddingsOptions(text));",blanks:["Credential", "Deployment parameter"]},
+  526:{code:"response = openai.[BLANK_0].create(\n    engine = deployment,\n    messages = conversation,\n    data_sources = [{\n        \"type\": \"[BLANK_1]\",\n        \"parameters\": {\n            \"endpoint\": search_endpoint,\n            \"key\": search_key\n        }\n    }])",blanks:["Completion type", "Data source type"]},
+  619:{code:"var client = new [BLANK_0](\n  new Uri(endpoint),\n  new AzureKeyCredential(key));\n\nvar request = new AnalyzeImageOptions(\n  BinaryData.FromStream(imageStream));\n\nvar response = await client.[BLANK_1];",blanks:["Client type", "Analyze method"]},
+  620:{code:"var client = new [BLANK_0](\n  new Uri(endpoint),\n  new AzureKeyCredential(key));\n\nvar request = new [BLANK_1](text);\nvar response = await client.AnalyzeTextAsync(request);",blanks:["Client type", "Request type"]}
+};
+
+function buildHotspotCode(q,numDropdowns,dropLists){
+  const tmpl=HOTSPOT_TEMPLATES[q.id];
+  let html='<div style="font-size:12px;font-weight:700;font-family:sans-serif;margin-bottom:10px;color:#1d1d1f">'+(tmpl?'Hot Area:':'Answer Area')+'</div>';
+  html+='<div class="hotspot-code">';
+
+  if(tmpl){
+    /* Split on [BLANK_N] markers */
+    const parts=tmpl.code.split(/\[BLANK_(\d+)\]/g);
+    for(let i=0;i<parts.length;i++){
+      if(i%2===0){
+        html+=parts[i].replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      } else {
+        const idx=parseInt(parts[i]);
+        if(idx<dropLists.length) html+=makeDropdown(idx,dropLists[idx]);
+      }
+    }
+  } else {
+    const labels=parseHotspotLabels(q.q,numDropdowns);
+    for(let i=0;i<numDropdowns;i++){
+      html+='\n'+labels[i]+' = '+makeDropdown(i,dropLists[i]);
+    }
+  }
+  html+='</div>';
+  return html;
+}
+
+function parseHotspotLabels(txt,num){
+  const colonIdx=txt.lastIndexOf(':');
+  if(colonIdx>-1){
+    const after=txt.substring(colonIdx+1).replace(/\?$/,'').trim();
+    const parts=after.split(/\s+and\s+/i).map(s=>s.trim()).filter(Boolean);
+    if(parts.length===num) return parts.map(p=>p+':');
+    const parts2=after.split(/\s*\+\s*/).map(s=>s.trim()).filter(Boolean);
+    if(parts2.length===num) return parts2.map(p=>p+':');
+  }
+  return Array.from({length:num},(_,i)=>'Selection '+(i+1)+':');
+}
+
+function makeDropdown(idx,vals){
+  const opts='<option value="">-- select --</option>'+vals.map(v=>`<option value="${v.replace(/"/g,'&quot;')}">${v}</option>`).join('');
+  return `<span class="hs-select"><select class="hs-dd" data-idx="${idx}">${opts}</select><span class="hs-arrow">&#9660;</span></span>`;
+}
+
+function revealHotspot(){
+  const q=state.questions[state.idx];
+  if(state.answers[q.id]!==undefined)return;
+
+  /* Get correct answer — q.a is index into q.o */
+  const correctOpt=q.o[q.a];
+  const correctParts=correctOpt.split(' / ').map(s=>s.trim());
+
+  /* Read user selections */
+  const selects=document.querySelectorAll('.hs-dd');
+  let allCorrect=true;
+  const userParts=[];
+
+  selects.forEach((sel,i)=>{
+    const userVal=sel.value;
+    const correct=correctParts[i]||'';
+    userParts.push(userVal);
+    sel.disabled=true;
+    if(userVal===correct){
+      sel.classList.add('correct');
+    } else {
+      sel.classList.add('wrong');
+      allCorrect=false;
     }
   });
-  // disable pool items
-  document.querySelectorAll("#dndPool .dnd-item").forEach(el=>{el.draggable=false;el.classList.add("placed-away");});
-  const corrHtml=correctArr.map((ci,i)=>`<strong>${detectStages(q)[i]||"Step "+(i+1)}:</strong> ${q.o[ci]}`).join("<br>");
-  showExp(ok,q.e+(ok?"":("<br><br><strong>Correct mapping:</strong><br>"+corrHtml)));
-  document.getElementById("dndRevealBtn").disabled=true;
-  document.getElementById("bnext").disabled=false;
-  document.getElementById("bskip").disabled=true;
+
+  state.answers[q.id]=userParts.join(' / ');
+  if(!allCorrect&&!state.wrong.includes(q.id))state.wrong.push(q.id);
+
+  const corrDisplay=correctParts.map((p,i)=>`<strong>Box ${i+1}:</strong> ${p}`).join('<br>');
+  showExp(allCorrect, q.e+(allCorrect?'':'<br><br><strong>Correct answer:</strong><br>'+corrDisplay));
+  document.getElementById('hsRevealBtn').disabled=true;
+  document.getElementById('bskip').disabled=true;
 }
 
 /* ---- show explanation ---- */
@@ -1228,6 +1752,7 @@ function next(){
 function isCorrect(q){
   const a=state.answers[q.id];if(a===-1||a===undefined)return false;
   if(isDragDrop(q)){const c=Array.isArray(q.a)?q.a:[q.a];return JSON.stringify(a)===JSON.stringify(c);}
+  if(isHotspot(q)){return a===q.o[q.a];}
   if(q.m)return JSON.stringify([...(a||[])].sort())===JSON.stringify([...q.a].sort());
   return a===q.a;
 }
@@ -1266,9 +1791,12 @@ function exitQuiz(){clearInterval(state.tiv);showScreen("home");}
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js')
-      .then(r=>console.log('SW registered'))
-      .catch(e=>console.log('SW error',e));
+    /* Only register SW on GitHub Pages, not on Claude preview */
+    if(location.hostname.endsWith('github.io') || location.protocol==='https:' && !location.hostname.includes('claude')){
+      navigator.serviceWorker.register('sw.js')
+        .then(r=>console.log('SW registered'))
+        .catch(e=>console.log('SW error',e));
+    }
   });
 }
 let deferredPrompt;
@@ -1283,6 +1811,469 @@ function installApp(){
     deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').style.display='none';});
   }
 }
+
+
+/* ===================================================================
+   SIMULATION ENGINE — Interactive Azure Portal mockups
+   =================================================================== */
+
+const SIMULATIONS = {
+
+  // SIM 1: Create Cognitive Services resource
+  701: {
+    scenario: `You need to create a Cognitive Services resource named <strong>captions12345678</strong> for image captioning using the <strong>Free F0</strong> pricing tier.<br>To complete this task, use the simulated Azure Portal below.`,
+    steps: [
+      'Search for Cognitive Services',
+      'Click Create',
+      'Enter resource name and settings',
+      'Click Review + create'
+    ],
+    render: function(container, onComplete) {
+      let step = 0;
+      container.innerHTML = `
+        <div class="az-topbar">
+          <span class="az-logo">&#xe900; Microsoft Azure</span>
+          <input class="az-search" placeholder="Search resources, services, and docs" id="simSearch">
+          <div class="az-icons">
+            <i class="ti ti-bell az-icon" aria-hidden="true"></i>
+            <i class="ti ti-settings az-icon" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div class="az-breadcrumb">Home &gt; <span>Cognitive Services</span></div>
+        <div class="az-main" id="simMain">
+          <div id="simSearchResult" style="display:none">
+            <div class="az-page-title">Cognitive Services</div>
+            <div class="az-page-sub">Manage your Cognitive Services resources</div>
+            <button class="az-btn az-btn-primary" id="simCreateBtn" onclick="simStep2()">+ Create</button>
+            <div style="margin-top:16px;background:#fff;border:1px solid #edebe9;border-radius:4px;padding:16px;color:#605e5c;font-size:13px">
+              No cognitive services resources found. Click + Create to add one.
+            </div>
+          </div>
+          <div id="simHomePanel">
+            <div class="az-page-title">Home</div>
+            <div style="background:#fff;border:1px solid #edebe9;border-radius:4px;padding:16px;margin-bottom:12px">
+              <p style="font-size:13px;color:#605e5c;margin-bottom:10px">Search for a service to get started</p>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+                ${['Cognitive Services','Storage accounts','Virtual machines','App Services','Key vaults','Resource groups'].map(s=>`<div class="az-nav-item" style="border:1px solid #edebe9;border-radius:4px;justify-content:center;text-align:center;font-size:12px" onclick="simSearchFor('${s}')">${s}</div>`).join('')}
+              </div>
+            </div>
+          </div>
+          <div id="simCreatePanel" style="display:none">
+            <div class="az-page-title">Create Cognitive Services</div>
+            <div class="az-tabs">
+              <div class="az-tab active">Basics</div>
+              <div class="az-tab" style="color:#c8c6c4">Networking</div>
+              <div class="az-tab" style="color:#c8c6c4">Identity</div>
+              <div class="az-tab" style="color:#c8c6c4">Tags</div>
+              <div class="az-tab" style="color:#c8c6c4">Review + create</div>
+            </div>
+            <div class="az-form-section">
+              <div class="az-form-section-title">Project details</div>
+              <div class="az-field">
+                <label class="az-label">Subscription <span class="req">*</span></label>
+                <select class="az-select"><option>Pay-As-You-Go</option></select>
+              </div>
+              <div class="az-field">
+                <label class="az-label">Resource group <span class="req">*</span></label>
+                <select class="az-select"><option>rg-ai102-demo</option><option>rg-prod</option></select>
+              </div>
+            </div>
+            <div class="az-form-section">
+              <div class="az-form-section-title">Instance details</div>
+              <div class="az-field">
+                <label class="az-label">Region <span class="req">*</span></label>
+                <select class="az-select"><option>East US</option><option>West US</option><option>West Europe</option></select>
+              </div>
+              <div class="az-field">
+                <label class="az-label">Name <span class="req">*</span></label>
+                <input class="az-input" id="simResName" placeholder="Enter resource name" oninput="simCheckName()">
+                <div id="simNameHint" style="font-size:11px;color:#605e5c;margin-top:3px">Must be: captions12345678</div>
+              </div>
+              <div class="az-field">
+                <label class="az-label">Pricing tier <span class="req">*</span></label>
+                <select class="az-select" id="simTier" onchange="simCheckTier()">
+                  <option value="">-- Select pricing tier --</option>
+                  <option value="S0">Standard S0</option>
+                  <option value="F0">Free F0</option>
+                </select>
+                <div id="simTierHint" style="font-size:11px;color:#605e5c;margin-top:3px">Must use: Free F0</div>
+              </div>
+            </div>
+            <div class="az-notification" id="simFormMsg"></div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="az-btn az-btn-secondary">Previous</button>
+              <button class="az-btn az-btn-primary" onclick="simReviewCreate()">Review + create</button>
+            </div>
+          </div>
+          <div id="simReviewPanel" style="display:none">
+            <div class="az-page-title">Review + create</div>
+            <div class="az-notification success show"><i class="ti ti-circle-check"></i> Validation passed</div>
+            <div class="az-form-section">
+              <div class="az-form-section-title">Summary</div>
+              <table style="width:100%;font-size:13px;border-collapse:collapse">
+                <tr style="border-bottom:1px solid #edebe9"><td style="padding:6px 0;color:#605e5c;width:40%">Subscription</td><td style="padding:6px 0">Pay-As-You-Go</td></tr>
+                <tr style="border-bottom:1px solid #edebe9"><td style="padding:6px 0;color:#605e5c">Resource group</td><td style="padding:6px 0">rg-ai102-demo</td></tr>
+                <tr style="border-bottom:1px solid #edebe9"><td style="padding:6px 0;color:#605e5c">Name</td><td style="padding:6px 0" id="reviewName">—</td></tr>
+                <tr style="border-bottom:1px solid #edebe9"><td style="padding:6px 0;color:#605e5c">Pricing tier</td><td style="padding:6px 0" id="reviewTier">—</td></tr>
+              </table>
+            </div>
+            <button class="az-btn az-btn-primary" onclick="simCreate()">Create</button>
+          </div>
+          <div id="simDeployPanel" style="display:none;text-align:center;padding:40px 20px">
+            <div style="font-size:32px;margin-bottom:12px">&#x2705;</div>
+            <div style="font-size:18px;font-weight:600;color:#107c10;margin-bottom:8px">Deployment complete!</div>
+            <div style="font-size:13px;color:#605e5c;margin-bottom:20px">Resource <strong id="deployedName"></strong> was created successfully.</div>
+            <button class="az-btn az-btn-primary" onclick="simTaskDone()">Go to resource</button>
+          </div>
+        </div>`;
+
+      // Wire search
+      document.getElementById('simSearch').addEventListener('keydown', e => {
+        if(e.key==='Enter') simSearchFor(e.target.value);
+      });
+
+      window.simSearchFor = function(term) {
+        if(/cognitive/i.test(term)){
+          document.getElementById('simHomePanel').style.display='none';
+          document.getElementById('simSearchResult').style.display='block';
+          simMarkStep(0);
+          document.getElementById('simHint').textContent='Step 2: Click + Create to create a new resource.';
+        }
+      };
+
+      window.simStep2 = function(){
+        document.getElementById('simSearchResult').style.display='none';
+        document.getElementById('simCreatePanel').style.display='block';
+        simMarkStep(1);
+        document.getElementById('simHint').textContent='Step 3: Enter name "captions12345678" and select Free F0 tier.';
+      };
+
+      window.simCheckName = function(){
+        const val=document.getElementById('simResName').value;
+        const hint=document.getElementById('simNameHint');
+        if(val==='captions12345678'){hint.style.color='#107c10';hint.textContent='✓ Correct name';}
+        else{hint.style.color='#a4262c';hint.textContent='Must be: captions12345678';}
+      };
+
+      window.simCheckTier = function(){
+        const val=document.getElementById('simTier').value;
+        const hint=document.getElementById('simTierHint');
+        if(val==='F0'){hint.style.color='#107c10';hint.textContent='✓ Free F0 selected';}
+        else{hint.style.color='#a4262c';hint.textContent='Must use: Free F0';}
+      };
+
+      window.simReviewCreate = function(){
+        const name=document.getElementById('simResName').value;
+        const tier=document.getElementById('simTier').value;
+        const msg=document.getElementById('simFormMsg');
+        if(name!=='captions12345678'){
+          msg.className='az-notification error show';
+          msg.innerHTML='<i class="ti ti-alert-circle"></i> Name must be exactly: captions12345678';
+          return;
+        }
+        if(tier!=='F0'){
+          msg.className='az-notification error show';
+          msg.innerHTML='<i class="ti ti-alert-circle"></i> Must select Free F0 pricing tier.';
+          return;
+        }
+        msg.style.display='none';
+        document.getElementById('simCreatePanel').style.display='none';
+        document.getElementById('simReviewPanel').style.display='block';
+        document.getElementById('reviewName').textContent=name;
+        document.getElementById('reviewTier').textContent='Free F0';
+        simMarkStep(2);
+        document.getElementById('simHint').textContent='Step 4: Click Create to deploy.';
+      };
+
+      window.simCreate = function(){
+        document.getElementById('simReviewPanel').style.display='none';
+        document.getElementById('simDeployPanel').style.display='block';
+        document.getElementById('deployedName').textContent='captions12345678';
+        simMarkStep(3);
+        document.getElementById('simHint').textContent='Deployment complete! Click "Go to resource" to finish.';
+        document.getElementById('simNextBtn').disabled=false;
+      };
+
+      window.simTaskDone = onComplete;
+      document.getElementById('simHint').textContent='Step 1: Search for "Cognitive Services" in the search bar above.';
+    }
+  },
+
+  // SIM 2: Deploy GPT-35-Turbo in Azure AI Foundry
+  708: {
+    scenario: `You need to deploy a <strong>GPT-35-Turbo</strong> model in Azure AI Foundry and test it in the <strong>Chat playground</strong>.<br>To complete this task, use the simulated Azure AI Foundry portal below.`,
+    steps: [
+      'Navigate to Deployments',
+      'Click Deploy model',
+      'Select gpt-35-turbo and configure',
+      'Deploy and open Chat playground',
+      'Test the model'
+    ],
+    render: function(container, onComplete) {
+      let chatHistory = [];
+      container.innerHTML = `
+        <div class="az-topbar" style="background:#0f172a">
+          <span class="az-logo" style="font-size:13px">&#x1F9E0; Azure AI Foundry</span>
+          <div class="az-icons">
+            <span style="font-size:12px;color:rgba(255,255,255,0.8)">My Project</span>
+          </div>
+        </div>
+        <div class="az-layout">
+          <div class="az-leftnav">
+            <div class="az-nav-section">Project</div>
+            <div class="az-nav-item" onclick="simFoundryNav('overview')"><i class="ti ti-home" aria-hidden="true"></i>Overview</div>
+            <div class="az-nav-item" onclick="simFoundryNav('models')"><i class="ti ti-robot" aria-hidden="true"></i>Model catalog</div>
+            <div class="az-nav-item active" id="navDeploy" onclick="simFoundryNav('deployments')"><i class="ti ti-server" aria-hidden="true"></i>Deployments</div>
+            <div class="az-nav-section">Tools</div>
+            <div class="az-nav-item" id="navPlayground" onclick="simFoundryNav('playground')"><i class="ti ti-message" aria-hidden="true"></i>Chat playground</div>
+            <div class="az-nav-item" onclick="simFoundryNav('promptflow')"><i class="ti ti-git-branch" aria-hidden="true"></i>Prompt flow</div>
+            <div class="az-nav-section">Settings</div>
+            <div class="az-nav-item" onclick="simFoundryNav('connections')"><i class="ti ti-plug" aria-hidden="true"></i>Connections</div>
+          </div>
+          <div class="az-main" id="simFoundryMain">
+
+            <!-- Deployments panel -->
+            <div id="panelDeployments">
+              <div class="az-page-title">Deployments</div>
+              <div class="az-page-sub">Manage your model deployments</div>
+              <button class="az-btn az-btn-primary" id="btnDeployModel" onclick="simShowDeployDialog()" style="margin-bottom:12px">+ Deploy model</button>
+              <div style="background:#fff;border:1px solid #edebe9;border-radius:4px;overflow:hidden">
+                <table style="width:100%;font-size:13px;border-collapse:collapse">
+                  <thead><tr style="background:#f3f2f1">
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#323130">Name</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#323130">Model</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#323130">Status</th>
+                    <th style="padding:10px 12px;text-align:left;font-weight:600;color:#323130">Created</th>
+                  </tr></thead>
+                  <tbody id="deployTable">
+                    <tr><td colspan="4" style="padding:20px;text-align:center;color:#605e5c">No deployments yet. Click + Deploy model.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Deploy dialog (inline) -->
+            <div id="panelDeployDialog" style="display:none">
+              <div class="az-page-title">Deploy model</div>
+              <div class="az-form-section">
+                <div class="az-form-section-title">Select model</div>
+                <div style="display:flex;flex-direction:column;gap:8px" id="modelList">
+                  ${['gpt-4','gpt-35-turbo','gpt-35-turbo-16k','text-embedding-ada-002','dall-e-3','whisper'].map(m=>`
+                  <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #edebe9;border-radius:4px;cursor:pointer;font-size:13px" id="modelOpt-${m}">
+                    <input type="radio" name="modelSel" value="${m}" onchange="simSelectModel('${m}')"> ${m}
+                  </label>`).join('')}
+                </div>
+              </div>
+              <div class="az-form-section" id="deployConfig" style="display:none">
+                <div class="az-form-section-title">Deployment configuration</div>
+                <div class="az-field">
+                  <label class="az-label">Deployment name <span class="req">*</span></label>
+                  <input class="az-input" id="deployName" value="gpt-35-turbo">
+                </div>
+                <div class="az-field">
+                  <label class="az-label">Tokens per minute (thousands)</label>
+                  <input class="az-input" type="number" value="10" min="1" max="120">
+                </div>
+              </div>
+              <div class="az-notification" id="deployMsg"></div>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="az-btn az-btn-secondary" onclick="simFoundryNav('deployments')">Cancel</button>
+                <button class="az-btn az-btn-primary" id="btnConfirmDeploy" onclick="simConfirmDeploy()" disabled>Deploy</button>
+              </div>
+            </div>
+
+            <!-- Playground panel -->
+            <div id="panelPlayground" style="display:none">
+              <div class="az-page-title">Chat playground</div>
+              <div style="display:flex;gap:12px;height:380px">
+                <div style="width:220px;flex-shrink:0">
+                  <div class="az-form-section" style="height:100%">
+                    <div class="az-form-section-title">Configuration</div>
+                    <div class="az-field">
+                      <label class="az-label">Deployment</label>
+                      <select class="az-select" id="playgroundDeploy"></select>
+                    </div>
+                    <div class="az-field">
+                      <label class="az-label">System message</label>
+                      <textarea class="az-input" rows="4" style="resize:none" placeholder="You are a helpful AI assistant.">You are a helpful AI assistant.</textarea>
+                    </div>
+                    <div class="az-field">
+                      <label class="az-label">Temperature</label>
+                      <input type="range" min="0" max="2" step="0.1" value="0.7" style="width:100%">
+                    </div>
+                  </div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+                  <div class="az-form-section" style="flex:1;overflow-y:auto" id="chatHistory">
+                    <div style="font-size:12px;color:#605e5c;text-align:center;padding:20px">Send a message to start chatting</div>
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <input class="az-input" id="chatInput" placeholder="Type a message..." style="flex:1"
+                      onkeydown="if(event.key==='Enter')simSendChat()">
+                    <button class="az-btn az-btn-primary" onclick="simSendChat()">Send</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Other panels placeholder -->
+            <div id="panelOther" style="display:none;padding:40px;text-align:center;color:#605e5c;font-size:14px">
+              Select a section from the left navigation.
+            </div>
+          </div>
+        </div>`;
+
+      let deployedModel = null;
+
+      window.simFoundryNav = function(section) {
+        document.querySelectorAll('#simFoundryMain > div').forEach(p=>p.style.display='none');
+        document.querySelectorAll('.az-nav-item').forEach(n=>n.classList.remove('active'));
+        if(section==='deployments'){
+          document.getElementById('panelDeployments').style.display='block';
+          document.getElementById('navDeploy').classList.add('active');
+          simMarkStep(0);
+        } else if(section==='playground'){
+          if(!deployedModel){
+            document.getElementById('simHint').textContent='Deploy a model first before using the playground.';
+            document.getElementById('panelDeployments').style.display='block';
+            return;
+          }
+          document.getElementById('panelPlayground').style.display='block';
+          document.getElementById('navPlayground').classList.add('active');
+          const sel=document.getElementById('playgroundDeploy');
+          sel.innerHTML=`<option>${deployedModel}</option>`;
+          simMarkStep(3);
+          document.getElementById('simHint').textContent='Step 5: Type a message and click Send to test the model.';
+        } else {
+          document.getElementById('panelOther').style.display='block';
+        }
+      };
+
+      window.simShowDeployDialog = function(){
+        document.getElementById('panelDeployments').style.display='none';
+        document.getElementById('panelDeployDialog').style.display='block';
+        simMarkStep(1);
+        document.getElementById('simHint').textContent='Step 3: Select gpt-35-turbo from the model list.';
+      };
+
+      window.simSelectModel = function(model){
+        document.querySelectorAll('#modelList label').forEach(l=>{
+          l.style.borderColor=l.querySelector('input').value===model?'#0078d4':'#edebe9';
+          l.style.background=l.querySelector('input').value===model?'#e1effa':'#fff';
+        });
+        document.getElementById('deployConfig').style.display=model==='gpt-35-turbo'?'block':'block';
+        document.getElementById('deployName').value=model;
+        document.getElementById('btnConfirmDeploy').disabled=false;
+        if(model!=='gpt-35-turbo'){
+          const msg=document.getElementById('deployMsg');
+          msg.className='az-notification info show';
+          msg.innerHTML='<i class="ti ti-info-circle"></i> Hint: Select gpt-35-turbo for this simulation.';
+        } else {
+          document.getElementById('deployMsg').className='az-notification';
+          simMarkStep(2);
+          document.getElementById('simHint').textContent='Step 4: Click Deploy to deploy the model.';
+        }
+      };
+
+      window.simConfirmDeploy = function(){
+        const sel=document.querySelector('input[name="modelSel"]:checked');
+        if(!sel||sel.value!=='gpt-35-turbo'){
+          const msg=document.getElementById('deployMsg');
+          msg.className='az-notification error show';
+          msg.innerHTML='<i class="ti ti-alert-circle"></i> Please select gpt-35-turbo to continue.';
+          return;
+        }
+        deployedModel=document.getElementById('deployName').value||'gpt-35-turbo';
+        // Update deployments table
+        document.getElementById('deployTable').innerHTML=`
+          <tr>
+            <td style="padding:10px 12px">${deployedModel}</td>
+            <td style="padding:10px 12px">gpt-35-turbo</td>
+            <td style="padding:10px 12px"><span style="color:#107c10;font-weight:600">&#x2022; Succeeded</span></td>
+            <td style="padding:10px 12px">${new Date().toLocaleDateString()}</td>
+          </tr>`;
+        simFoundryNav('deployments');
+        simMarkStep(3);
+        document.getElementById('simHint').textContent='Step 4: Click Chat playground in the left nav to test the model.';
+      };
+
+      window.simSendChat = function(){
+        const input=document.getElementById('chatInput');
+        const msg=input.value.trim();
+        if(!msg)return;
+        const hist=document.getElementById('chatHistory');
+        hist.innerHTML=`
+          <div style="margin-bottom:8px;text-align:right"><span style="background:#0078d4;color:#fff;padding:6px 12px;border-radius:12px 12px 0 12px;font-size:13px;display:inline-block;max-width:80%">${msg}</span></div>
+          <div style="margin-bottom:8px"><span style="background:#f3f2f1;color:#323130;padding:6px 12px;border-radius:12px 12px 12px 0;font-size:13px;display:inline-block;max-width:80%">Hello! I'm GPT-3.5 Turbo running in Azure AI Foundry. I can help you with questions about Azure AI services, code, and more. What would you like to know?</span></div>`;
+        input.value='';
+        simMarkStep(4);
+        document.getElementById('simNextBtn').disabled=false;
+        document.getElementById('simHint').textContent='✓ Simulation complete! The model responded successfully.';
+        onComplete();
+      };
+
+      document.getElementById('simHint').textContent='Step 1: Click Deployments in the left navigation.';
+    }
+  }
+};
+
+/* ---- Step tracker ---- */
+function simMarkStep(idx){
+  document.querySelectorAll('.sim-step').forEach((el,i)=>{
+    el.classList.remove('done','active');
+    if(i<idx) el.classList.add('done');
+    else if(i===idx) el.classList.add('active');
+  });
+}
+
+/* ---- Launch simulation ---- */
+let simState={id:null,tiv:null,startTime:0,completed:false};
+
+function startSimulation(simId){
+  const sim=SIMULATIONS[simId];
+  if(!sim){alert('Simulation not found.');return;}
+  simState={id:simId,tiv:null,startTime:Date.now(),completed:false};
+
+  // Set scenario text
+  document.getElementById('simScenarioText').innerHTML=sim.scenario;
+
+  // Build task steps
+  document.getElementById('simTaskSteps').innerHTML=sim.steps.map((s,i)=>`
+    <div class="sim-step" id="simStep${i}">
+      <div class="sim-step-icon">${i+1}</div>
+      <span>${s}</span>
+    </div>`).join('');
+
+  // Reset next button
+  document.getElementById('simNextBtn').disabled=true;
+
+  // Render portal
+  const portal=document.getElementById('simPortal');
+  portal.innerHTML='';
+  sim.render(portal, ()=>{simState.completed=true;document.getElementById('simNextBtn').disabled=false;});
+
+  // Start timer
+  clearInterval(simState.tiv);
+  simState.tiv=setInterval(()=>{
+    const s=Math.floor((Date.now()-simState.startTime)/1000);
+    document.getElementById('simTimer').textContent=`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+  },1000);
+
+  showScreen('simScreen');
+}
+
+function simNext(){
+  clearInterval(simState.tiv);
+  showScreen('home');
+}
+
+function exitSim(){
+  clearInterval(simState.tiv);
+  showScreen('home');
+}
+
+
+
 </script>
 </body>
 </html>
