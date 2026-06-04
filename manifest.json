@@ -1,0 +1,33 @@
+{
+  "name": "AI-102 Exam Simulator",
+  "short_name": "AI-102",
+  "description": "Microsoft Azure AI Engineer AI-102 Practice Exam",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f5f7",
+  "theme_color": "#1a73e8",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Quick Quiz",
+      "short_name": "Quick",
+      "description": "Start a 20-question quick quiz",
+      "url": "./index.html"
+    }
+  ]
+}

@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a73e8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="AI-102 Exam">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-102 Exam Simulator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f0f0f0;color:#1d1d1f;min-height:100vh;font-size:14px}
+#app{max-width:100%;margin:0 auto;min-height:100vh}
+.screen{display:none}.screen.active{display:block}
+
+/* ============ HOME SCREEN ============ */
+#home{background:#f5f5f7;min-height:100vh;max-width:640px;margin:0 auto;padding-bottom:32px}
+.hero{padding:28px 16px 16px;text-align:center}
+.hero-icon{width:64px;height:64px;border-radius:18px;background:#e3f2fd;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:32px}
+.hero h2{font-size:22px;font-weight:700;color:#1d1d1f;margin-bottom:6px}
+.hero p{font-size:13px;color:#6e6e73;line-height:1.5}
+.badge-row{margin-top:12px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px}
+.badge-blue{background:#e3f2fd;color:#1565c0}
+.badge-green{background:#e8f5e9;color:#1b5e20}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 16px 0}
+.sc{background:#fff;border-radius:12px;padding:14px 12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.sv{font-size:24px;font-weight:700;color:#1d1d1f}.sl{font-size:11px;color:#6e6e73;margin-top:3px}
+.prog-wrap{margin:14px 16px 0;background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.prog-bar-bg{height:8px;background:#e5e5ea;border-radius:4px;overflow:hidden;margin-bottom:6px}
+.prog-bar-fill{height:100%;background:#2e7d32;border-radius:4px}
+.prog-label{font-size:11px;color:#6e6e73;text-align:right}
+.mlist{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+.mbtn{display:flex;align-items:center;gap:14px;padding:16px;border-radius:12px;border:1.5px solid #e5e5ea;background:#fff;cursor:pointer;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,0.06);transition:all 0.15s;width:100%}
+.mbtn:hover{background:#f5f5f7;border-color:#c7c7cc;transform:translateY(-1px)}
+.mico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.mt{font-size:14px;font-weight:600;color:#1d1d1f}.md{font-size:12px;color:#6e6e73;margin-top:2px}
+.domain-grid{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+
+/* ============ EXAM SHELL ============ */
+#quiz{display:flex;flex-direction:column;height:100vh;background:#fff}
+.exam-topbar{background:#1a73e8;color:#fff;padding:0 16px;height:40px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.exam-topbar .left{display:flex;align-items:center;gap:12px}
+.exam-topbar .qnum{font-size:13px;font-weight:700}
+.exam-topbar .topic{font-size:13px;font-style:italic;font-weight:400}
+.exam-topbar .right{display:flex;align-items:center;gap:12px}
+.exam-topbar .timer-badge{font-size:12px;background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:20px;font-weight:600}
+.exam-topbar .exit-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:12px;font-weight:600;padding:4px 12px;border-radius:4px;cursor:pointer}
+.exam-topbar .exit-btn:hover{background:rgba(255,255,255,0.35)}
+
+/* Progress bar */
+.exam-pbar{height:4px;background:#c5d9f5;flex-shrink:0}
+.exam-pfill{height:100%;background:#fff;transition:width 0.3s}
+
+/* Main split layout */
+.exam-body{display:flex;flex:1;overflow:hidden;min-height:0}
+
+/* LEFT NAV PANE */
+.nav-pane{width:180px;flex-shrink:0;background:#f8f9fa;border-right:1px solid #dee2e6;overflow-y:auto;display:flex;flex-direction:column}
+.nav-section-title{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.08em;padding:10px 12px 4px}
+.nav-btn{display:block;width:100%;text-align:left;padding:8px 14px;font-size:12px;font-weight:500;color:#333;background:none;border:none;cursor:pointer;border-left:3px solid transparent;transition:all 0.1s;line-height:1.3}
+.nav-btn:hover{background:#e9ecef;color:#1a73e8}
+.nav-btn.active{background:#e3f0fd;color:#1a73e8;border-left-color:#1a73e8;font-weight:600}
+.nav-divider{height:1px;background:#dee2e6;margin:6px 0}
+.nav-question-btn{display:block;width:100%;text-align:left;padding:8px 14px;font-size:12px;font-weight:600;color:#1a73e8;background:#e3f0fd;border:none;cursor:pointer;border-left:3px solid #1a73e8}
+
+/* CONTENT PANE */
+.content-pane{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
+
+/* Case study reading panel */
+.case-reading{padding:20px 24px;flex:1;line-height:1.75;color:#1d1d1f;display:none}
+.case-reading.active{display:block}
+.case-reading h3{font-size:14px;font-weight:700;margin-bottom:2px;color:#1d1d1f}
+.case-reading p{margin-bottom:6px;font-size:13.5px;line-height:1.75}
+.case-reading ul{margin:4px 0 8px 20px}
+.case-reading ul li{font-size:13.5px;margin-bottom:3px;line-height:1.7}
+.case-reading table{border-collapse:collapse;margin:10px 0;font-size:13px}
+.case-reading table th{background:#f0f0f0;font-weight:700;padding:7px 14px;border:1px solid #ccc;text-align:left}
+.case-reading table td{padding:7px 14px;border:1px solid #ccc}
+.case-reading pre{background:#f8f8f8;border:1px solid #ddd;padding:12px;font-size:12px;line-height:1.5;overflow-x:auto;border-radius:4px;margin:8px 0;font-family:monospace}
+.case-reading .section-header{font-weight:700;margin:14px 0 2px;font-size:14px}
+.case-reading .subsection-header{font-weight:700;margin:10px 0 2px;font-size:13.5px;color:#333}
+
+/* Question panel */
+.question-panel{padding:20px 24px;display:none;flex-direction:column;gap:0}
+.question-panel.active{display:flex}
+.qp-label{font-size:13px;font-weight:700;margin-bottom:4px;color:#1d1d1f}
+.qp-type{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:6px}
+.qp-context{font-size:13px;line-height:1.75;margin-bottom:6px;color:#1d1d1f}
+.qp-instruction{font-size:13px;margin-bottom:10px;color:#1d1d1f;line-height:1.6}
+.qp-note{font-size:12px;color:#555;margin-bottom:8px}
+
+/* Domain tag */
+.dtag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:10px}
+.d1{background:#e3f2fd;color:#0C447C}.d2{background:#e8f5e9;color:#1b5e20}
+.d3{background:#ede7f6;color:#311b92}.d4{background:#fff3e0;color:#e65100}
+.d5{background:#e0f7fa;color:#006064}.d6{background:#fce4ec;color:#880e4f}
+.d7{background:#e3f2fd;color:#0C447C}
+.mbadge2{font-size:10px;padding:3px 8px;border-radius:20px;background:#fff3e0;color:#e65100;font-weight:600;margin-left:6px}
+
+/* ---- STANDARD MCQ ---- */
+.mcq-opts{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.mcq-opt{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border:1.5px solid #ccc;border-radius:6px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:13px;transition:all 0.15s;line-height:1.5}
+.mcq-opt:hover:not(:disabled){background:#f5f5f7;border-color:#999}
+.mcq-opt.selected{border-color:#1a73e8;background:#e8f2fd}
+.mcq-opt.correct{border-color:#2e7d32;background:#e8f5e9}
+.mcq-opt.wrong{border-color:#c62828;background:#ffebee}
+.mcq-opt.reveal{border-color:#2e7d32;background:#e8f5e9}
+.mcq-ltr{font-weight:700;color:#555;min-width:20px;flex-shrink:0}
+.mcq-opt.correct .mcq-ltr{color:#2e7d32}
+.mcq-opt.wrong .mcq-ltr{color:#c62828}
+.mcq-opt.reveal .mcq-ltr{color:#2e7d32}
+
+/* ---- YES/NO ---- */
+.yn-opts{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.yn-opt{display:flex;align-items:center;gap:10px;padding:11px 16px;border:1.5px solid #ccc;border-radius:6px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:13px;transition:all 0.15s}
+.yn-opt:hover:not(:disabled){background:#f5f5f7;border-color:#999}
+.yn-opt.selected{border-color:#1a73e8;background:#e8f2fd}
+.yn-opt.correct{border-color:#2e7d32;background:#e8f5e9;color:#2e7d32;font-weight:600}
+.yn-opt.wrong{border-color:#c62828;background:#ffebee;color:#c62828}
+.yn-opt.reveal{border-color:#2e7d32;background:#e8f5e9;color:#2e7d32;font-weight:600}
+.yn-ltr{font-weight:700;color:#555;min-width:18px}
+
+/* ---- DRAG & DROP (Select and Place) ---- */
+.dnd-layout{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+.dnd-services{width:170px;flex-shrink:0}
+.dnd-services-label{font-size:12px;font-weight:700;margin-bottom:6px;color:#1d1d1f}
+.dnd-pool{display:flex;flex-direction:column;gap:6px;min-height:60px}
+.dnd-item{padding:8px 12px;background:#fff;border:1.5px solid #aaa;border-radius:4px;font-size:12.5px;cursor:grab;user-select:none;line-height:1.4;transition:all 0.12s}
+.dnd-item:hover{border-color:#1a73e8;background:#e8f2fd}
+.dnd-item.dragging{opacity:0.4;cursor:grabbing}
+.dnd-item.placed-away{opacity:0.3;cursor:default;background:#f0f0f0}
+
+.dnd-answer-area{flex:1;min-width:0}
+.dnd-answer-label{font-size:12px;font-weight:700;margin-bottom:8px;color:#1d1d1f}
+.dnd-pipeline{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:4px}
+.dnd-stage{display:flex;flex-direction:column;align-items:center}
+.dnd-stage-label{font-size:12px;font-weight:700;margin-bottom:6px;text-align:center;color:#1d1d1f;min-width:120px}
+.dnd-drop-target{width:120px;min-height:54px;border:1.5px solid #aaa;border-radius:4px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;color:#bbb;padding:6px;text-align:center;transition:all 0.12s;position:relative}
+.dnd-drop-target.drag-over{border-color:#1a73e8;background:#e3f0fd;color:#1a73e8}
+.dnd-drop-target.filled{color:#1d1d1f;font-size:12px;background:#e8f2fd;border-color:#1a73e8;cursor:pointer}
+.dnd-drop-target.correct-drop{background:#e8f5e9;border-color:#2e7d32;color:#2e7d32}
+.dnd-drop-target.wrong-drop{background:#ffebee;border-color:#c62828;color:#c62828}
+.dnd-arrow{font-size:18px;color:#666;align-self:center;margin:0 4px;padding-top:28px;flex-shrink:0}
+
+/* Multi-select table drag-drop */
+.dnd-table-wrap{overflow-x:auto;margin-top:10px}
+.dnd-table{border-collapse:collapse;font-size:13px;width:100%}
+.dnd-table th{background:#f0f0f0;font-weight:700;padding:8px 12px;border:1px solid #ccc;text-align:left}
+.dnd-table td{padding:8px 12px;border:1px solid #ccc;vertical-align:middle}
+.dnd-table-target{min-width:160px;min-height:36px;border:1.5px dashed #aaa;border-radius:4px;background:#fafafa;display:flex;align-items:center;justify-content:center;font-size:12px;color:#bbb;padding:4px 8px;cursor:default;transition:all 0.12s}
+.dnd-table-target.drag-over{border-color:#1a73e8;background:#e3f0fd}
+.dnd-table-target.filled{border-style:solid;border-color:#1a73e8;background:#e8f2fd;color:#1d1d1f;font-size:12.5px;cursor:pointer}
+.dnd-table-target.correct-drop{background:#e8f5e9;border-color:#2e7d32;color:#2e7d32}
+.dnd-table-target.wrong-drop{background:#ffebee;border-color:#c62828;color:#c62828}
+
+/* ---- EXPLANATION ---- */
+.exp-box{margin-top:14px;padding:12px 14px;background:#f0f4ff;border-radius:8px;border-left:3px solid #1a73e8;font-size:13px;line-height:1.65;color:#333;display:none}
+.exp-box.show{display:block}
+
+/* ---- BOTTOM BAR ---- */
+.exam-bottombar{background:#f8f9fa;border-top:1px solid #dee2e6;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.bottom-left{display:flex;gap:8px;align-items:center}
+.bottom-right{display:flex;gap:8px;align-items:center}
+.eb-btn{padding:9px 20px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #ccc;background:#fff;color:#333;transition:all 0.15s}
+.eb-btn:hover:not(:disabled){background:#f0f0f0}
+.eb-btn:disabled{opacity:0.4;cursor:default}
+.eb-btn.primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.eb-btn.primary:hover:not(:disabled){background:#1557b0}
+.eb-btn.reveal-sol{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.eb-btn.reveal-sol:hover:not(:disabled){background:#1557b0}
+.eb-btn.reveal-sol:disabled{background:#ccc;border-color:#ccc;opacity:1}
+.plbl-small{font-size:12px;color:#666}
+
+/* ---- RESULTS ---- */
+#results{background:#f5f5f7;min-height:100vh;max-width:640px;margin:0 auto;padding:20px 16px}
+.scirc{width:120px;height:120px;border-radius:50%;margin:0 auto 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid #1a73e8;background:#fff}
+.spct{font-size:30px;font-weight:700;color:#1d1d1f}
+.slbl{font-size:11px;color:#6e6e73}
+.pass-ring{border-color:#2e7d32!important}
+.fail-ring{border-color:#c62828!important}
+.rcard{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:16px}
+.rrow{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
+.rrow:last-child{border-bottom:none}
+.rlbl{font-size:13px;color:#666}.rval{font-size:13px;font-weight:600}
+.dsec{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;margin:14px 0 6px}
+.rbtn-row{display:flex;gap:8px}
+
+/* ---- HINT ---- */
+.hint-box{padding:8px 12px;background:#fff3e0;border-radius:6px;font-size:12px;color:#e65100;margin-bottom:8px;display:none}
+.hint-box.show{display:block}
+
+/* domain picker */
+#dpick{background:#f5f5f7;min-height:100vh;max-width:640px;margin:0 auto;padding-bottom:32px}
+.dpick-hdr{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #e5e5ea;background:#fff;position:sticky;top:0;z-index:10}
+.dpick-hdr h1{font-size:15px;font-weight:600;flex:1}
+.dpick-back{background:none;border:none;cursor:pointer;color:#6e6e73;font-size:22px;line-height:1;padding:0}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.case-reading.active,.question-panel.active{animation:fadeIn 0.15s ease}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ==================== HOME ==================== -->
+<div id="home" class="screen active">
+  <div class="hero">
+    <div class="hero-icon">&#x1F9E0;</div>
+    <h2>AI-102 Exam Simulator</h2>
+    <p>Microsoft Azure AI Engineer Associate<br>Designing &amp; Implementing Azure AI Solutions</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">&#x2713; Full question bank</span>
+      <span class="badge badge-green">&#x1F4CA; Microsoft exam style</span>
+    </div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-bar-bg"><div class="prog-bar-fill" id="totalProg" style="width:0%"></div></div>
+    <div class="prog-label" id="totalProgLabel">Loading...</div>
+  </div>
+  <div class="sgrid">
+    <div class="sc"><div class="sv" id="totalQ">0</div><div class="sl">Questions</div></div>
+    <div class="sc"><div class="sv" id="sb">—</div><div class="sl">Best score</div></div>
+    <div class="sc"><div class="sv" id="sa">0</div><div class="sl">Attempted</div></div>
+    <div class="sc"><div class="sv">7</div><div class="sl">Domains</div></div>
+  </div>
+  <div class="mlist">
+    <button class="mbtn" onclick="startMode('full')"><div class="mico" style="background:#e3f2fd">&#x1F4CB;</div><div><div class="mt">Full practice exam</div><div class="md">All questions · timed</div></div></button>
+    <button class="mbtn" onclick="startMode('quick')"><div class="mico" style="background:#e8f5e9">&#x26A1;</div><div><div class="mt">Quick quiz</div><div class="md">20 random questions</div></div></button>
+    <button class="mbtn" onclick="startMode('domain')"><div class="mico" style="background:#ede7f6">&#x1F5C2;&#xFE0F;</div><div><div class="mt">By domain</div><div class="md">Focus on one exam area</div></div></button>
+    <button class="mbtn" onclick="startMode('dragdrop')"><div class="mico" style="background:#e8f5e9">&#x1F500;</div><div><div class="mt">Drag &amp; Drop / Sequence</div><div class="md">Order-the-steps questions</div></div></button>
+    <button class="mbtn" onclick="startMode('yesno')"><div class="mico" style="background:#fff3e0">&#x2705;</div><div><div class="mt">Yes / No questions</div><div class="md">Does this meet the goal?</div></div></button>
+    <button class="mbtn" onclick="startMode('multi')"><div class="mico" style="background:#fce4ec">&#x1F4DD;</div><div><div class="mt">Multi-select only</div><div class="md">Select all correct answers</div></div></button>
+    <button class="mbtn" onclick="startMode('casestudy')"><div class="mico" style="background:#e8f5e9">&#x1F4D6;</div><div><div class="mt">Case Study mode</div><div class="md">Full scenario + navigation pane</div></div></button>
+    <button class="mbtn" onclick="startMode('review')"><div class="mico" style="background:#fce4ec">&#x1F516;</div><div><div class="mt">Review mistakes</div><div class="md" id="wrongCount">No wrong answers yet</div></div></button>
+  </div>
+</div>
+
+<!-- ==================== DOMAIN PICKER ==================== -->
+<div id="dpick" class="screen">
+  <div class="dpick-hdr">
+    <button class="dpick-back" onclick="showScreen('home')">&#8592;</button>
+    <h1>Choose a domain</h1>
+  </div>
+  <div class="domain-grid" id="dlist"></div>
+</div>
+
+<!-- ==================== EXAM QUIZ SCREEN ==================== -->
+<div id="quiz" class="screen">
+  <!-- Top bar -->
+  <div class="exam-topbar">
+    <div class="left">
+      <span class="qnum" id="topQnum">Question #1</span>
+      <span class="topic" id="topTopic">Topic 1</span>
+    </div>
+    <div class="right">
+      <span class="timer-badge" id="timer">00:00</span>
+      <button class="exit-btn" onclick="exitQuiz()">&#x2715; Exit</button>
+    </div>
+  </div>
+  <!-- Progress bar -->
+  <div class="exam-pbar"><div class="exam-pfill" id="prog" style="width:0%"></div></div>
+
+  <!-- Body: nav + content -->
+  <div class="exam-body">
+    <!-- Left navigation pane -->
+    <div class="nav-pane" id="navPane">
+      <!-- filled dynamically -->
+    </div>
+
+    <!-- Right content area -->
+    <div class="content-pane" id="contentPane">
+      <!-- Case study sections (reading) -->
+      <div id="caseIntro" class="case-reading">
+        <h3>Introductory Info</h3>
+        <p style="font-weight:700">Case study -</p>
+        <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
+        <p>To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.</p>
+        <p>At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.</p>
+        <br>
+        <p style="font-weight:700">To start the case study -</p>
+        <p>To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.</p>
+      </div>
+
+      <div id="caseOverview" class="case-reading">
+        <p class="section-header">Overview -</p>
+        <p>A company named Wide World Importers is developing an e-commerce platform.</p>
+        <p>You are working with a solutions architect to design and implement the features of the e-commerce platform. The platform will use microservices and a serverless environment built on Azure.</p>
+        <p>Wide World Importers has a customer base that includes English, Spanish, and Portuguese speakers.</p>
+        <br>
+        <p class="section-header">Existing Environment -</p>
+        <p class="subsection-header">Applications -</p>
+        <p>Wide World Importers has an App Service plan that contains the web apps shown in the following table.</p>
+        <table>
+          <tr><th>Name</th><th>Description</th></tr>
+          <tr><td>Product Management</td><td>An app used by employees to create and manage products. The app and the expected inputs from the employees are in English.</td></tr>
+          <tr><td>Inventory Tracking</td><td>An app used by employees to manage inventory when dispatching orders, receiving refunds, and receiving consignments from suppliers.</td></tr>
+        </table>
+        <br>
+        <p class="subsection-header">Azure Resources -</p>
+        <p>You have the following resources:</p>
+        <p>An Azure Active Directory (Azure AD) tenant</p>
+        <ul>
+          <li>The tenant supports internal authentication.</li>
+          <li>All employees belong to a group named AllUsers.</li>
+          <li>Senior managers belong to a group named LeadershipTeam.</li>
+        </ul>
+        <p>An Azure Functions resource</p>
+        <ul><li>A function app posts to Azure Event Grid when stock levels of a product change between OK, Low Stock, and Out of Stock. The function app uses the Azure Cosmos DB change feed.</li></ul>
+        <p>An Azure Cosmos DB account</p>
+        <ul>
+          <li>The account uses the Core (SQL) API.</li>
+          <li>The account stores data for the Product Management app and the Inventory Tracking app.</li>
+        </ul>
+        <p>An Azure Storage account</p>
+        <ul>
+          <li>The account contains blob containers for assets related to products.</li>
+          <li>The assets include images, videos, and PDFs.</li>
+        </ul>
+        <p>An Azure Cognitive Services resource named wwics</p>
+        <p>An Azure Video Analyzer for Media (previously Video Indexer) resource named wwivi</p>
+      </div>
+
+      <div id="caseRequirements" class="case-reading">
+        <p class="section-header">Requirements -</p>
+        <br>
+        <p class="subsection-header">Business Goals -</p>
+        <p>Wide World Importers wants to leverage AI technologies to differentiate itself from its competitors.</p>
+        <br>
+        <p class="subsection-header">Planned Changes -</p>
+        <p>Wide World Importers plans to start the following projects:</p>
+        <ul>
+          <li>A product creation project: Help employees create accessible and multilingual product entries, while expediting product entry creation.</li>
+          <li>A smart e-commerce project: Implement an Azure Cognitive Search solution to display products for customers to browse.</li>
+          <li>A shopping on-the-go project: Build a chatbot that can be integrated into smart speakers to support customers.</li>
+        </ul>
+        <br>
+        <p class="subsection-header">Business Requirements -</p>
+        <p>Wide World Importers identifies the following business requirements for all the projects:</p>
+        <ul>
+          <li>Provide a multilingual customer experience that supports English, Spanish, and Portuguese.</li>
+          <li>Whenever possible, scale based on transaction volumes to ensure consistent performance.</li>
+          <li>Minimize costs.</li>
+        </ul>
+        <p class="subsection-header">Governance and Security Requirements</p>
+        <p>Wide World Importers identifies the following governance and security requirements:</p>
+        <ul>
+          <li>Data storage and processing must occur in datacenters located in the United States.</li>
+          <li>Azure Cognitive Services must be inaccessible directly from the internet.</li>
+        </ul>
+        <br>
+        <p class="subsection-header">Accessibility Requirements -</p>
+        <p>Wide World Importers identifies the following accessibility requirements:</p>
+        <ul>
+          <li>All images must have relevant alt text.</li>
+          <li>All videos must have transcripts that are associated to the video and included in product descriptions.</li>
+          <li>Product descriptions, transcripts, and alt text must be available in English, Spanish, and Portuguese.</li>
+        </ul>
+        <br>
+        <p class="subsection-header">Product Creation Requirements -</p>
+        <p>Wide World Importers identifies the following requirements for improving the Product Management app:</p>
+        <ul>
+          <li>Minimize how long it takes for employees to create products and add assets.</li>
+          <li>Remove the need for manual translations.</li>
+        </ul>
+        <br>
+        <p class="subsection-header">Smart E-Commerce Requirements -</p>
+        <p>Wide World Importers identifies the following requirements for the smart e-commerce project:</p>
+        <ul>
+          <li>Ensure that the Cognitive Search solution meets a Service Level Agreement (SLA) of 99.9% availability for searches and index writes.</li>
+          <li>Provide users with the ability to search insight gained from the images, manuals, and videos associated with the products.</li>
+          <li>Support autocompletion and suggestion based on all product name variants.</li>
+          <li>Store all raw insight data that was generated, so the data can be processed later.</li>
+          <li>Update the stock level field in the product index immediately upon changes.</li>
+          <li>Update the product index hourly.</li>
+        </ul>
+        <br>
+        <p class="subsection-header">Shopping On-the-Go Requirements -</p>
+        <p>Wide World Importers identifies the following requirements for the shopping on-the-go chatbot:</p>
+        <ul>
+          <li>Answer common questions.</li>
+          <li>Support interactions in English, Spanish, and Portuguese.</li>
+          <li>Replace an existing FAQ process so that all Q&amp;A is managed from a central location.</li>
+          <li>Provide all employees with the ability to edit Q&amp;As. Only senior managers must be able to publish updates.</li>
+          <li>Support purchases by providing information about relevant products to customers. Product displays must include images and warnings when stock levels are low or out of stock.</li>
+        </ul>
+      </div>
+
+      <div id="caseProductJSON" class="case-reading">
+        <p class="section-header">Product JSON Sample -</p>
+        <p>You have the following JSON sample for a product.</p>
+        <pre>{
+  "sku": "b1",
+  "name": {
+      "en":"Bicycle",
+      "es": "Bicicleta",
+      "pt": "Bicicleta"
+  },
+  "stocklevel": "Out of Stock",
+  "description": {
+      "en":"Bicycle",
+      "es": "Bicicleta",
+      "pt": "Bicicleta"
+  },
+  "image":
+  {"uri": "https://upload.worldwideimporters.org/bicycle.jpg",
+      "alttext": {
+          "en":"Bicycle",
+          "es": "Bicicleta",
+          "pt": "Bicicleta"
+      }
+  },
+  "createdUtc": "2020-02-14T06:08:39Z",
+}</pre>
+      </div>
+
+      <!-- Question panel -->
+      <div id="questionPanel" class="question-panel">
+        <div id="qpDomainTag"></div>
+        <div class="qp-label" id="qpLabel">Question</div>
+        <div class="qp-type" id="qpType" style="display:none"></div>
+        <div class="qp-context" id="qpContext" style="display:none"></div>
+        <div class="qp-instruction" id="qpInstruction"></div>
+        <div class="qp-note" id="qpNote" style="display:none"></div>
+        <div class="hint-box" id="hint"></div>
+
+        <!-- MCQ options -->
+        <div class="mcq-opts" id="mcqOpts" style="display:none"></div>
+
+        <!-- Yes/No options -->
+        <div id="ynSection" style="display:none">
+          <div class="yn-opts" id="ynOpts"></div>
+          <div style="margin-top:10px">
+            <button class="eb-btn reveal-sol" id="revealBtn" onclick="revealYN()" disabled>Reveal Solution</button>
+          </div>
+        </div>
+
+        <!-- Drag & Drop pipeline -->
+        <div id="dndSection" style="display:none">
+          <div class="dnd-layout">
+            <div class="dnd-services">
+              <div class="dnd-services-label">Services</div>
+              <div class="dnd-pool" id="dndPool"></div>
+            </div>
+            <div class="dnd-answer-area">
+              <div class="dnd-answer-label">Answer Area</div>
+              <div class="dnd-pipeline" id="dndPipeline"></div>
+            </div>
+          </div>
+          <button class="eb-btn reveal-sol" id="dndRevealBtn" onclick="revealDND()" style="margin-top:14px" disabled>Reveal Solution</button>
+        </div>
+
+        <div class="exp-box" id="exp"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="exam-bottombar">
+    <div class="bottom-left">
+      <span class="plbl-small" id="plbl">1 / 1</span>
+    </div>
+    <div class="bottom-right">
+      <button class="eb-btn" id="bskip" onclick="skip()">Skip</button>
+      <button class="eb-btn primary" id="bnext" onclick="next()" disabled>Next &#8594;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== RESULTS ==================== -->
+<div id="results" class="screen">
+  <div style="max-width:600px;margin:0 auto;padding:20px 16px">
+    <div class="scirc" id="scirc"><div class="spct" id="rpct">0%</div><div class="slbl">Score</div></div>
+    <div class="rcard" id="rrows"></div>
+    <div class="rbtn-row">
+      <button class="eb-btn" onclick="showScreen('home')">Home</button>
+      <button class="eb-btn primary" onclick="retryWrong()">Retry wrong</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<script>
+const Q=[
+// D1
+{id:1,d:"D1",q:"Create resource for sentiment analysis + OCR using single key/endpoint. HTTP method and resource type?",o:["PUT — CognitiveServices","PATCH — CognitiveServices","PUT — TextAnalytics","GET — CognitiveServices"],a:0,m:false,e:"PUT creates an Azure resource. CognitiveServices is the multi-service kind providing one key/endpoint for multiple services."},
+{id:2,d:"D1",q:"Sales system monitors to ensure equitable results regardless of background. Which two responsible AI principles apply?",o:["Transparency","Fairness","Inclusiveness","Reliability and safety","Privacy and security"],a:[1,2],m:true,e:"Fairness ensures equitable treatment; Inclusiveness ensures the system empowers all demographics."},
+{id:3,d:"D1",q:"You notify users their data has been processed by AI. Which responsible AI principle?",o:["Transparency","Fairness","Inclusiveness","Reliability and safety"],a:0,m:false,e:"Transparency means being open about how AI works and what data it uses."},
+{id:4,d:"D1",q:"CMK encryption enabled on Azure Cognitive Search. Three implications?",o:["Index size will increase","Query times will increase","Self-signed X.509 certificate required","Index size will decrease","Query times will decrease","Azure Key Vault is required"],a:[0,1,5],m:true,e:"CMK increases index size, increases query times, and requires Azure Key Vault."},
+{id:5,d:"D1",q:"Human review step before AI makes financial decisions. Which responsible AI principle?",o:["Transparency","Fairness","Accountability","Privacy and security"],a:2,m:false,e:"Accountability means humans can oversee and be responsible for AI decisions."},
+{id:6,d:"D1",q:"App detects anomalies in time series stream. Limited connectivity, minimize costs. What to use?",o:["Azure Kubernetes Service","Azure Container Instances","Kubernetes on Azure Stack Hub","the Docker Engine"],a:3,m:false,e:"Docker Engine is the lowest-cost option for running Cognitive Services containers in limited-connectivity environments."},
+{id:7,d:"D1",q:"Host Anomaly Detector on Docker Server1 on-premises. Which docker run parameter is required?",o:["Fluentd","Billing","HttpProxy","Mounts"],a:1,m:false,e:"The Billing parameter is required in every Cognitive Services docker run command for metering."},
+{id:8,d:"D1",q:"Speech service app authenticate using Azure AD token. Which two actions?",o:["Enable a virtual network service endpoint","Configure a custom subdomain","Request an X.509 certificate","Create a private endpoint","Create a Conditional Access policy"],a:[1,3],m:true,e:"Custom subdomain required for Azure AD token auth. Private endpoint enables secure connectivity."},
+{id:9,d:"D1",q:"Only specific Azure processes access Language service, minimize admin effort. What to include?",o:["IPsec rules","Azure Application Gateway","A virtual network gateway","Virtual network rules"],a:3,m:false,e:"Virtual network rules specify which VNets/subnets can access the resource with minimal admin effort."},
+{id:10,d:"D1",q:"Prevent external access to CSAccount1 connected to VNet1. Two actions?",o:["In VNet1, enable a service endpoint for CSAccount1","Configure IAM settings in CSAccount1","In VNet1, modify virtual network settings","In VNet1, create a virtual subnet","In CSAccount1, modify the virtual network settings"],a:[0,4],m:true,e:"Enable service endpoint in VNet1 AND modify CSAccount1 virtual network settings to restrict access."},
+{id:11,d:"D1",q:"DevOps pipeline creates Azure AI services account. Identify it in next step. Which CLI command?",o:["az resource link","az cognitiveservices account network-rule","az cognitiveservices account show","az account list"],a:2,m:false,e:"az cognitiveservices account show retrieves details of a specific Cognitive Services account."},
+{id:12,d:"D1",q:"Create resource for sentiment analysis + OCR, single key/endpoint. HTTP method and resource kind?",o:["PUT / CognitiveServices","POST / CognitiveServices","PUT / TextAnalytics","GET / CognitiveServices"],a:0,m:false,e:"PUT creates via ARM REST API. CognitiveServices kind provides single key/endpoint for multiple services."},
+{id:13,d:"D1",q:"Anomaly Detector container on-premises, prevent billing info in command-line history, control access via Azure RBAC. Four actions in sequence?",o:["Pull image → Push to Azure container registry → Build → Distribute docker run script","Create Dockerfile → Pull → Push to Docker Hub → Distribute","Pull → Build → Push to Azure container registry → Distribute docker run script","Create Dockerfile → Build → Push to Docker Hub → Run"],a:2,m:false,e:"Pull the image, build it, push to Azure Container Registry (RBAC control), distribute docker run script (keeps secrets out of history)."},
+{id:14,d:"D1",q:"Deploy Language service container, confidential documents must remain on-premises. Three actions in sequence?",o:["Provision on-premises Kubernetes isolated from internet → Pull image from MCR → Run container with API key and endpoint URL","Pull from Docker Hub → Deploy to Azure → Run","Provision Azure Kubernetes → Pull from MCR → Run","Deploy to Azure Container Instances → Pull → Run"],a:0,m:false,e:"On-premises isolated Kubernetes keeps documents local. Pull from MCR. Run container with API key and Cognitive Services endpoint for billing."},
+{id:15,d:"D1",q:"Secure Azure Cognitive Search Search1: prevent internet access + limit apps to specific queries. Two actions?",o:["Configure IP firewall / Use Azure roles","Create a private endpoint / Use key authentication","Create a private endpoint / Use Azure roles","Configure IP firewall / Use key authentication"],a:1,m:false,e:"Private endpoint prevents internet access. Key authentication (query keys) limits each app to read-only query operations."},
+{id:16,d:"D1",q:"HTTP request to create resource for sentiment analysis + OCR in subscription 8d3591aa. Path segment and provider?",o:["subscriptions/8d3591aa... / Microsoft.CognitiveServices","subscriptions/3edfe572... / Microsoft.CognitiveServices","tenant/8d3591aa... / Microsoft.ApiManagement","subscriptions/8d3591aa... / Microsoft.KeyVault"],a:0,m:false,e:"Use the subscription ID (not tenant ID) in the path. Microsoft.CognitiveServices is the provider for multi-service resources."},
+// D2
+{id:101,d:"D2",q:"5,000 IoT time series datasets from machinery sensors. Identify unusual values to predict failures. Which service?",o:["Anomaly Detector","Cognitive Search","Form Recognizer","Custom Vision"],a:0,m:false,e:"Anomaly Detector is built for time series analysis to detect unusual values."},
+{id:102,d:"D2",q:"Monitor multiple correlated engine sensors for atypical values. What to include?",o:["Application Insights in Azure Monitor","Metric alerts in Azure Monitor","Multivariate Anomaly Detection","Univariate Anomaly Detection"],a:2,m:false,e:"Multivariate Anomaly Detection analyzes multiple correlated time series together."},
+{id:103,d:"D2",q:"Detect anomalies in 24-hour sensor data by scanning entire dataset at once. Which detection type?",o:["batch","streaming","change points"],a:0,m:false,e:"Batch detection scans the entire time series dataset at once."},
+{id:104,d:"D2",q:"Monitor single temperature stream, generate alerts for atypical values, minimize effort. What?",o:["Multivariate Anomaly Detection","Azure Stream Analytics","metric alerts in Azure Monitor","Univariate Anomaly Detection"],a:3,m:false,e:"Univariate Anomaly Detection monitors a single time series — simplest option."},
+{id:105,d:"D2",q:"20GB OneDrive video file. Index using Azure Video Indexer website. What to do?",o:["Upload to YouTube and copy URL","Download to local and upload","Create a download link from OneDrive","Create a sharing link from OneDrive and copy to Video Indexer"],a:3,m:false,e:"Video Indexer accepts a sharing link URL. Direct upload is limited to smaller files."},
+{id:106,d:"D2",q:"Computer Vision OCR C# SDK: GetReadResultAsync called before read completes. Two actions?",o:["Remove the Guid.Parse(operationId) parameter","Add code to verify the results.Status value","Add code to verify txtHeaders.Status value","Wrap GetReadResultAsync in a loop with a delay"],a:[1,3],m:true,e:"Check results.Status for Succeeded, and use a loop with delay between polls."},
+{id:107,d:"D2",q:"Search Video Indexer company videos by who is present. What to do?",o:["Create a person model and associate it to the videos","Create person objects and provide face images","Invite all staff to Video Indexer","Edit faces in the videos"],a:0,m:false,e:"Creating a person model and associating it to videos enables face-based search."},
+{id:108,d:"D2",q:"After training a Custom Vision classifier, which two evaluation metrics are available?",o:["Recall","F-score","Weighted accuracy","Precision","AUC"],a:[0,3],m:true,e:"Custom Vision provides Precision and Recall as the primary evaluation metrics."},
+{id:109,d:"D2",q:"Face API fails to detect faces in blurred and sideways images. What to do?",o:["Use a different API version","Use Computer Vision instead","Use Identify instead of Detect","Change the detection model"],a:3,m:false,e:"Switching to a newer detection model improves detection of blurred or non-frontal faces."},
+{id:110,d:"D2",q:"Python: create free West US Computer Vision resource for image captioning. Which code?",o:["create_resource(res1,ComputerVision,F0,westus)","create_resource(res1,CustomVision.Prediction,F0,westus)","create_resource(res1,ComputerVision,S0,westus)","create_resource(res1,CustomVision.Prediction,S0,westus)"],a:0,m:false,e:"Image captioning uses ComputerVision. F0 is free tier. Region is lowercase westus."},
+{id:111,d:"D2",q:"Computer Vision OCR Python SDK: get_read_result called before read completes. Two actions?",o:["Remove the operation_id parameter","Add code to verify the read_results.status value","Add code to verify the read_operation_location value","Wrap get_read_result call in a loop with a delay"],a:[1,3],m:true,e:"Check read_results.status for succeeded, wrap polling call in a loop with delay."},
+{id:112,d:"D2",q:"OCR sensitive documents — must NOT deploy to public cloud. What to do?",o:["Build on-premises web app to query cloud endpoint","Host Computer Vision endpoint in container on-premises","Host exported ONNX model on-premises","Build Azure web app to query endpoint"],a:1,m:false,e:"Running the Computer Vision container on-premises processes data locally without sending it to the cloud."},
+{id:113,d:"D2",q:"Validate exam candidates are real people using Face service live video. What to do?",o:["Retrieve FaceRectangle","Check for changes to FaceAttributes.HeadPose across multiple frames","Use FaceLandmarks to calculate pupil distance","Check for changes to FaceAttributes.Accessories"],a:1,m:false,e:"Checking head pose changes across multiple frames verifies liveness."},
+{id:114,d:"D2",q:"Generate multilingual image tags with minimal development effort. Which endpoint?",o:["Content Moderator Image Moderation","Custom Vision image classification","Computer Vision Image Analysis","Custom Translator"],a:2,m:false,e:"Computer Vision Image Analysis natively supports multilingual tags via a language parameter."},
+{id:115,d:"D2",q:"1 million scanned magazine articles as image files. Extract text, minimize effort. What to include?",o:["Computer Vision Image Analysis","the Read API in Computer Vision","Form Recognizer","Azure Cognitive Service for Language"],a:1,m:false,e:"The Computer Vision Read API is optimized for large-scale text extraction from image files."},
+{id:116,d:"D2",q:"20GB video file on local drive. Index using Azure Video Indexer website. What first?",o:["Upload to Azure Storage queue","Upload directly to Video Indexer website","Upload to Microsoft OneDrive","Upload to YouTube"],a:2,m:false,e:"Video Indexer does not accept files larger than 2GB directly. Upload to OneDrive first."},
+{id:117,d:"D2",q:"Image-sharing app: categorize as photograph or drawing AND generate a caption. Which two Computer Vision features?",o:["Object detection","Content tags","Image descriptions","Image type detection","Image classification in Custom Vision"],a:[2,3],m:true,e:"Image descriptions generates captions. Image type detection classifies photographs vs drawings."},
+{id:118,d:"D2",q:"Video Indexer language model for industry-specific terms. Which file format?",o:["XML","TXT","XLS","PDF"],a:1,m:false,e:"Azure Video Indexer language models accept vocabulary files in plain TXT format."},
+{id:119,d:"D2",q:"Files: File1.mp4, File2.mov, File3.wmv, File4.avi. Which can you upload to Azure Video Indexer?",o:["File1 and File3 only","File1, File2, File3 and File4","File1, File2, and File3 only","File1 and File2 only"],a:1,m:false,e:"Azure Video Indexer supports mp4, mov, wmv, avi and many other formats — all four files."},
+{id:120,d:"D2",q:"Monitor video stream of user to verify they are alone, minimize development effort. What to include?",o:["speech-to-text in Azure AI Speech","object detection in Azure AI Custom Vision","Spatial Analysis in Azure AI Vision","object detection in Azure AI Vision"],a:2,m:false,e:"Spatial Analysis in Azure AI Vision analyzes physical space and peoples positions in video streams."},
+{id:121,d:"D2",q:"Custom Form Recognizer training. Files: File1(PDF,20MB), File2(MP4,100MB), File3(JPG,20MB), File4(PDF,100MB), File5(GIF,1MB), File6(JPG,40MB). Which three files?",o:["File1, File2, File3","File1, File3, File6","File2, File4, File5","File3, File4, File6"],a:1,m:false,e:"Form Recognizer supports PDF and JPG under 50MB. File1(PDF,20MB), File3(JPG,20MB), File6(JPG,40MB) qualify."},
+{id:122,d:"D2",q:"Internet training solution, detect learner presence from video, attention from facial expression, talking from audio. Services?",o:["Face / Face / Speech","Speech / Face / Text Analytics","Face / Text Analytics / Speech","Text Analytics / Face / Speech"],a:0,m:false,e:"Face service detects presence and facial expression attention. Speech service detects whether learner is talking."},
+{id:123,d:"D2",q:"Automated call handling, French and English. Detect incoming language and respond in callers own language. Services?",o:["Text Analytics / Text to Speech","Speech to Text / Text to Speech","Speaker Recognition / Translator","Speech to Text / Translator"],a:1,m:false,e:"Speech to Text detects the spoken language. Text to Speech responds in the callers own language."},
+{id:124,d:"D2",q:"App processes incoming email, directs to French or English support teams. Which API?",o:["eastus.api.cognitive.microsoft.com / /text/analytics/v3.1/languages","api.cognitive.microsofttranslator.com / /translator/text/v3.0/translate","portal.azure.com / /text/analytics/v3.1/entities","eastus.api.cognitive.microsoft.com / /text/analytics/v3.1/sentiment"],a:0,m:false,e:"Language detection uses eastus.api.cognitive.microsoft.com with the /text/analytics/v3.1/languages endpoint."},
+{id:125,d:"D2",q:"Custom Vision project, object detection, General domain. Export for disconnected network. Three actions in sequence?",o:["Change to General(compact) → Retrain → Export","Retrain → Change to General(compact) → Export","Export → Change domain → Retrain","Change classification type → Export → Retrain"],a:0,m:false,e:"Switch to General (compact) first to enable export, retrain with new domain, then export the model."},
+{id:126,d:"D2",q:"Factory cardboard packaging, intermittent internet. Identify defects and location. Project type and domain?",o:["Classification / General","Object Detection / General (compact)","Classification / General (compact)","Object Detection / General"],a:1,m:false,e:"Object Detection finds defect location. General (compact) enables export for offline use."},
+{id:127,d:"D2",q:"Build model: Precision=100%, Recall=25%, mAP=77.2%. Percentage of false positives and recall threshold?",o:["0% false positives / 25","100% false positives / 25","0% false positives / 77","25% false positives / 100"],a:0,m:false,e:"100% Precision means 0 false positives. 25% is the Recall value from training metrics."},
+{id:128,d:"D2",q:"App shares images: extract text + analyze for profane language, minimize effort. Services?",o:["Azure AI Language / Content Moderator","Azure AI Computer Vision / Content Moderator","Azure AI Document Intelligence / Azure AI Language","Azure AI Computer Vision / Azure AI Language"],a:1,m:false,e:"Computer Vision extracts text from images. Content Moderator analyzes text for profane language."},
+{id:129,d:"D2",q:"Custom Vision, add new products to classifier, minimize time + development effort. Five actions in sequence?",o:["From Custom Vision portal open project → Upload sample images → Label images → Retrain → Publish","Create new project → Upload → Label → Train → Export","Upload → Get suggested tags → Approve → Train → Publish","Open project → Create new iteration → Upload → Train → Export"],a:0,m:false,e:"Open existing project, upload new product images, label them, retrain, publish the updated model."},
+{id:130,d:"D2",q:"Azure AI Vision API request to identify if image is clipart or line drawing. Method and visualFeature?",o:["GET / description","GET / imageType","POST / categories","POST / tags"],a:1,m:false,e:"GET request to Computer Vision analyze endpoint with visualFeatures=imageType identifies photograph vs clipart vs line drawing."},
+{id:131,d:"D2",q:"Video Indexer REST API, add custom brand + configure exclusion. enabled and useBuiltin settings?",o:["enabled=Included / useBuiltin=false","enabled=Excluded / useBuiltin=true","enabled=Excluded / useBuiltin=false","enabled=Included / useBuiltin=true"],a:1,m:false,e:"Setting enabled to Excluded excludes this brand. useBuiltin=true uses the built-in Bing brands list."},
+{id:132,d:"D2",q:"Analyze video content to identify mentions of specific company names. Three actions in sequence?",o:["Sign in to Azure Video Analyzer → From Content model select Brands → Add to include list","Sign in to Custom Vision → Add to exclude list → Select Language","Sign in to Azure Video Analyzer → Select Language → Add to include list","Create custom classifier → Add brand names → Publish"],a:0,m:false,e:"Sign in to Azure Video Analyzer for Media, go to Content model customization, select Brands, add company names to include list."},
+{id:133,d:"D2",q:"Computer Vision brand analysis code, brand_confidence >= 0.75. What does code return?",o:["Yes/Yes/No — name with confidence >=75%; top-left corner; NOT bottom-right","Yes/Yes/Yes — name, top-left, bottom-right","No/Yes/Yes — top-left and bottom-right only","Yes/No/No — name only"],a:0,m:false,e:"Returns brand name with confidence >=75% (Yes). brand.rectangle.x,y = top-left corner (Yes). Bottom-right is NOT returned (No)."},
+{id:134,d:"D2",q:"Face API, find similar faces from employeeFaces list (80,000 images). HTTP request body values?",o:["faceId=18c51e87... / listId=employeeFaces / mode=matchFace","faceId=18c51e87... / listId=employeeFaces / mode=matchPerson","largeFaceListId=employeeFaces / mode=matchFace / maxCandidates=100","faceId=sample / largeFaceListId=employees / mode=matchPerson"],a:0,m:false,e:"faceId identifies the query face, largeFaceListId=employeeFaces targets the list, mode=matchFace finds most similar faces."},
+{id:135,d:"D2",q:"Face API POST to find photos of a person. Endpoint and request body?",o:["{Endpoint}/face/v1.0/findsimilars / faceId + largeFaceListId=sample_list + mode=matchFace","{Endpoint}/face/v1.0/detect / faceId + mode=matchPerson","{Endpoint}/face/v1.0/identify / faceId + personGroupId","{Endpoint}/face/v1.0/verify / faceId1 + faceId2"],a:0,m:false,e:"findsimilars endpoint finds similar faces. Use faceId of sample image, largeFaceListId of face list, mode=matchFace."},
+{id:136,d:"D2",q:"Face API, add multiple face images to person group. Complete code: type of t in File.OpenRead(imagePath)?",o:["File","Stream","Uri","Url"],a:0,m:false,e:"File.OpenRead returns a FileStream. The parameter type accepted is File for local file reading."},
+{id:137,d:"D2",q:"App uploads images, auto-suggest alt text + detect/block inappropriate images, minimize effort. Two endpoints?",o:["Computer Vision analyze (Adult,Description) / Content Moderator ProcessImage/Evaluate","Custom Vision classify / Content Moderator","Computer Vision analyze (Tags) / Content Moderator","Computer Vision describe / Azure AI Language"],a:0,m:false,e:"Computer Vision with Adult,Description generates alt text and detects adult content. Content Moderator ProcessImage/Evaluate blocks inappropriate images."},
+{id:138,d:"D2",q:"Custom Vision model for iOS app, cats vs dogs (one label per image). Project type, classification type, domain?",o:["Classification / Multiclass (Single tag) / General (compact)","Object Detection / Multiclass / General","Classification / Multilabel / General (compact)","Classification / Multiclass / General"],a:0,m:false,e:"Classification. Multiclass because each image has one label. General (compact) for mobile export to iOS."},
+{id:139,d:"D2",q:"Custom Vision, factory fault classifier. Three actions in sequence?",o:["Create project → Upload and tag images → Train the classifier model","Upload images → Create project → Train","Create project → Train → Upload images","Upload → Train → Tag"],a:0,m:false,e:"Create project first, upload and tag images, then train the classifier model."},
+{id:140,d:"D2",q:"Custom Vision Retail domain model, deploy for Android phones. Three actions in sequence?",o:["Change model domain → Retrain → Export","Retrain → Export → Change domain","Export → Retrain → Change domain","Change classification type → Export → Retrain"],a:0,m:false,e:"Change to a compact domain that supports Android export, retrain with new domain, then export the model."},
+{id:141,d:"D2",q:"Move Custom Vision object detection model from acndev to acnpro. Three actions in sequence?",o:["ExportProject on acndev → GetProjects → ImportProject on acnpro","GetProjects on acndev → ExportProject on acndev → ImportProject on acnpro","ImportProject on acnpro → ExportProject on acndev → GetProjects","ExportIteration on acndev → ImportProject on acnpro → GetIterations"],a:1,m:false,e:"Get project list to find project ID, export from acndev, import to acnpro."},
+{id:142,d:"D2",q:"Docker run command for Text Analytics Sentiment Analysis container. Image and Billing values?",o:["mcr.microsoft.com/azure-cognitive-services/textanalytics/sentiment / https://contoso.cognitiveservices.azure.com","mcr.microsoft.com/azure-cognitive-services/textanalytics/keyphrase / https://contoso.blob.core.windows.net","http://contoso.blob.core.windows.net / https://contoso.cognitiveservices.azure.com","mcr.microsoft.com/azure-cognitive-services/textanalytics/sentiment / http://contoso.blob.core.windows.net"],a:0,m:false,e:"Use the sentiment container image from MCR. Billing must point to the Cognitive Services endpoint."},
+{id:143,d:"D2",q:"Deploy Azure OpenAI via ARM template. Type and kind values?",o:["Microsoft.CognitiveServices / FormRecognizer","Microsoft.MachineLearning / OpenAI","Microsoft.CognitiveServices / OpenAI","Microsoft.ApiManagement / AIServices"],a:2,m:false,e:"Azure OpenAI is a CognitiveServices resource type with kind=OpenAI."},
+{id:144,d:"D2",q:"Language learning solution: analyze lesson plans (extract key fields) + analyze learning content with word images. Services?",o:["Azure AI Document Intelligence / Azure AI Custom Vision","Azure AI Document Intelligence / Immersive Reader","Azure Cognitive Search / Azure AI Language","Azure AI Language / Azure AI Vision"],a:1,m:false,e:"Document Intelligence extracts key fields from lesson plans. Immersive Reader provides images of commonly used words for learning content."},
+{id:145,d:"D2",q:"Scanned documents, export to database. Internal expenditure authorization forms + supplier invoices. Models?",o:["Custom model / Custom model","Custom model / Pre-built model","Pre-built model / Custom model","Pre-built model / Pre-built model"],a:1,m:false,e:"Internal expenditure forms need custom model. Supplier invoices can use the prebuilt invoice model."},
+{id:146,d:"D2",q:"Three document types. Expenditure forms (structured) + employment forms (structured) + survey forms (mixed). Models?",o:["Custom neural / Custom template / Custom template","Custom template / Custom template / Custom neural","Prebuilt / Custom neural / Custom template","Custom template / Prebuilt / Custom neural"],a:1,m:false,e:"Structured forms = custom template. Unstructured/varied = custom neural. Survey(mixed)=neural."},
+{id:147,d:"D2",q:"Video Indexer website files: File1(WMV,34min,400MB), File2(AVI,90min,1.2GB), File3(MOV,200min,980MB), File4(MP4,80min,1.8GB). Which can upload?",o:["File1 and File3 only","File1, File2 and File3 only","All four files","File1 and File2 only"],a:2,m:false,e:"Azure Video Indexer website supports WMV, AVI, MOV, MP4. All four files are within supported formats and size limits."},
+{id:148,d:"D2",q:"Streaming Speech to Text, MP3 encoding. Complete code: audioFormat and recognizer type?",o:["AudioConfig.SetProperty / KeywordRecognizer","AudioStreamFormat.GetCompressedFormat / SpeechRecognizer","AudioStreamFormat.GetWaveFormatPCM / SpeechSynthesizer","PullAudioInputStream / SpeakerRecognizer"],a:1,m:false,e:"GetCompressedFormat handles MP3/compressed audio. SpeechRecognizer converts speech to text."},
+{id:149,d:"D2",q:"5,000 hand-written survey responses, no consistent layout. Document Intelligence Studio, minimize development effort. Upload to and model type?",o:["An Azure Cosmos DB account / Custom neural","An Azure Files share / Custom template","An Azure Storage account / Custom neural","An Azure Storage account / Custom template"],a:2,m:false,e:"Document Intelligence requires an Azure Storage account. No consistent layout = custom neural model."},
+// D3
+{id:201,d:"D3",q:"Chatbot: chit-chat + knowledge base + multilingual + sentiment analysis + auto-selects language model. What to integrate?",o:["QnA Maker, Language Understanding, and Dispatch","Translator, Speech, and Dispatch","Language Understanding, Text Analytics, and QnA Maker","Text Analytics, Translator, and Dispatch"],a:2,m:false,e:"Language Understanding handles intents, Text Analytics handles sentiment, QnA Maker provides FAQ knowledge base."},
+{id:202,d:"D3",q:"Build a solution to translate text between multiple languages in real time. Which service?",o:["Azure AI Language","Azure AI Translator","Azure AI Speech","Azure AI Bot Service"],a:1,m:false,e:"Azure AI Translator is the dedicated service for real-time text translation."},
+{id:203,d:"D3",q:"Route incoming emails to French or English teams based on language. Which API endpoint?",o:["Sentiment analysis","Language detection — /text/analytics/v3.1/languages","Key phrase extraction","Entity recognition"],a:1,m:false,e:"The language detection endpoint returns the detected language code, enabling routing."},
+{id:204,d:"D3",q:"Detect when user asks question via microphone in video training solution, minimize effort. What?",o:["speech-to-text in Azure AI Speech","language detection in Azure AI Language","Face service in Azure AI Vision","object detection in Azure AI Custom Vision"],a:0,m:false,e:"Speech-to-text converts spoken audio to text in real time with minimal development effort."},
+{id:205,d:"D3",q:"Evaluate CLU model accuracy before deploying. Two methods?",o:["Retrieve model evaluation summary from language authoring REST endpoint","Enable Active Learning and validate utterances logged for review","Select Model performance in Language Studio","Enable log collection in Log Analytics and analyze logs"],a:[0,2],m:true,e:"Language authoring REST endpoint provides evaluation summary API. Language Studio Model performance shows precision/recall/F1."},
+{id:206,d:"D3",q:"Identify URL of REST interface for Language service. Which Azure portal blade?",o:["Identity","Keys and Endpoint","Networking","Properties"],a:1,m:false,e:"The Keys and Endpoint blade shows both the API key and the REST endpoint URL."},
+{id:207,d:"D3",q:"Voice talent profile for custom neural voice. What to upload?",o:["ZIP of 10-second WAV files and TXT transcripts","5-minute FLAC file and TXT transcript","WAV or MP3 of voice talent consenting to creation of synthetic voice","5-minute WAV/MP3 of voice talent describing the kiosk system"],a:2,m:false,e:"The voice talent profile requires a recording of the talent explicitly consenting to creation of a synthetic voice."},
+{id:208,d:"D3",q:"Many intents with similar utterances for airport names/codes. Minimize training utterances. Which entity type?",o:["Pattern.any","machine-learning","regular expression","list"],a:3,m:false,e:"A list entity defines a fixed set of known values reducing the need for separate utterances."},
+{id:209,d:"D3",q:"Text chatbot with Content Moderator Text Moderation API. Which two service responses for content moderation?",o:["personal data","the adult classification score","text classification","OCR","the racy classification score"],a:[1,4],m:true,e:"Adult classification score detects sexually explicit content; racy classification score detects suggestive content."},
+{id:210,d:"D3",q:"CLU FindContact intent. Create new utterance for each phrase. Does this meet goal?",o:["Yes","No"],a:0,m:false,e:"Yes. Adding example utterances directly to the FindContact intent is the correct way to train CLU."},
+{id:211,d:"D3",q:"C# key phrase function called with the quick brown fox jumps over the lazy dog. What output?",o:["The quick / The lazy","the quick brown fox jumps over the lazy dog","jumps over the","quick brown fox / lazy dog"],a:3,m:false,e:"Key phrase extraction identifies the most significant noun phrases: quick brown fox and lazy dog."},
+{id:212,d:"D3",q:"Python method, sentiment analysis, East US. How to call?",o:["create_resource(res1,TextAnalytics,Standard,East US)","create_resource(res1,ContentModerator,S0,eastus)","create_resource(res1,ContentModerator,Standard,East US)","create_resource(res1,TextAnalytics,S0,eastus)"],a:3,m:false,e:"Sentiment analysis uses TextAnalytics. S0 is paid tier. Region must be lowercase eastus."},
+{id:213,d:"D3",q:"Decision + Language APIs, single endpoint/credential. Which resource type?",o:["Language","Speech","Azure Cognitive Services","Content Moderator"],a:2,m:false,e:"The multi-service Azure Cognitive Services resource provides one key and endpoint for multiple services."},
+{id:214,d:"D3",q:"Chatbot recognizes company products and codenames, minimize effort. Which Language service?",o:["custom text classification","entity linking","custom Named Entity Recognition (NER)","key phrase extraction"],a:2,m:false,e:"Custom NER lets you define and train recognition of your specific entity types with minimal effort."},
+{id:215,d:"D3",q:"App1 accesses CSAccount1, minimize admin effort. What to use?",o:["system-assigned managed identity and X.509 certificate","endpoint URI and OAuth token","endpoint URI and SAS token","endpoint URI and subscription key"],a:3,m:false,e:"The endpoint URI + subscription key is the simplest and most common authentication method."},
+{id:216,d:"D3",q:"Multi-service Translator resource REST API request. Which headers required?",o:["access control request + content type + content length","subscription key + client trace ID","resource ID + content language","subscription key + subscription region + content type"],a:3,m:false,e:"Multi-service Translator requires subscription key, subscription region, and Content-Type headers."},
+{id:217,d:"D3",q:"5,000 scanned invoice images. Extract invoice items, sales amounts, customer details. What to use?",o:["Custom Vision","Azure AI Computer Vision","Azure AI Immersive Reader","Azure AI Document Intelligence"],a:3,m:false,e:"Azure AI Document Intelligence has a prebuilt invoice model that extracts exactly these fields."},
+{id:218,d:"D3",q:"TTS app for motor vehicles. Which SSML attribute optimizes voice output quality?",o:["style attribute of mstts:express-as","effect attribute of the voice element","pitch attribute of prosody element","level attribute of emphasis element"],a:1,m:false,e:"The effect attribute on the voice element applies acoustic processing optimizations including eq_car for in-vehicle environments."},
+{id:219,d:"D3",q:"Content management for dyslexia/reduced comprehension users, minimize development effort. Which service?",o:["Azure AI Immersive Reader","Azure AI Translator","Azure AI Document Intelligence","Azure AI Language"],a:0,m:false,e:"Azure AI Immersive Reader is specifically designed to improve reading for people with dyslexia and learning differences."},
+{id:220,d:"D3",q:"Python app using intent identification model (CLU). Which package to add?",o:["azure-cognitiveservices-language-textanalytics","azure-ai-language-conversations","azure-mgmt-cognitiveservices","azure-cognitiveservices-speech"],a:1,m:false,e:"azure-ai-language-conversations is the official Python SDK package for CLU intent recognition."},
+{id:221,d:"D3",q:"Internet training solution: verify user is alone in video stream, minimize effort. What to include?",o:["speech-to-text in Azure AI Speech","object detection in Azure AI Custom Vision","Spatial Analysis in Azure AI Vision","object detection in Azure AI Vision"],a:2,m:false,e:"Spatial Analysis detects peoples positions and counts in video frames."},
+{id:222,d:"D3",q:"Speech + Language APIs, single endpoint/credential. Which resource type?",o:["Azure AI Language","Azure AI Speech","Azure AI Services","Azure AI Content Safety"],a:2,m:false,e:"Azure AI Services is the multi-service resource providing one key and endpoint for both Speech and Language APIs."},
+{id:223,d:"D3",q:"NER function called with Our tour of London included a visit to Buckingham Palace. What returned?",o:["London and Buckingham Palace only","Tour and visit only","London and Tour only","Our tour of London included visit to Buckingham Palace"],a:0,m:false,e:"NER identifies named entities: London (Location) and Buckingham Palace (Location/Landmark)."},
+{id:224,d:"D3",q:"Key phrase Python function called with the quick brown fox jumps over the lazy dog. Output after Key phrases?",o:["The quick / The lazy","jumps over the","quick brown fox / lazy dog","the quick brown fox jumps over the lazy dog"],a:2,m:false,e:"Key phrase extraction returns the significant noun phrases: quick brown fox and lazy dog."},
+{id:225,d:"D3",q:"Azure AI Search resource to recognize geographic locations. Which built-in skill?",o:["AzureOpenAIEmbeddingSkill","DocumentExtractionSkill","EntityRecognitionSkill","EntityLinkingSkill"],a:2,m:false,e:"EntityRecognitionSkill recognizes named entities including locations."},
+{id:226,d:"D3",q:"CLU model: users speak/type billing address. Which entity type?",o:["machine learned","Regex","list","Pattern.any"],a:0,m:false,e:"Billing addresses are complex and variable-format — machine learned entities extract them using context."},
+{id:227,d:"D3",q:"Azure WebJob creating QnA Maker knowledge bases from URLs. Which two actions?",o:["Create a list of FileDTO objects","Call the client.Knowledgebase.CreateAsync method","Create a list of QnADTO objects","Create a CreateKbDTO object"],a:[1,3],m:true,e:"CreateKbDTO defines KB parameters; CreateAsync asynchronously creates the knowledge base."},
+{id:228,d:"D3",q:"Enable active learning in a CLU model. What to do?",o:["Add show-all-intents=true to prediction endpoint query","Enable speech priming","Add log=true to the prediction endpoint query","Enable sentiment analysis"],a:2,m:false,e:"Adding log=true enables logging of endpoint queries which feeds the active learning suggestions pipeline."},
+{id:229,d:"D3",q:"Upload speech samples to Speech Studio for custom speech training. How?",o:["Combine into single .wma file","Upload .zip containing .wav files and text transcript file","Upload individual FLAC files and Word transcript","Upload individual .wma files"],a:1,m:false,e:"Speech Studio requires a ZIP file containing WAV audio files and a matching plain-text transcript file."},
+{id:230,d:"D3",q:"Translator API: translate webpage to Greek WITH Roman alphabet transliteration. Three query parameters?",o:["toScript=Cyrl","from=el","textType=html","to=el","textType=plain","toScript=Latn"],a:[2,3,5],m:true,e:"textType=html handles HTML markup; to=el targets Greek; toScript=Latn requests Roman alphabet transliteration."},
+{id:231,d:"D3",q:"Debug chatbot endpoint remotely. Which two tools install locally?",o:["Fiddler","Bot Framework Composer","Bot Framework Emulator","Bot Framework CLI","ngrok","nginx"],a:[2,4],m:true,e:"Bot Framework Emulator connects to bots. ngrok creates a public tunnel to your local endpoint."},
+{id:232,d:"D3",q:"LUIS FindContact model. Create new INTENT for location. Does this meet goal?",o:["Yes","No"],a:1,m:false,e:"No. Creating a new intent splits what should be handled in FindContact."},
+{id:233,d:"D3",q:"LUIS FindContact model. Create new ENTITY for the domain. Does this meet goal?",o:["Yes","No"],a:1,m:false,e:"No. Creating an entity does not add training examples or utterances."},
+{id:234,d:"D3",q:"LUIS model with only GetContactDetails intent. Decrease false positives. What?",o:["Enable active learning","Add a machine learned entity","Add more examples to GetContactDetails","Add examples to the None intent"],a:3,m:false,e:"The None intent catches irrelevant utterances. Adding diverse examples to None reduces false positives."},
+{id:235,d:"D3",q:"Deploy Azure TextAnalytics to East US for sentiment analysis. Which call?",o:["create_resource(res1,ContentModerator,S0,eastus)","create_resource(res1,TextAnalytics,S0,eastus)","create_resource(res1,ContentModerator,Standard,East US)","create_resource(res1,TextAnalytics,Standard,East US)"],a:1,m:false,e:"Sentiment analysis uses TextAnalytics. S0 is paid tier. Region is lowercase eastus."},
+{id:236,d:"D3",q:"CLU JSON export shows Weather.Historic entity. To what does it correspond?",o:["last year","by month","amount of","average"],a:1,m:false,e:"Weather.Historic maps to by month, a temporal/historical reference in the utterance."},
+{id:237,d:"D3",q:"Text Analytics output: Space Needle (Location), Seattle (Location), last week (DateTime). Which API?",o:["Entity Linking","Named Entity Recognition","Sentiment Analysis","Key Phrase Extraction"],a:1,m:false,e:"NER identifies entities and assigns categories like Location, DateTime, Person, Organization."},
+{id:238,d:"D3",q:"Measure public perception of your brand on social media using NLP. Which Azure service?",o:["Language service","Content Moderator","Computer Vision","Form Recognizer"],a:0,m:false,e:"Azure AI Language provides sentiment analysis for measuring brand perception in text."},
+{id:239,d:"D3",q:"Prevent Language service from persisting input data after analysis. Which query parameter?",o:["model-version","piiCategories","showStats","loggingOptOut"],a:3,m:false,e:"loggingOptOut tells the Language service not to log or persist input text after analysis."},
+{id:240,d:"D3",q:"C# app that identifies intent of text input. Which Azure.AI.Language package?",o:["Universal.Microsoft.CognitiveServices.Speech","SpeechServicesToolkit","Azure.AI.Language.Conversations","Xamarin.Cognitive.Speech"],a:2,m:false,e:"Azure.AI.Language.Conversations is the official .NET SDK package for CLU."},
+{id:241,d:"D3",q:"Social media TTS extension, list available voices. Which endpoint?",o:["https://uksouth.api.cognitive.microsoft.com/speechtotext/v3.0/models/base","https://uksouth.customvoice.api.speech.microsoft.com/.../voices","https://uksouth.tts.speech.microsoft.com/cognitiveservices/voices/list","https://uksouth.voice.speech.microsoft.com/cognitiveservices/v1?deploymentId={id}"],a:2,m:false,e:"The cognitiveservices/voices/list endpoint returns all available TTS voices for the region."},
+{id:242,d:"D3",q:"EntityLinker code: Our tour guide took us up the Space Needle during our trip to Seattle last week. Three statements?",o:["No/Yes/Yes — not language detection; url=Bing link; matches=location in document","Yes/No/No — detects language; no Bing link; no location","No/No/Yes — no language; no Bing; matches=location","Yes/Yes/No — detects language; url=Bing; no location"],a:0,m:false,e:"EntityLinker does NOT detect language (No). url attribute is a Bing search link (Yes). matches attribute provides location in document (Yes)."},
+{id:243,d:"D3",q:"100 chatbots, programmatically update Language Understanding models with new phrases. Complete code?",o:["AddPhraseListAsync / PhraselistCreateObject","SavePhraselistAsync / Phraselist","UploadPhraseListAsync / PhraselistCreateObject","AddPhraseListAsync / Phrases"],a:0,m:false,e:"client.Features.AddPhraseListAsync is the method. PhraselistCreateObject is the class used to create the phrase list definition."},
+{id:244,d:"D3",q:"LUIS app1 container deployment. V1.2(not trained), V1.1(trained, not published), V1.0(trained, published). Latest deployable. Three actions?",o:["Select v1.0 → Export for containers (GZIP) → Run container and mount model file","Select v1.1 → Export as JSON → Run container with version env var","Select v1.2 → Export for containers (GZIP) → Build container","Select v1.1 → Export for containers (GZIP) → Run container"],a:0,m:false,e:"V1.0 is the only published version. Export for containers requires GZIP format. Run the container and mount the model file."},
+{id:245,d:"D3",q:"CLU entity for purchasing tickets. Labels: Paris / email@domain.com / 2 audit business. Entity types?",o:["GeographyV2 / Email / Machine learned","List / Regex / Machine learned","Machine learned / Email / List","Regex / GeographyV2 / Machine learned"],a:0,m:false,e:"Paris = GeographyV2. email@domain.com = Email (prebuilt). 2 audit business = Machine learned."},
+{id:246,d:"D3",q:"QnA Maker chatbot, two questions return same answer. Increase accuracy. Three actions in sequence?",o:["Add alternative phrasing to QnA pair → Retrain → Republish","Add new QnA pair → Retrain → Republish","Enable active learning → Validate → Retrain","Add document → Retrain → Test"],a:0,m:false,e:"Add alternative phrasing to help the model distinguish between the two questions, then retrain and republish."},
+{id:247,d:"D3",q:"Language translation app, text must remain within American Azure geography. Translate to single language. Complete code?",o:["api-nam.cognitive.microsofttranslator.com / /translate?to=en","api.cognitive.microsofttranslator.com / /translate?to=en","api-nam.cognitive.microsofttranslator.com / /translate?from=en","eastus.api.cognitive.microsoft.com / /translate?to=en"],a:0,m:false,e:"api-nam uses North American Azure geography for data sovereignty. /translate?to=en translates to English."},
+{id:248,d:"D3",q:"Lecture recording service, English UK, provide transcripts in EN/FR/ES/DE. Complete code: languages list and recognizer type?",o:["[fr,de,es] / TranslationRecognizer","[en-GB,fr,es,de] / SpeechRecognizer","[fr,de] / TranslationRecognizer","[en-US,fr,de,es] / SpeechSynthesizer"],a:0,m:false,e:"Target languages are the three non-English ones: fr, de, es. TranslationRecognizer handles speech translation."},
+{id:249,d:"D3",q:"Custom Speech training, 1000 new images without tags, minimize retrain time. Three actions in Custom Vision portal?",o:["Upload all images → Get suggested tags → Review and confirm tags","Upload images by category → Tag manually → Train","Get suggested tags → Upload images → Train","Group images locally → Upload → Get suggested tags"],a:0,m:false,e:"Upload all images, use Smart Labeler to get suggested tags, review and confirm to minimize manual tagging time."},
+{id:250,d:"D3",q:"Call handling system, French and German callers. Capture inbound messages as text + replay in English. Services?",o:["Speech-to-text / Text-to-speech only","Speech-to-text / Text-to-speech and Language","Speaker Recognition / Translator","Speech-to-text / Speech-to-text and Language"],a:1,m:false,e:"Speech-to-text captures voice messages as text. Text-to-speech + Language translates to English and converts to speech for replay."},
+{id:251,d:"D3",q:"Custom neural voice TTS app SSML: calm tone + young adult female voice. SSML attributes?",o:["mstts:express-as style / voice type","mstts:express-as style / voice voice","mstts:express-as role / voice voice","mstts:express-as styledegree / voice style"],a:0,m:false,e:"style attribute on mstts:express-as controls the tone. voice attribute on the voice element specifies the voice name."},
+{id:252,d:"D3",q:"RecognizeEntities called with Our tour of Paris included a visit to the Eiffel Tower. Three statements?",o:["No/No/No — not our/included; not Paris+Eiffel+Tower; not key phrases","Yes/Yes/Yes","No/Yes/No","Yes/No/Yes"],a:0,m:false,e:"Output won't include our and included (No). Paris and Eiffel Tower are entities but Tower alone is not (No). Function uses entity recognition not key phrases (No)."},
+{id:253,d:"D3",q:"Azure web app, translate English to Spanish, data sovereignty in United States. Complete URI?",o:["api-nam.cognitive.microsofttranslator.com / translate","api.cognitive.microsofttranslator.com / languages","eastus.api.cognitive.microsoft.com / translate","api-nam.cognitive.microsofttranslator.com / detect"],a:0,m:false,e:"api-nam provides US data sovereignty. translate is the path for text translation."},
+{id:254,d:"D3",q:"Transcription service for technical podcasts, fails with technical terms. Five actions to improve accuracy?",o:["Create Custom Speech project → Upload training datasets → Create speech-to-text model → Train model → Deploy model","Upload data → Create project → Train → Deploy → Test","Create project → Test → Upload data → Train → Deploy","Deploy model → Create project → Upload data → Train → Test"],a:0,m:false,e:"Create Custom Speech project, upload training data, create a speech-to-text model, train it, then deploy."},
+{id:255,d:"D3",q:"C# App1 speech-to-speech translation English to German. Complete SpeechTranslationConfig?",o:["SpeechRecognitionLanguage=en-US / AddTargetLanguage=de","SpeechRecognitionLanguage=de / AddTargetLanguage=en-US","SpeechRecognitionLanguage=en / AddTargetLanguage=de-DE","SpeechRecognitionLanguage=en-GB / AddTargetLanguage=de"],a:0,m:false,e:"SpeechRecognitionLanguage=en-US sets English as source. AddTargetLanguage(de) adds German as translation target."},
+{id:256,d:"D3",q:"Python App1 speech-to-speech translation English to German. SpeechTranslationConfig values?",o:["add_target_language=de / speech_recognition_language=en-US","add_target_language=en-US / speech_recognition_language=de","add_target_language=de-DE / speech_recognition_language=en","add_target_language=fr / speech_recognition_language=en-US"],a:0,m:false,e:"add_target_language(de) adds German target. speech_recognition_language=en-US sets English as input language."},
+{id:257,d:"D3",q:"Speech SDK, translate speech from French to German. Define source and output language. Complete code?",o:["speechRecognitionLanguage=fr-FR / addTargetLanguage=de","speechRecognitionLanguage=de / addTargetLanguage=fr-FR","speechRecognitionLanguage=fr / addTargetLanguage=de-DE","addSourceLanguage=fr / speechRecognitionLanguage=de"],a:0,m:false,e:"speechRecognitionLanguage sets the source (French). addTargetLanguage adds German as the translation output."},
+{id:258,d:"D3",q:"German Word + PowerPoint files, translate to French, preserve formatting + custom glossary. Three actions?",o:["Upload glossary to German container → Define document translation spec with French target → Perform async translation","Upload files to French container → Define translation spec → Run sync translation","Create translation spec → Upload glossary → Run batch translation","Upload files → Create glossary → Define spec → Run translation"],a:0,m:false,e:"Upload glossary to source container, define document translation spec with French as target, perform asynchronous document translation."},
+{id:259,d:"D3",q:"get_key_phrases Python, called with the cat sat on the mat. Three statements?",o:["Yes/No/No — outputs key phrases; not the,cat,sat; no confidence","No/Yes/Yes — no output; contains words; has confidence","Yes/Yes/No — outputs phrases; contains words; no confidence","No/No/Yes — no output; no words; has confidence"],a:0,m:false,e:"Yes: key phrases ARE output. No: the, cat, sat are not key phrases (stop words). No: key phrase extraction does not return confidence levels."},
+{id:260,d:"D3",q:"Docker Host1, custom speech-to-text model1. Three actions to run model1 on Host1?",o:["Export model → Import to Host1 → Run container","Pull speech container image from MCR → Export model1 → Run container with model","Export model → Copy to Host1 → Run container specifying model","Import model → Configure billing → Run container"],a:1,m:false,e:"Pull the speech SDK container from MCR, export the custom model, then run the container referencing the exported model."},
+{id:261,d:"D3",q:"Move QnA project to Language service in different Azure region. Three actions in sequence?",o:["From new Language service: import project file → train + evaluate → deploy","Export from old → Create new service → Import project","Export → Delete old → Create new → Import","From old: export → From new: import → Test → Deploy"],a:0,m:false,e:"From the new Language service instance: import the project file, train and evaluate, then deploy."},
+{id:262,d:"D3",q:"Customer support chatbot: identify code names (internal product) + credit card numbers. Minimize effort. Services?",o:["Custom NER / Custom NER","Custom NER / PII detection","Key phrase extraction / Custom NER","Entity linking / PII detection"],a:1,m:false,e:"Custom NER for code names. PII detection automatically identifies credit card numbers as sensitive information."},
+{id:263,d:"D3",q:"App automatically translates speech English to FR/DE/ES. Complete code: languages list and recognizer?",o:["[fr,de,es] / TranslationRecognizer","[en,fr,de,es] / SpeechRecognizer","[fr,de] / TranslationRecognizer","[fr,de,es] / SpeechSynthesizer"],a:0,m:false,e:"Target languages are fr, de, es (not the source English). TranslationRecognizer handles speech translation."},
+{id:264,d:"D3",q:"Language Understanding service, web customer agent, users report Sorry I don't understand that. Improve. Three actions?",o:["Enable active learning → Validate utterances logged for review and modify model → Train and republish","Add prebuilt domain models → Train → Publish","Migrate authoring to Azure resource → Enable active learning → Train","Enable log analytics → Analyze logs → Add utterances"],a:0,m:false,e:"Enable active learning to capture misunderstood utterances, validate and modify the model, then train and republish."},
+// D4
+{id:301,d:"D4",q:"Extract top-level receipt info (vendor, total) from English receipts, minimize development effort. Which service?",o:["Custom Vision","Personalizer","Form Recognizer","Computer Vision"],a:2,m:false,e:"Form Recognizer has a prebuilt receipt model that extracts key fields without custom training."},
+{id:302,d:"D4",q:"Azure Cognitive Search throttling. Migrate to higher tier. Does this meet goal?",o:["Yes","No"],a:0,m:false,e:"Yes, higher tier provides more capacity and higher throughput limits."},
+{id:303,d:"D4",q:"Azure Cognitive Search throttling. Add indexes. Does this meet goal?",o:["Yes","No"],a:1,m:false,e:"No, adding indexes does not increase query throughput."},
+{id:304,d:"D4",q:"Azure Cognitive Search throttling. Enable CMK encryption. Does this meet goal?",o:["Yes","No"],a:1,m:false,e:"No, CMK increases query latency making throttling worse."},
+{id:305,d:"D4",q:"Azure Cognitive Search throttling. Add replicas. Does this meet goal?",o:["Yes","No"],a:0,m:false,e:"Yes, replicas increase query-handling capacity, increasing throughput."},
+{id:306,d:"D4",q:"QnA Maker provisioned. Which two Azure resources are automatically created?",o:["Language Understanding","Azure SQL Database","Azure Storage","Azure Cognitive Search","Azure App Service"],a:[3,4],m:true,e:"QnA Maker automatically creates Azure Cognitive Search (stores knowledge base) and Azure App Service (hosts runtime)."},
+{id:307,d:"D4",q:"Form Recognizer SDK: use prebuilt receipt model from URL. Which client and method?",o:["FormRecognizerClient + StartRecognizeContentFromUri","FormTrainingClient + StartRecognizeContentFromUri","FormRecognizerClient + StartRecognizeReceiptsFromUri","FormTrainingClient + StartRecognizeReceiptsFromUri"],a:2,m:false,e:"FormRecognizerClient handles analysis; StartRecognizeReceiptsFromUri targets the prebuilt receipt model."},
+{id:308,d:"D4",q:"Cognitive Search indexing purchase orders. Analyze in Power BI with minimal effort. What to add?",o:["A projection group","A table projection","A file projection","An object projection"],a:1,m:false,e:"Table projections store enriched data in Azure Table Storage in tabular format that Power BI can connect to."},
+{id:309,d:"D4",q:"Blog posts with category field. Need: in results + text search + drill-down filtering. Which attributes?",o:["Searchable, sortable, and retrievable","Searchable, facetable, and retrievable","Retrievable, filterable, and sortable","Retrievable, facetable, and key"],a:1,m:false,e:"Searchable enables full-text search, retrievable includes field in results, facetable enables drill-down filtering."},
+{id:310,d:"D4",q:"Primary admin key compromised in AI Search. Prevent unauthorized access, minimize downtime. What to do?",o:["Regenerate primary key, change app to secondary, regenerate secondary","Change app to query key, regenerate both admin keys","Regenerate secondary key, change app to secondary, then regenerate primary","Add new query key, change app to it, delete unused query keys"],a:2,m:false,e:"Regenerate secondary first, switch the app to secondary, then regenerate primary. No downtime."},
+{id:311,d:"D4",q:"Millions of scanned docs in Blob storage. Make searchable as quickly as possible. What to do?",o:["Split data into multiple blobs, create search service per container","Split data, create indexer per container, increase search units, sequential pattern","Create one search service per document type","Split into virtual folders, indexer per folder, increase search units, same runtime execution pattern"],a:3,m:false,e:"Virtual folders allow parallel indexing with multiple indexers running simultaneously."},
+{id:312,d:"D4",q:"Table projection in knowledge store skillset JSON. Three required properties?",o:["tableName","generatedKeyName","dataSource","dataSourceConnection","source"],a:[0,1,4],m:true,e:"A table projection node requires tableName, generatedKeyName, and source."},
+{id:313,d:"D4",q:"Finance (on-prem SQL), Sales (Cosmos DB), Logs (Azure Table), HR (Azure SQL). Search all using Azure AI Search. What?",o:["Migrate HR to Azure Blob storage","Migrate HR to on-premises SQL","Export Finance data to Azure Data Lake Storage","Migrate Sales to MongoDB API"],a:2,m:false,e:"Azure AI Search has native connectors for Cosmos DB, Azure Table, and Azure SQL. On-premises SQL is not natively supported."},
+{id:314,d:"D4",q:"Mirror Finance (on-prem SQL) to enable Azure AI Search indexing. What to do?",o:["Configure multiple read replicas for Sales","Mirror Finance to an Azure SQL database","Ingest Logs into Azure Data Explorer","Ingest Logs into Azure Sentinel"],a:1,m:false,e:"Azure AI Search has a native connector for Azure SQL. Mirroring Finance to Azure SQL lets the indexer connect natively."},
+{id:315,d:"D4",q:"Generate a word cloud from product reviews. Which Text Analytics REST API endpoint?",o:["keyPhrases","sentiment","languages","entities/recognition/general"],a:0,m:false,e:"Key phrase extraction identifies important terms in text, exactly what is needed for a word cloud."},
+{id:316,d:"D4",q:"Document-level security filtering in Azure AI Search. Three actions?",o:["Send Azure AD access tokens with search request","Retrieve all groups","Retrieve the group memberships of the user","Add allowed groups to each index entry","Create one index per group","Supply the groups as a filter for search requests"],a:[2,3,5],m:true,e:"Retrieve current user group memberships, store allowed groups per document in the index, pass groups as filter on every search query."},
+{id:317,d:"D4",q:"Knowledge store for social media posts + sentiment. Which two fields in definition?",o:["storageContainer","storageConnectionString","files","tables","objects"],a:[1,4],m:true,e:"storageConnectionString specifies where to write. objects stores enriched JSON documents in Azure Blob Storage."},
+{id:318,d:"D4",q:"MessageCopy field: full text searches + results shown. Which attributes?",o:["Sortable and Retrievable","Filterable and Retrievable","Searchable and Facetable","Searchable and Retrievable"],a:3,m:false,e:"Searchable enables full-text search; Retrievable includes the field value in results."},
+{id:319,d:"D4",q:"Custom Document Intelligence model for contracts. Support additional format, minimize effort. What?",o:["Lower confidence threshold","Create new training set and new model","Add additional format to existing training set and retrain","Lower accuracy threshold"],a:2,m:false,e:"Adding the new format to the existing training set and retraining is the least-effort way to extend a custom model."},
+{id:320,d:"D4",q:"Extract shipping address, billing address, customer ID, amount due, due date, total tax, subtotal. Which model?",o:["custom extraction model","contract","invoice","general document"],a:2,m:false,e:"The prebuilt invoice model extracts exactly these fields without custom training."},
+{id:321,d:"D4",q:"Process scanned expense claims: merchant info, time/date, taxes, total cost. Minimize effort. Which model?",o:["the prebuilt Read model","a custom template model","a custom neural model","the prebuilt receipt model"],a:3,m:false,e:"The prebuilt receipt model extracts exactly these fields from receipts without custom training."},
+{id:322,d:"D4",q:"Custom skill for AI Search to recognize invoice properties using Azure AI. What to include?",o:["Azure AI Immersive Reader","Azure OpenAI","Azure AI Document Intelligence","Azure AI Custom Vision"],a:2,m:false,e:"Azure AI Document Intelligence prebuilt invoice model can be wrapped as a custom skill."},
+{id:323,d:"D4",q:"Train custom extraction model in Document Intelligence Studio. Files: PDF, JPEG, XLSX, DOCX, MP4. Which can upload?",o:["File1(PDF), File2(JPEG), File4(XLSX) only","File2(JPEG) and File5 only","File2, File4, and File5 only","All five files","File1(PDF) and File2(JPEG) only"],a:4,m:false,e:"Document Intelligence custom model training only accepts PDF and image files (JPEG, PNG, BMP, TIFF)."},
+{id:324,d:"D4",q:"Business card model v2.1 app. Need to interpret QR codes. Minimize admin effort. What first?",o:["Upgrade business card model to v3.0","Implement the read model","Deploy a custom model","Implement the contract model"],a:1,m:false,e:"The Document Intelligence Read model can extract text from QR codes."},
+{id:325,d:"D4",q:"Handwritten letters (JPEG) in Cognitive Search. Index for queries. Which skill?",o:["Image analysis","Optical character recognition (OCR)","Key phrase extraction","Document extraction"],a:1,m:false,e:"OCR extracts text from images and handwritten content, making it searchable."},
+{id:326,d:"D4",q:"Implement table projection for knowledge store. Three JSON properties?",o:["tableName","generatedKeyName","dataSource","dataSourceConnection","source"],a:[0,1,4],m:true,e:"The three required properties for a table projection node are tableName, generatedKeyName, and source."},
+{id:327,d:"D4",q:"Web app uses AI Search, query key compromised, prevent unauthorized access, minimize downtime. Three actions?",o:["Add new query key → Change app to new key → Delete compromised key","Regenerate secondary admin key → Change app to secondary → Regenerate primary","Change app to admin key → Delete query key → Create new query key","Regenerate primary admin key → Change app to secondary → Regenerate secondary"],a:0,m:false,e:"Add a new query key, switch the app to use it, then delete the compromised key. No downtime."},
+{id:328,d:"D4",q:"Knowledge store JSON with two projection groups. Statements about projection groups and normalized images?",o:["Two projection groups / projected to Azure Blob storage","One projection group / not projected","Four projection groups / projected to Azure File storage","Two projection groups / projected to Azure Table storage"],a:0,m:false,e:"Two separate objects in the projections array equals two projection groups. Normalized images are projected to Azure Blob storage."},
+{id:329,d:"D4",q:"Document Intelligence DI1, analyze test.pdf with tabular data. Complete command: model and header?",o:["prebuilt-document / Ocp-Apim-Subscription-Key","prebuilt-contract / Authorization","prebuilt-read / Content-Type","prebuilt-layout / Ocp-Apim-Subscription-Key"],a:0,m:false,e:"prebuilt-document model analyzes general documents including tabular data. Ocp-Apim-Subscription-Key is the required authentication header."},
+{id:330,d:"D4",q:"provision_resource method, Standard tier, create resource to scan receipts to text. Which call?",o:["provision_resource(res1,ComputerVision,S0,eastus)","provision_resource(res1,FormRecognizer,S0,eastus)","provision_resource(res1,TextAnalytics,S0,eastus)","provision_resource(res1,FormRecognizer,Standard,East US)"],a:1,m:false,e:"Scanning receipts uses Form Recognizer. S0 is Standard pricing tier. Region is lowercase eastus."},
+{id:331,d:"D4",q:"App1 analyzes medical records using Document Intelligence. Model=prebuilt-healthInsuranceCard.us. Three statements about suitability and confidence?",o:["Yes/Yes/Yes — suitable model; text >70%; form elements >70%","No/Yes/Yes — wrong model; text >70%; form >70%","Yes/No/No — suitable; text not >70%; form not >70%","Yes/Yes/No — suitable; text >70%; form not >70%"],a:0,m:false,e:"Health insurance card model IS suitable (Yes). Word confidence values ARE above 70% threshold (Yes). documents.confidence=1.0 means form elements fully recognized (Yes)."},
+{id:332,d:"D4",q:"DI1, analyze PDF files for handwritten content. Complete the code: model and confidence threshold?",o:["prebuilt-document / 0.5","prebuilt-read / 0.75","prebuilt-layout / 0.9","prebuilt-contract / 0.75"],a:1,m:false,e:"prebuilt-read model is designed to extract handwritten and printed text. 0.75 is the standard confidence threshold for handwritten content detection."},
+{id:333,d:"D4",q:"AI Search custom skill for sentiment analysis. Five actions in sequence?",o:["Provision Azure AI Services + get endpoint → Create Azure ML workspace → Create and train model → Create endpoint → Connect custom skill to endpoint","Create ML workspace → Train → Deploy → Connect to AI Search → Test","Provision AI Services → Train model → Deploy → Create skillset → Index","Create model → Create endpoint → Provision AI Services → Connect → Test"],a:0,m:false,e:"Provision Azure AI Services and obtain endpoint, create Azure ML workspace, create and train the model, create a model endpoint, connect the custom skill to that endpoint."},
+{id:334,d:"D4",q:"PDF press releases: extract text + perform sentiment analysis. Services for each task?",o:["Azure AI Search / Azure AI Language","Azure AI Document Intelligence / Azure AI Language","Azure AI Vision / Azure AI Language","Computer Vision Read API / Azure AI Language"],a:1,m:false,e:"Document Intelligence extracts text from PDFs. Azure AI Language performs sentiment analysis on the extracted text."},
+{id:335,d:"D4",q:"Create + train custom DI model, storage sa1, blob1 container. Four REST actions?",o:["Get info REST API → Create SAS URL for blob1 → Upload forms + JSON to blob1 → Call Build model REST API","Upload files → Create SAS → Call Train API → Call Get info API","Create SAS → Upload files → Call Get info API → Call Build API","Get model ID → Upload files → Create SAS → Call Build API"],a:0,m:false,e:"Get info to check service, create SAS URL for blob access, upload training files + JSON labels, call Build model API to start training."},
+{id:336,d:"D4",q:"Document Intelligence Studio, train custom model, storage sa1. Five actions in sequence?",o:["Create custom model project + link to sa1 → Upload 5 sample docs → Apply labels → Upload JSON files with layout + labels → Train and test","Upload docs → Label → Train → Create project → Test","Create project → Train → Upload docs → Label → Test","Label docs → Upload → Create project → Link storage → Train"],a:0,m:false,e:"Create project and link to storage, upload sample documents, apply labels, upload JSON label files, then train and test."},
+{id:337,d:"D4",q:"DI resource AbDoc1 S0. Files: File1(JPG,400MB), File2(PDF,150MB), File3(PNG,600MB), File4(XLSX), File5(PDF,160MB,password). Which files can upload?",o:["File1 and File2 only","File1, File2, and File3","File2 only","File1, File2, File3, and File5"],a:0,m:false,e:"JPG/PDF supported. File3 PNG over 500MB limit. File4 XLSX not supported. File5 is password-protected. File1(JPG,400MB) and File2(PDF,150MB) qualify."},
+{id:338,d:"D4",q:"DI1 Standard S0. Files: File1.pdf(800MB), File2.jpg(1KB,25x25px), File3.tiff(5MB,5000x5000px). Which can analyze?",o:["File1.pdf only","File2.jpg only","File3.tiff only","File1.pdf and File3.tiff"],a:2,m:false,e:"File1.pdf is too large (over 500MB). File2.jpg is too small (under 50px dimension). File3.tiff is within size and dimension limits."},
+// D5
+{id:401,d:"D5",q:"Add contributors to a LUIS authoring resource. What should you use?",o:["A conditional access policy in Azure AD","Access control (IAM) for the authoring resources in the Azure portal","Access control (IAM) for prediction resources","Cognitive Services Contributor role on subscription"],a:1,m:false,e:"LUIS authoring contributors are managed via the IAM page of the authoring resource."},
+{id:402,d:"D5",q:"Bot Framework SDK bot running locally. Validate functionality. What before connecting?",o:["Run the Bot Framework Emulator","Run the Bot Framework Composer","Register the bot with Azure Bot Service","Run Windows Terminal"],a:0,m:false,e:"The Bot Framework Emulator is the dedicated tool for testing and debugging Bot Framework bots locally."},
+{id:403,d:"D5",q:"Custom question answering project. Configure multi-turn conversations. What?",o:["Add follow-up prompts","Enable active learning","Add alternate questions","Enable chit-chat"],a:0,m:false,e:"Follow-up prompts enable multi-turn conversations by defining follow-up options after an answer."},
+{id:404,d:"D5",q:"Deploy bot using Bot Channels Registration. Which two values required?",o:["botId","tenantId","appId","objectId","appSecret"],a:[2,4],m:true,e:"appId (Microsoft App ID) and appSecret (client secret) are the two authentication values required."},
+{id:405,d:"D5",q:"Building multilingual chatbot. Different answers for positive/negative messages. Which two Language APIs?",o:["Linked entities from knowledge base","Sentiment Analysis","Key Phrases","Detect Language","Named Entity Recognition"],a:[1,3],m:true,e:"Sentiment Analysis determines positive/negative; Detect Language identifies the message language."},
+{id:406,d:"D5",q:"Build bot locally with Bot Framework CLI. Need to use existing LUIS model. What first?",o:["Clone the model from LUIS portal","Export the model as an .lu file","Create a new Speech service","Create a new Language Understanding service"],a:1,m:false,e:"Exporting the LUIS model as an .lu file is the first step."},
+{id:407,d:"D5",q:"Bot1 needs to connect to QnA Maker. Where to find connection info in Azure Portal?",o:["Access control (IAM)","Properties","Keys and Endpoint","Identity"],a:2,m:false,e:"The Keys and Endpoint blade contains the API key and endpoint URL needed for bot connection."},
+{id:408,d:"D5",q:"Bot Composer dialog property name. Dispose when last active dialog ends. Which scope?",o:["dialog","user","turn","conversation"],a:0,m:false,e:"The dialog scope persists only for the lifetime of the dialog, automatically disposed when it ends."},
+{id:409,d:"D5",q:"Enable speech capabilities for a chatbot. Three actions?",o:["Enable WebSockets for the chatbot app","Create a Speech service","Register a Direct Line Speech channel","Register a Cortana channel","Enable CORS for the chatbot app","Create a Language Understanding service"],a:[0,1,2],m:true,e:"Direct Line Speech requires: Enable WebSockets + Create Speech service + Register Direct Line Speech channel."},
+{id:410,d:"D5",q:"Bot Framework Composer bot for purchasing items. Users need to cancel in-progress transactions. What to add?",o:["a language generator","a custom event","a dialog trigger","a conversation activity"],a:2,m:false,e:"A dialog trigger listens for specific intents at any point and interrupts the current dialog."},
+{id:411,d:"D5",q:"Vacation request bot: gather start date, end date, PTO amount. Minimize dialog complexity. Which type?",o:["adaptive","skill","waterfall","component"],a:2,m:false,e:"A waterfall dialog collects a fixed sequence of inputs in order with minimal complexity."},
+{id:412,d:"D5",q:"Configure bot to respond to events by using custom text responses. What to use?",o:["a dialog","an activity handler","an adaptive card","a skill"],a:1,m:false,e:"An activity handler handles specific event types and allows custom text responses for each."},
+{id:413,d:"D5",q:"Chatbot lacks formality. Change chitchat to qna_chitchat_friendly.tsv, retrain. Does this meet goal?",o:["Yes","No"],a:1,m:false,e:"No. friendly is a casual/informal style. Use qna_chitchat_professional.tsv."},
+{id:414,d:"D5",q:"Chatbot lacks formality. Modify Q&A pairs for custom intents, retrain. Does this meet goal?",o:["Yes","No"],a:1,m:false,e:"No. Spurious questions hit the chit-chat knowledge base, not custom intents."},
+{id:415,d:"D5",q:"Chatbot lacks formality. Change chitchat to qna_chitchat_professional.tsv, retrain. Does this meet goal?",o:["Yes","No"],a:0,m:false,e:"Yes! qna_chitchat_professional.tsv provides formal, professional responses to small talk."},
+{id:416,d:"D5",q:"Make single bot combining 5 bots with dynamic routing. Which three actions?",o:["Create a composer extension","Change the Recognizer/Dispatch type","Create an Orchestrator model","Enable WebSockets","Create a custom recognizer JSON file","Install the Orchestrator package"],a:[1,2,5],m:true,e:"Orchestrator handles multi-bot routing: install Orchestrator package + create Orchestrator model + change Recognizer/Dispatch type."},
+{id:417,d:"D5",q:"QnA chatbot: responds to price of X but not cost of X. Add alternative phrasing, retrain. Does this meet goal?",o:["Yes","No"],a:0,m:false,e:"Yes. Adding How much does X cost? as alternative phrasing teaches the model to match both questions."},
+{id:418,d:"D5",q:"QnA chatbot: responds to price of X but not cost of X. Enable chit-chat, retrain. Does this meet goal?",o:["Yes","No"],a:1,m:false,e:"No. Chit-chat adds small talk responses. It has no effect on matching product price questions."},
+{id:419,d:"D5",q:"QnA chatbot: responds to price of X but not cost of X. Create entity for price, retrain. Does this meet goal?",o:["Yes","No"],a:1,m:false,e:"No. The QnA service does not use entities for matching. The fix is alternative phrasing."},
+{id:420,d:"D5",q:"Bot Composer chatbot: present list of options with image for each. Which two features?",o:["an entity","an Azure function","an utterance","an adaptive card","a dialog"],a:[3,4],m:true,e:"An adaptive card displays rich content including images. A dialog orchestrates the conversation flow."},
+{id:421,d:"D5",q:"Guide users through product setup process. Which dialog type?",o:["component","action","waterfall","adaptive"],a:2,m:false,e:"A waterfall dialog guides users through a sequential process step-by-step."},
+{id:422,d:"D5",q:"Chatbot voice interactions supporting multiple client apps. Which channel?",o:["Cortana","Microsoft Teams","Direct Line Speech"],a:2,m:false,e:"Direct Line Speech is the channel for voice interactions supporting multiple custom client apps."},
+{id:423,d:"D5",q:"Configure bot to respond to spoken requests, minimize development effort. What?",o:["Deploy to Azure and register with Direct Line Speech channel","Integrate with Cortana using Bot Framework SDK","Create Azure Function calling Speech service","Deploy to Azure and register with Microsoft Teams channel"],a:0,m:false,e:"Deploying to Azure and registering with Direct Line Speech is the minimal-effort path to enabling spoken interactions."},
+{id:424,d:"D5",q:"Chatbot lacks formality. Remove all chit-chat pairs, retrain. Does this meet goal?",o:["Yes","No"],a:1,m:false,e:"No. Removing chit-chat means spurious questions get no response. Still not formal."},
+{id:425,d:"D5",q:"Travel agent chatbot: ask user for destination, repeat until valid input. Which dialog type?",o:["prompt","input","adaptive","QnA Maker"],a:0,m:false,e:"A prompt dialog asks for input, validates it, and repeats until a valid response is received."},
+{id:426,d:"D5",q:"Configure chatbot to query a knowledge base. Which dialog class?",o:["QnAMakerDialog","AdaptiveDialog","SkillDialog","ComponentDialog"],a:0,m:false,e:"QnAMakerDialog is the Bot Framework SDK dialog class designed to query a QnA Maker knowledge base."},
+{id:427,d:"D5",q:"CLU model receives spurious requests incorrectly. Need model to identify spurious requests. What?",o:["Enable active learning","Add entities","Add examples to the None intent","Add examples to the custom intents"],a:2,m:false,e:"The None intent is the catch-all for unrecognized utterances. Adding examples of spurious requests trains the model to route them there."},
+{id:428,d:"D5",q:"Add speech-based channels to Bot Composer bot. Three actions?",o:["Configure language and voice settings for Speech resource","Add endpoint and key of Speech resource to bot","Add language understanding to dialogs","Add Orchestrator to bot","Add Speech to bot responses","Remove setSpeak configuration"],a:[0,1,4],m:true,e:"Configure Speech resource settings + add its endpoint/key to bot + add Speech (SSML) to bot responses."},
+{id:429,d:"D5",q:"Flight booking bot: ask for departure date, repeat until valid. Which dialog type?",o:["prompt","adaptive","waterfall","action"],a:0,m:false,e:"A prompt dialog asks for input, validates it, and repeats until a valid response or cancellation."},
+{id:430,d:"D5",q:"Deploy bot to Azure after creating Azure Bot resource. What else to create?",o:["Azure AD app registration + Azure App Service + App Service plan","Azure AD app registration + AKS + container image","Only Azure App Service + App Service plan","Azure ML workspace + Azure AD app registration"],a:0,m:false,e:"Deploying a Bot Framework bot to Azure requires: Azure AD app registration + Azure App Service + App Service plan."},
+{id:431,d:"D5",q:"Food ordering bot: ask for additional input based on item type, minimize effort. Which two dialog types?",o:["adaptive","action","waterfall","prompt","input"],a:[2,3],m:true,e:"Waterfall dialogs orchestrate multi-step conversations. Prompt dialogs ask for specific user input and validate responses."},
+{id:432,d:"D5",q:"QnA chatbot: price of X but not cost of X. Create entity for cost, retrain. Does this meet goal?",o:["Yes","No"],a:1,m:false,e:"No. The QnA service does not use entities for matching."},
+{id:433,d:"D5",q:"Bot Framework Composer dialog, AskForName + AskForAge. Statements about user.name entity and dialog behavior?",o:["No/Yes/Yes — not entity; assigns values; takes first non-null","Yes/No/No — is entity; does not assign; does not take first","No/No/Yes — not entity; does not assign; takes first","Yes/Yes/No — is entity; assigns; does not take first"],a:0,m:false,e:"user.name is NOT an entity, it is a property (No). Dialog DOES assign to user.name/user.age (Yes). Chatbot DOES attempt to take first non-null entity value for userName (Yes)."},
+{id:434,d:"D5",q:"Build chatbot to support task tracking. CLU service lu1, integrate into chatbot, minimize development time. Four actions?",o:["Add new application → Add prebuilt domain ToDo → Add example utterances → Train","Create new service → Add intents → Train → Publish","Clone existing → Add utterances → Train → Publish","Add new application → Add example utterances → Add domain ToDo → Train"],a:0,m:false,e:"Add a new application, add the prebuilt ToDo domain, add example utterances, then train."},
+{id:435,d:"D5",q:"OnMembersAddedAsync in Microsoft Teams bot. Three statements about behavior?",o:["Yes/No/No — triggers on join; existing users don't see greeting; not on message send","No/Yes/Yes — doesn't trigger; users see greeting; triggers on message","Yes/Yes/No — triggers; users see greeting; not on message","No/No/Yes — doesn't trigger; users don't see; triggers on message"],a:0,m:false,e:"OnMembersAddedAsync IS triggered when user joins (Yes). Existing users do NOT see greeting (No). It is NOT initialized when user sends a message (No)."},
+{id:436,d:"D5",q:"Language generation file with User.Name, Greet(), Greeting(). Three statements?",o:["No/Yes/Yes — not retrieved by prompt; Greet() is template name; Greeting() is template reference","Yes/No/No — retrieved by prompt; not template name; not template reference","No/No/Yes — not prompt; not template name; is template reference","Yes/Yes/No — is prompt; is template name; not template reference"],a:0,m:false,e:"User.Name retrieves from property NOT a prompt (No). Greet() IS the language generation template name (Yes). Greeting() IS a reference to a template (Yes)."},
+{id:437,d:"D5",q:"Bot Framework SDK, UserProfile + ConversationData, Memory Storage. Three statements?",o:["No/No/No — UserProfile not in storage layer; ConversationData not in storage layer; both don't persist on termination","Yes/Yes/Yes — both in storage layer; both persist","No/Yes/No — UserProfile not; ConversationData is; don't persist","Yes/No/Yes — UserProfile is; ConversationData not; persist"],a:0,m:false,e:"Memory Storage is in-memory only. Neither UserProfile nor ConversationData are persisted. Both are lost when runtime terminates."},
+{id:438,d:"D5",q:"Chatbot showing flight info (passengers, 2 stops, SFO-AMS, $4032.54). The chatbot is showing and card includes?",o:["an Adaptive Card / an image","a Hero Card / an image group","an Adaptive Card / an image group","a Thumbnail Card / media"],a:2,m:false,e:"The rich card with multiple passengers, flight details, and pricing is an Adaptive Card. The card includes an image group."},
+{id:439,d:"D5",q:"LUIS .lu file with Confirm/SelectNone/@DirectionalReference. SelectNone is and DirectionalReference is?",o:["an entity / an utterance","an intent / an entity","an entity / an intent","a domain / an utterance"],a:0,m:false,e:"SelectNone is an entity (@ prefix denotes entity). @{DirectionalReference=top right} is an utterance example showing entity usage."},
+{id:440,d:"D5",q:"Bot Framework Emulator chat flow with Attachment and AttachmentLayout activities. BOX1 activity type and BOX2/BOX3 layout?",o:["Typing / carousel / carousel","ConversationUpdate / adaptive / list","Attachment / thumbnail / carousel","Typing / list / adaptive"],a:0,m:false,e:"Typing activity shows bot is processing. carousel layout displays multiple attachments side by side."},
+{id:441,d:"D5",q:"QnA Maker chatbot, enable active learning. Four actions in sequence?",o:["Save and train KB → Show active learning suggestions in KB → Approve and reject suggestions → Publish KB","Enable active learning → Train → Publish → Review suggestions","Add task to Azure → Train → Publish → Review","Review suggestions → Train → Enable active learning → Publish"],a:0,m:false,e:"Save and train the KB, select Show active learning suggestions, approve/reject suggestions, then publish the updated KB."},
+{id:442,d:"D5",q:"Test bot in Bot Framework Emulator, debug interactively. Three actions in sequence?",o:["Build and run the bot → Open Bot Framework Emulator → Connect to the bot endpoint","Register bot with Azure → Open Emulator → Connect","Open Emulator → Register bot → Build and run","Build → Register → Open Emulator"],a:0,m:false,e:"Build and run the bot locally first, open the Bot Framework Emulator, then connect to the local bot endpoint."},
+{id:443,d:"D5",q:"Deploy bot app1 to Azure. Complete az command: az type and deployment source?",o:["webapp / config-zip","functionapp / config","bot / config-local-git","vm / config"],a:0,m:false,e:"az webapp deploy deploys a web app. config-zip uses a zip file as the deployment source."},
+{id:444,d:"D5",q:"Bot Framework Emulator, test bot with credentials prompt when signing in. Three settings to configure?",o:["Use your own ID to communicate with bot / Use secure ID authentication token / Automatically download and install updates","Bypass ngrok / Use localhost / Enable HTTPS","Sign in to Azure AD / Configure App ID / Set endpoint","Use ngrok / Set App ID / Set App Secret"],a:0,m:false,e:"These three Emulator settings enable credential prompting: own ID, secure auth token, and auto-updates."},
+{id:445,d:"D5",q:"Bot Framework Composer, GetWeather dialog. User asks weather for York and GetWeather dialog TRIGGER type?",o:["change to a different dialog / Dialog starts","send a response / OnIntent","ask a question / OnActivity","invoke a skill / BeginDialog"],a:0,m:false,e:"When user asks about weather for York, it changes to GetWeather dialog. The dialog uses Dialog starts as its trigger."},
+// D6
+{id:501,d:"D6",q:"Azure OpenAI GPT-4 model. App1 must NOT return hate speech. What to configure?",o:["the Frequency penalty parameter","abuse monitoring","a content filter","the Temperature parameter"],a:2,m:false,e:"Azure OpenAI content filters configure threshold levels for filtering harmful content including hate speech."},
+{id:502,d:"D6",q:"System message: explain like a 4-year-old. Which prompt engineering technique?",o:["few-shot learning","affordance","chain of thought","priming"],a:3,m:false,e:"Priming uses the system message to set the models persona, behavior, and response style."},
+{id:503,d:"D6",q:"Travel agent chatbot. Need to maximize accuracy. What to do?",o:["Configure model to include travel agent database data","Set the Top P parameter to 0","Set the Temperature parameter to 0","Modify system message to specify answers must be accurate"],a:2,m:false,e:"Setting Temperature to 0 makes the model deterministic, choosing the most probable token."},
+{id:504,d:"D6",q:"GPT 3.5 chatbot. Improve quality, minimize development effort. Two ways?",o:["Fine-tune the model","Provide grounding content","Add sample request/response pairs","Retrain with your own data","Train a custom LLM"],a:[1,2],m:true,e:"Providing grounding content and adding sample request/response pairs both improve quality with minimal effort."},
+{id:505,d:"D6",q:"Compare documents for semantic similarity. Return numeric vectors. Minimize effort. Which model?",o:["GPT-3.5","GPT-4","embeddings","DALL-E"],a:2,m:false,e:"Embedding models convert text into high-dimensional numerical vectors that capture semantic meaning."},
+{id:506,d:"D6",q:"500 prompt-completion pairs for fine-tuning. Which file format?",o:["CSV","XML","JSONL","TSV"],a:2,m:false,e:"Azure OpenAI fine-tuning requires training data in JSONL (JSON Lines) format."},
+{id:507,d:"D6",q:"Custom OpenAI model. Files: File1.tsv, File2.xml, File3.pdf, File4.xlsx. Which can upload to OpenAI CLI tool?",o:["File1.tsv only","File2.xml only","File3.pdf only","File4.xlsx only","File1.tsv and File4.xlsx only","All four files"],a:0,m:false,e:"The OpenAI CLI data preparation tool accepts TSV, CSV, JSONL, JSON formats. Only File1.tsv qualifies."},
+{id:508,d:"D6",q:"User1 needs to upload datasets to OpenAI1 and fine-tune models. Least privilege. Which role?",o:["Cognitive Services OpenAI Contributor","Cognitive Services Contributor","Cognitive Services OpenAI User","Contributor"],a:0,m:false,e:"Cognitive Services OpenAI Contributor grants permissions to upload training data and fine-tune models."},
+{id:509,d:"D6",q:"10,000 ASCII files. Find files containing phrases using cosine similarity. Which model?",o:["text-embedding-ada-002","GPT-4","GPT-35 Turbo","GPT-4-32k"],a:0,m:false,e:"text-embedding-ada-002 generates embeddings. Cosine similarity between embeddings finds semantically similar content."},
+{id:510,d:"D6",q:"User1 needs: view endpoints, view models, generate text/images. Least privilege. Which role?",o:["Cognitive Services OpenAI User","Cognitive Services Contributor","Contributor","Cognitive Services OpenAI Contributor"],a:0,m:false,e:"Cognitive Services OpenAI User allows viewing endpoints, seeing available models, and calling models."},
+{id:511,d:"D6",q:"Azure OpenAI Studio: need more deterministic responses. Which two parameters to configure?",o:["Temperature","Max tokens","Top P (nucleus sampling)","Presence penalty"],a:[0,2],m:true,e:"Temperature and Top P both control output randomness. Lowering both makes responses more deterministic."},
+{id:512,d:"D6",q:"After creating Azure OpenAI resource, what must you do before calling the model?",o:["Call the completions API directly","Deploy a specific model within the Azure OpenAI resource","Create a separate Cognitive Services resource for each model","Enable the OpenAI feature in Azure AD"],a:1,m:false,e:"You must explicitly deploy a specific model version before calling its endpoints."},
+{id:513,d:"D6",q:"Ground Azure OpenAI responses in your own documents. Which approach?",o:["Fine-tune the model on your documents","Use RAG with Azure AI Search as the data source","Increase the temperature parameter","Use function calling with a custom API"],a:1,m:false,e:"RAG with Azure AI Search retrieves relevant document chunks and passes them as context to the model."},
+{id:514,d:"D6",q:"Which role in Azure OpenAI Chat Completion API shapes the assistants behavior?",o:["user","assistant","system","function"],a:2,m:false,e:"The system role provides instructions defining the assistants persona, tone, behavior, and constraints."},
+{id:515,d:"D6",q:"Prevent Azure OpenAI from generating harmful content. Which feature?",o:["Decrease temperature to 0","Set a maximum token limit","Configure Azure OpenAI content filters","Use a restricted system prompt only"],a:2,m:false,e:"Azure OpenAI content filters configure threshold levels for filtering harmful content categories."},
+{id:516,d:"D6",q:"Azure OpenAI needs to call external APIs based on user requests. Which feature?",o:["Fine-tuning","Function calling","Content filters","Prompt caching"],a:1,m:false,e:"Function calling lets the model return structured JSON tool calls which your code then executes."},
+{id:517,d:"D6",q:"Azure OpenAI chatbot, more creative and less deterministic. Complete code: role and parameter?",o:["system / temperature","user / temperature","assistant / top_p","system / frequency_penalty"],a:0,m:false,e:"The system role shapes assistant behavior. temperature parameter controls randomness/creativity."},
+{id:518,d:"D6",q:"Azure OpenAI model, Temperature=1, Top P=0.5, Max tokens=100. Response: finish_reason=stop, completion_tokens=86. Three statements?",o:["Yes/No/No — charged 86 tokens; NOT truncated (stop not length); prompt_tokens NOT in max token calc","No/Yes/Yes — not 86; was truncated; is in calc","Yes/Yes/No — 86 tokens; was truncated; not in calc","No/No/Yes — not 86; not truncated; is in calc"],a:0,m:false,e:"Subscription charged for 86 completion tokens (Yes). finish_reason=stop means natural completion NOT truncation (No). prompt_tokens do not count toward Max response tokens (No)."},
+{id:519,d:"D6",q:"Azure OpenAI Python console app, call AI1 and output results. Complete code: response type and print value?",o:["openai.ChatCompletion.create / response.choices[0].text","openai.Embedding.create / response.choices[0].message","openai.Image.create / response.choices[0].text","openai.ChatCompletion.create / response.choices[0].message.content"],a:3,m:false,e:"openai.ChatCompletion.create calls the chat completion API. response.choices[0].message.content accesses the response text."},
+{id:520,d:"D6",q:"Azure OpenAI C# console app, call AI1. Complete code: method and print value?",o:["GetCompletions / response.Value.Choices[0].Text","GetEmbeddings / response.Value.Data[0].Embedding","GetImageGenerations / response.Value.Data[0].Url","GetChatCompletions / response.Value.Choices[0].Message.Content"],a:0,m:false,e:"GetCompletions is the method for text completion. response.Value.Choices[0].Text accesses the completion text."},
+{id:521,d:"D6",q:"ARM script, create resource for fictional stories using customer-managed key. Provider and property?",o:["aiServices / --assign-identity","CognitiveServices / --encryption","OpenAI / --key-vault","MachineLearning / --identity"],a:0,m:false,e:"aiServices is the provider for Azure AI Services. --assign-identity is required to assign managed identity for customer-managed key access to Key Vault."},
+{id:522,d:"D6",q:"Azure OpenAI chatbot, upload company data via Chat playground. Complete code: options type and extension configuration?",o:["ChatCompletionsOptions / AzureCognitiveSearchChatExtensionConfiguration","CompletionsOptions / AzureChatExtensionConfiguration","StreamingChatCompletions / AzureDocumentIntelligenceChatExtensionConfiguration","ChatCompletionsOptions / AzureDocumentIntelligenceChatExtensionConfiguration"],a:0,m:false,e:"ChatCompletionsOptions is the options class for chat. AzureCognitiveSearchChatExtensionConfiguration connects to Azure AI Search for RAG."},
+{id:523,d:"D6",q:"Query OpenAI1 embeddings deployment (embeddings1, text-embedding-ada-002). Complete code: credential and GetEmbeddings parameter?",o:["API key value / embeddings1 (deployment name)","Tenant ID / text-embedding-ada-002","Subscription ID / OpenAI1","Client secret / embeddings1"],a:0,m:false,e:"AzureKeyCredential takes the API key. GetEmbeddings takes the deployment name (embeddings1), not the model name."},
+{id:524,d:"D6",q:"Azure OpenAI Studio Chat playground, reduce word repetition + reduce randomness. Which two parameters?",o:["Frequency penalty / Temperature","Presence penalty / Top P","Frequency penalty / Top P","Temperature / Max tokens"],a:0,m:false,e:"Frequency penalty reduces repetition of words. Temperature reduces randomness of responses."},
+{id:525,d:"D6",q:"Python chatbot, openai.ChatCompletion.create, system=helpful assistant, user=What is an LLM. Three statements?",o:["No/No/Yes — not high certainty; changing question does not help; changing system message works","Yes/Yes/No — high certainty; question change helps; system change does not","No/Yes/No — not certain; question helps; system does not","Yes/No/Yes — certain; question does not help; system does"],a:0,m:false,e:"Response certainty NOT guaranteed (No). Changing only the user question does not change response scope (No). Changing system message to restrict to AI context WILL produce intended response (Yes)."},
+{id:526,d:"D6",q:"Azure OpenAI Python chatbot, upload company data using Chat playground. Complete code: completion type and data source type?",o:["ChatCompletion / AzureCognitiveSearch","Completion / BlobStorage","Embedding / AzureDocumentIntelligence","ChatCompletion / AzureOpenAI"],a:0,m:false,e:"ChatCompletion for chat-based responses. AzureCognitiveSearch as the data source type for RAG with company data."},
+{id:527,d:"D6",q:"Azure OpenAI ARM template, resource must respond to 600 requests per minute. Property name and value?",o:["capacity / 600","count / 600","maxValue / 1","size / 100"],a:0,m:false,e:"The capacity property in the ARM template SKU section sets the throughput capacity. 600 equals 600K tokens per minute."},
+{id:528,d:"D6",q:"App analyzes negative comments using Sentiment Analysis, managed feedback remains on-premises. Three actions in sequence?",o:["Provision Language service in Azure → Deploy Docker container to on-premises server → Run container and query prediction endpoint","Deploy to Azure → Configure private endpoint → Query cloud endpoint","Provision on-premises server → Deploy to Azure → Query cloud endpoint","Create Language service → Export model → Deploy locally"],a:0,m:false,e:"Provision Language service in Azure for billing, deploy the container to on-premises server to keep data local, run and query the on-premises container endpoint."},
+{id:529,d:"D6",q:"Azure OpenAI resource AI1, three GPT-3.5 deployments. Apps access via REST API. Provide access and connect to deployment?",o:["An API key / A deployment name","A bearer token / A deployment endpoint","A SAS token / A model name","An API key / A deployment endpoint"],a:0,m:false,e:"API key provides access to AI1. Deployment name specifies which of the three deployments to use."},
+// D7
+{id:601,d:"D7",q:"Chatbot using AI1. Check all input AND output for objectionable content. Create what resource first?",o:["Microsoft Defender Threat Intelligence","Azure AI Content Safety","Log Analytics","Azure Machine Learning"],a:1,m:false,e:"Azure AI Content Safety is the dedicated service for detecting harmful content in both text and images."},
+{id:602,d:"D7",q:"Submit image of a circle to Azure AI Content Safety. What output?",o:["0","0.0","7","100"],a:0,m:false,e:"A circle contains no harmful content. Azure AI Content Safety returns a severity score of 0 (integer)."},
+{id:603,d:"D7",q:"Social media app: block inappropriate images, minimize effort. Two tools?",o:["Azure AI Document Intelligence","Microsoft Defender for Cloud Apps","Azure AI Content Safety","Azure AI Vision","Azure AI Custom Vision"],a:[2,3],m:true,e:"Azure AI Content Safety has built-in image moderation. Azure AI Vision can detect adult/racy content."},
+{id:604,d:"D7",q:"Optimize content filter configs by running tests. Use Protected material detection. Does this meet requirement?",o:["Yes","No"],a:1,m:false,e:"No. Protected material detection identifies copyrighted content, not test content filter safety configurations."},
+{id:605,d:"D7",q:"Optimize content filter configs by running tests. Use Moderate text content feature. Does this meet requirement?",o:["Yes","No"],a:0,m:false,e:"Yes. Moderate text content lets you test text inputs against safety categories."},
+{id:606,d:"D7",q:"Optimize content filter configs by running tests. Use Monitor online activity. Does this meet requirement?",o:["Yes","No"],a:1,m:false,e:"No. Monitor online activity tracks real-time production traffic, not for running offline tests."},
+{id:607,d:"D7",q:"Optimize content filter configs by running tests. Use Safety metaprompt. Does this meet requirement?",o:["Yes","No"],a:1,m:false,e:"No. Safety metaprompt generates system prompts for safety, it does not let you run your own test questions."},
+{id:608,d:"D7",q:"Create dictionary of offensive terms for obscure offensive term detection, minimize effort. What?",o:["a text classifier","language detection","text moderation","a blocklist"],a:3,m:false,e:"A blocklist in Azure AI Content Safety lets you add custom terms that will be flagged during content analysis."},
+{id:609,d:"D7",q:"Block questions intended to circumvent built-in safety features. Which AI Content Safety feature?",o:["Monitor online activity","Jailbreak risk detection","Moderate text content","Protected material text detection"],a:1,m:false,e:"Jailbreak risk detection specifically identifies prompt injection and jailbreak attempts."},
+{id:610,d:"D7",q:"Video Indexer transcribing webinars with high accuracy for jargon. What to do?",o:["Create a custom language model","Configure audio indexing for videos only","Enable multi-language detection","Build a custom Person model for presenters"],a:0,m:false,e:"A custom language model in Video Indexer lets you add domain-specific vocabulary and jargon."},
+{id:611,d:"D7",q:"Receipt extraction. Trigger manual review when confidence below 70%. Which expression?",o:["documentResults.docType == prebuilt:receipt","documentResults.fields.*.confidence < 0.7","documentResults.fields.ReceiptType.confidence > 0.7","documentResults.fields.MerchantName.confidence < 0.7"],a:1,m:false,e:"documentResults.fields.*.confidence < 0.7 checks ALL extracted fields against the 70% threshold."},
+{id:612,d:"D7",q:"Cognitive Search: autocompletion based on all three product name variants. Three actions?",o:["Make API queries to autocomplete endpoint and include suggesterName","Add a suggester with the three product name fields as source fields","Make API queries to search endpoint with product name fields in searchFields","Add a suggester for each of the three product name fields","Set the searchAnalyzer property for the three product name variants","Set the analyzer property for the three product name variants"],a:[0,1,5],m:true,e:"Add a single suggester with all 3 name fields, set the analyzer property, and query the autocomplete endpoint with suggesterName."},
+{id:613,d:"D7",q:"Extract text from financial docs (custom formats + receipts). Two API endpoints?",o:["/vision/v3.1/read/analyzeResults","/formrecognizer/v2.0/custom/models/{modelId}/analyze","/formrecognizer/v2.0/prebuilt/receipt/analyze","/vision/v3.1/describe","/vision/v3.1/read/analyze"],a:[1,2],m:true,e:"Custom standardized documents use /formrecognizer/v2.0/custom/models/{modelId}/analyze. Receipt images use /formrecognizer/v2.0/prebuilt/receipt/analyze."},
+{id:614,d:"D7",q:"Process wiki content for knowledgebase (must support EN/FR/PT). What to include?",o:["indexer for Azure Blob storage + language detection + text translation skills","indexer for Azure Blob storage + language detection skill","indexer for Azure Cosmos DB + document extraction + text translation skills","indexer for Azure Cosmos DB + language detection + text translation skills"],a:3,m:false,e:"Wiki content is in Cosmos DB. Language detection identifies source language; text translation converts to EN/FR/PT."},
+{id:615,d:"D7",q:"Knowledgebase requirement: support searches for equivalent terms. What to include?",o:["synonym map","a suggester","a custom analyzer","a built-in key phrase extraction skill"],a:0,m:false,e:"A synonym map in Azure Cognitive Search lets you define equivalent terms so searches for one term also match synonyms."},
+{id:616,d:"D7",q:"QnA Maker + Bot SDK integration. Implement confidence score threshold of 70%. Which property?",o:["QnAMakerOptions.StrictFilters","QnADialogResponseOptions.CardNoMatchText","QnAMakerOptions.RankerType","QnAMakerOptions.ScoreThreshold"],a:3,m:false,e:"QnAMakerOptions.ScoreThreshold sets the minimum confidence score threshold. Set to 0.7 for 70%."},
+{id:617,d:"D7",q:"QnA Maker + Bot SDK. Need additional component to route between QnA and other services. What?",o:["Microsoft Translator","Language Understanding","Orchestrator","chatdown"],a:2,m:false,e:"Orchestrator routes user input to the appropriate service (QnA, LUIS, custom dialog)."},
+{id:618,d:"D7",q:"Azure AI Content Safety curl command, identify hateful language using blocklist. Endpoint path and API resource?",o:["content/safety / text/blocklists","text/analyze / completions","content/safety / text/analyze","embeddings / text/blocklists"],a:0,m:false,e:"The Content Safety service uses the content/safety path. text/blocklists endpoint manages and applies custom blocklists."},
+{id:619,d:"D7",q:"Social media app, moderate content uploaded by users. Complete code: client type and analyze method?",o:["ContentSafetyClient / client.AnalyzeImage(request)","BlocklistClient / client.AnalyzeText(request)","AnalyzeTextOptions / client.AnalyzeImage(request)","ContentSafetyClient / client.AnalyzeText(request)"],a:0,m:false,e:"ContentSafetyClient is the client class for Azure AI Content Safety. AnalyzeImage method analyzes images for inappropriate content."},
+{id:620,d:"D7",q:"Azure AI Content Safety SDK, identify requests containing harmful content. Complete code: client type and request type?",o:["ContentSafetyClient / AnalyzeTextOptions","BlocklistClient / TextBlockMatch","ContentSafetyClient / AnalyzeImageOptions","TextCategoryAnalysis / AnalyzeTextOptions"],a:0,m:false,e:"ContentSafetyClient is used to connect to the Content Safety service. AnalyzeTextOptions is the request type for text analysis."},
+{id:621,d:"D7",q:"Content Moderator chatbot, identify sexually explicit language. Section and Category values?",o:["Classification / Category 2","PII / Category 1","Terms / Category 3","Classification / Category 1"],a:0,m:false,e:"Classification section contains the category scores. Category 2 specifically covers sexually explicit content in Content Moderator Text Moderation."},
+{id:622,d:"D7",q:"Anomaly Detector, Server1 with intermittent internet. Deploy Anomaly Detector to Server1. Four actions in sequence?",o:["Install Docker Engine on Server1 → From Server1 run docker pull → From Server1 run docker run → Query prediction endpoint on Server1","Pull container → Deploy to Azure → Run container → Query cloud endpoint","Create Dockerfile → Build → Push to registry → Run on Server1","Pull from Docker Hub → Install Docker → Run container → Test"],a:0,m:false,e:"Install Docker on Server1, pull the Anomaly Detector container image, run it with billing parameters, then query the local prediction endpoint."}
+,
+{id:17,d:"D1",q:"App1 sends requests to an Azure AI Services resource. You need to ensure requests are throttled if the per-second rate exceeds the limit. Which HTTP status code does the service return?",o:["400 Bad Request", "401 Unauthorized", "403 Forbidden", "429 Too Many Requests"],a:3,m:false,e:"HTTP 429 Too Many Requests is returned when the call rate limit is exceeded for Azure AI Services."},
+{id:18,d:"D1",q:"Monitor Azure AI Services usage. You need to configure a diagnostic setting. Where should you send the logs to enable long-term retention and querying with KQL?",o:["Azure Event Hub", "Azure Storage account", "Log Analytics workspace", "Azure Service Bus"],a:2,m:false,e:"Log Analytics workspace stores diagnostic logs and allows querying with Kusto Query Language (KQL) for long-term retention and analysis."},
+{id:19,d:"D1",q:"Which two methods can be used to authenticate to an Azure AI Services resource? Each correct answer presents a complete solution.",o:["Subscription key", "Managed identity", "X.509 certificate", "SSH key", "Shared access signature (SAS) token"],a:[0, 1],m:true,e:"Azure AI Services support authentication via subscription keys and Azure AD-based managed identity."},
+{id:20,d:"D1",q:"You need to regenerate the primary key for an Azure AI Services resource with zero downtime. What should you do first?",o:["Delete and recreate the resource", "Update all apps to use the secondary key", "Regenerate the primary key immediately", "Disable the resource temporarily"],a:1,m:false,e:"Switch all applications to the secondary key first, then regenerate the primary key. This ensures no downtime during key rotation."},
+{id:21,d:"D1",q:"You need to monitor an Azure AI Services resource and receive an alert when the total number of calls exceeds 1000 per day. What should you configure?",o:["A diagnostic setting with a Storage account", "An alert rule based on a metric threshold", "A Log Analytics workspace query", "An Azure Policy assignment"],a:1,m:false,e:"Alert rules based on metric thresholds trigger notifications when a specific metric like Total Calls exceeds the defined value."},
+{id:22,d:"D1",q:"Deploy an Azure AI Services container to an on-premises server. The container must continue to function if internet connectivity is temporarily lost. Which type of container commitment should you configure?",o:["Standard pay-as-you-go", "Connected commitment", "Disconnected commitment", "Serverless commitment"],a:2,m:false,e:"Disconnected commitment containers can operate without continuous internet access. They require a license downloaded in advance."},
+{id:23,d:"D1",q:"You are designing an AI solution that processes personal data. Which responsible AI principle requires that individuals can access, correct, and control their own data?",o:["Fairness", "Reliability and Safety", "Privacy and Security", "Accountability"],a:2,m:false,e:"Privacy and Security ensures that AI systems protect personal data and give individuals control over their information."},
+{id:24,d:"D1",q:"You need to restrict access to an Azure AI Services resource to only allow requests from a specific virtual network subnet. What should you configure?",o:["A private DNS zone", "A network security group on the resource", "Virtual network firewall rules on the resource", "An application gateway with WAF"],a:2,m:false,e:"Virtual network firewall rules on the Azure AI Services resource restrict inbound access to specific VNet subnets."},
+{id:25,d:"D1",q:"App1 uses an Azure AI Services resource. You need to ensure App1 can authenticate without storing keys in code or config files, with minimal management overhead. What should you use?",o:["A connection string in Azure Key Vault", "A system-assigned managed identity", "A service principal with a certificate", "A shared access signature"],a:1,m:false,e:"A system-assigned managed identity authenticates to Azure services without credentials in code. Azure manages the identity lifecycle automatically."},
+{id:26,d:"D1",q:"You need to track the cost of Azure AI Services across multiple departments. Each department uses a different resource. What is the most efficient way to report costs per department?",o:["Create separate Azure subscriptions per department", "Tag each resource with the department name and use cost analysis", "Use Azure Advisor recommendations", "Create a budget alert per resource"],a:1,m:false,e:"Resource tags allow you to organize and filter costs by department in Azure Cost Management without needing separate subscriptions."},
+{id:27,d:"D1",q:"An AI model makes loan decisions. Auditors need to understand why each decision was made. Which responsible AI principle applies most directly?",o:["Inclusiveness", "Reliability and Safety", "Transparency", "Fairness"],a:2,m:false,e:"Transparency means AI systems should be understandable and explainable so stakeholders can understand how and why decisions are made."},
+{id:28,d:"D1",q:"You need to deploy Azure AI Services in a region that guarantees data residency in Europe. Which feature ensures data does not leave the selected region?",o:["Azure Policy", "Geo-redundant storage", "Regional deployment with no cross-region replication", "Azure Purview"],a:2,m:false,e:"Deploying to a specific Azure region and not enabling geo-redundancy ensures data stays within that region for residency compliance."},
+{id:29,d:"D1",q:"Your team uses a CI/CD pipeline to deploy Azure AI resources via ARM templates. You need to retrieve the endpoint and key after deployment. Which CLI command retrieves these?",o:["az cognitiveservices account keys list", "az cognitiveservices account network-rule list", "az cognitiveservices account list", "az role assignment list"],a:0,m:false,e:"az cognitiveservices account keys list returns the subscription keys for the specified Azure AI Services account."},
+{id:30,d:"D1",q:"You need to create a single Azure AI Services resource that provides access to Language, Vision, and Speech services using one endpoint and one key. Which resource kind should you create?",o:["TextAnalytics", "CognitiveServices", "SpeechServices", "ComputerVision"],a:1,m:false,e:"CognitiveServices is the multi-service kind that provides a single key and endpoint for multiple Azure AI services including Language, Vision, and Speech."},
+{id:150,d:"D2",q:"You use Azure AI Vision to analyze an image and need to detect whether the image contains adult or violent content. Which visual feature should you request?",o:["Tags", "Objects", "Adult", "Description"],a:2,m:false,e:"The Adult visual feature returns scores for adult content and racy/violent content in the image."},
+{id:151,d:"D2",q:"You need to extract structured data from identity documents such as passports and driver licenses using Azure AI Document Intelligence. Which prebuilt model should you use?",o:["prebuilt-invoice", "prebuilt-idDocument", "prebuilt-businessCard", "prebuilt-receipt"],a:1,m:false,e:"The prebuilt-idDocument model is specifically designed to extract fields from identity documents like passports and driver licenses."},
+{id:152,d:"D2",q:"You train a Custom Vision object detection model. After evaluation, Precision is high but Recall is low. What does this indicate?",o:["The model detects too many false positives", "The model misses many actual objects (false negatives)", "The model is accurate and well-balanced", "The model threshold is too low"],a:1,m:false,e:"Low Recall means the model fails to detect many objects that are actually present (high false negatives). High Precision means the detections it does make are mostly correct."},
+{id:153,d:"D2",q:"You need to detect the faces of known employees in a video stream in real time. Which two Azure services should you use together?",o:["Azure AI Face API", "Azure AI Custom Vision", "Azure AI Video Indexer", "Azure Stream Analytics", "Azure AI Vision Image Analysis"],a:[0, 2],m:true,e:"Azure AI Face API performs real-time face recognition. Azure AI Video Indexer can index and search videos for known faces using a person model."},
+{id:154,d:"D2",q:"A Custom Vision classification model is deployed. You need to call it from a Python app using the SDK. Which client class should you use?",o:["CustomVisionTrainingClient", "CustomVisionPredictionClient", "ComputerVisionClient", "ImageAnalysisClient"],a:1,m:false,e:"CustomVisionPredictionClient is the SDK class used to call a published Custom Vision model for predictions."},
+{id:155,d:"D2",q:"You use Azure AI Video Indexer to index a video. You need to extract the spoken words as searchable text. Which insight type does this produce?",o:["OCR", "Labels", "Transcript", "Keyframes"],a:2,m:false,e:"The Transcript insight in Video Indexer converts spoken audio to searchable text using speech-to-text transcription."},
+{id:265,d:"D3",q:"You are building a custom text classification solution using Azure AI Language. After labeling and training, what must you do before calling the prediction endpoint?",o:["Export the model as ONNX", "Deploy the model to a deployment slot", "Enable active learning", "Add more training examples"],a:1,m:false,e:"After training a custom text classification model in Azure AI Language, you must deploy it to a named deployment slot before you can call the prediction API."},
+{id:266,d:"D3",q:"App1 uses the Azure AI Language service to analyze customer reviews. You need to identify the product name, location, and person mentioned in each review. Which feature should you use?",o:["Sentiment Analysis", "Key Phrase Extraction", "Named Entity Recognition", "Entity Linking"],a:2,m:false,e:"Named Entity Recognition (NER) identifies and categorizes entities such as Person, Location, Organization, and Product in text."},
+{id:267,d:"D3",q:"You need to transcribe a live customer service call from English speech to English text in real time. Which Azure AI Speech API should you use?",o:["Batch transcription API", "Real-time speech-to-text API", "Speaker Recognition API", "Custom Neural Voice API"],a:1,m:false,e:"The real-time speech-to-text API transcribes live audio streams into text immediately, suitable for live call transcription."},
+{id:268,d:"D3",q:"You build a CLU model. After deployment, users report that questions outside the expected domain get routed to incorrect intents. What should you do?",o:["Increase the confidence threshold", "Add more entities to existing intents", "Add diverse utterance examples to the None intent", "Retrain with the same data"],a:2,m:false,e:"The None intent catches out-of-domain requests. Adding diverse examples of unrelated utterances trains the model to correctly route them to None instead of a valid intent."},
+{id:269,d:"D3",q:"You need to translate a Word document from English to French while preserving the document formatting. Which Azure service should you use?",o:["Azure AI Language Text Translation", "Azure AI Translator Document Translation", "Azure AI Translator Text Translation", "Azure AI Speech Translation"],a:1,m:false,e:"Document Translation in Azure AI Translator translates entire documents including Word files while preserving their original formatting and structure."},
+{id:270,d:"D3",q:"Python app uses Azure AI Language to detect PII in customer emails. You need to redact detected PII from the output. Which SDK method returns redacted text?",o:["recognize_entities()", "extract_key_phrases()", "recognize_pii_entities() with redacted_text property", "analyze_sentiment()"],a:2,m:false,e:"recognize_pii_entities() returns both the detected PII entities and a redacted_text property where PII has been replaced with asterisks."},
+{id:339,d:"D4",q:"Azure AI Search index has a field named price. You need users to be able to filter results by price range and sort results by price. Which two attributes must the field have?",o:["Searchable", "Filterable", "Sortable", "Facetable", "Retrievable"],a:[1, 2],m:true,e:"Filterable enables range filters. Sortable enables ordering results by the field value."},
+{id:340,d:"D4",q:"You add a custom skill to an Azure AI Search skillset that calls an Azure Function. What must the Azure Function return in its response body?",o:["A JSON object with a values array containing recordId and data fields", "A plain text string", "An XML document", "A JSON object with a results array"],a:0,m:false,e:"Custom skills must return a JSON object with a values array. Each element must include recordId matching the input record and data containing the skill outputs."},
+{id:341,d:"D4",q:"You have an Azure AI Search service with 1 partition and 1 replica. You need to achieve 99.9% SLA for both queries and indexing. What is the minimum configuration required?",o:["2 replicas, 1 partition", "3 replicas, 1 partition", "2 replicas, 2 partitions", "3 replicas, 2 partitions"],a:2,m:false,e:"99.9% SLA for both read queries and write indexing requires at least 2 replicas and 2 partitions in Azure AI Search."},
+{id:342,d:"D4",q:"You index product data in Azure AI Search. You need to highlight the search terms within the returned text fields. Which query parameter enables this?",o:["$select", "highlight", "$filter", "scoringProfile"],a:1,m:false,e:"The highlight query parameter specifies which fields should have matching terms highlighted in the search results."},
+{id:343,d:"D4",q:"You need to implement fuzzy search so users can find documents even when they make spelling mistakes. Which Azure AI Search query syntax supports fuzzy matching?",o:["Simple query syntax with the tilde operator", "Full Lucene syntax with the tilde operator", "OData filter expressions", "Semantic query type"],a:1,m:false,e:"Full Lucene syntax supports fuzzy search using the tilde operator which matches terms within a specified edit distance."},
+{id:344,d:"D4",q:"You need to extract key phrases and sentiment from documents during Azure AI Search indexing, with no custom code. What should you add to the skillset?",o:["A custom skill calling Azure AI Language", "The built-in KeyPhraseExtractionSkill and SentimentSkill", "A custom skill calling an Azure Function", "An EntityRecognitionSkill only"],a:1,m:false,e:"Azure AI Search includes built-in cognitive skills including KeyPhraseExtractionSkill and SentimentSkill which require no custom code."},
+{id:345,d:"D4",q:"What is the minimum supported interval for an Azure AI Search indexer schedule?",o:["1 minute", "5 minutes", "1 hour", "6 hours"],a:1,m:false,e:"The minimum supported interval for Azure AI Search indexer schedules is 5 minutes."},
+{id:346,d:"D4",q:"You need to ensure that an Azure AI Search index is updated immediately when a document changes in Cosmos DB, without waiting for the scheduled indexer run. What should you use?",o:["Increase indexer frequency to every 5 minutes", "Enable change detection policy on the indexer", "Use the Push API to update the index directly", "Add a merge-or-upload action via the indexer"],a:2,m:false,e:"The Push API lets you update index documents immediately without waiting for an indexer to run providing real-time index updates."},
+{id:347,d:"D4",q:"You configure a knowledge store in Azure AI Search. You need to store enriched documents as individual JSON files in blob storage. Which projection type should you use?",o:["Table projection", "Object projection", "File projection", "Shaper projection"],a:1,m:false,e:"Object projections store enriched documents as individual JSON files in Azure Blob Storage containers."},
+{id:348,d:"D4",q:"Azure AI Search query returns too many irrelevant results. You need to boost documents where the category field matches the user selection. What should you configure?",o:["A synonym map", "A scoring profile with a field weight", "A suggester", "A semantic configuration"],a:1,m:false,e:"Scoring profiles let you define field weights and functions that boost relevance scores for documents matching specific criteria like category."},
+{id:349,d:"D4",q:"You need to implement autocomplete in a search box using Azure AI Search so that partial input returns suggested completions. What must you create on the index first?",o:["A synonym map", "A scoring profile", "A suggester", "A semantic ranker"],a:2,m:false,e:"A suggester must be defined on the index specifying which fields are used as the source for autocomplete and suggest operations."},
+{id:350,d:"D4",q:"You are designing a multi-tenant Azure AI Search solution where each tenant data must be isolated. What is the recommended approach that minimizes cost?",o:["One search service per tenant", "One index per tenant on a shared service", "One partition per tenant", "One replica per tenant"],a:1,m:false,e:"Using one index per tenant on a shared search service isolates tenant data logically while minimizing cost compared to separate services."},
+{id:446,d:"D5",q:"You need to build a bot that can answer questions about company policies from a SharePoint site, a PDF, and a FAQ webpage. Which Azure service should you use to create the knowledge base?",o:["LUIS", "Azure Bot Service QnA Maker", "Azure AI Language Custom question answering", "Azure AI Language CLU"],a:2,m:false,e:"Custom question answering in Azure AI Language creates knowledge bases from URLs, files, and structured Q&A pairs replacing QnA Maker."},
+{id:447,d:"D5",q:"A Bot Framework bot needs to validate that user input is a valid email address before proceeding. Which dialog component should you use?",o:["WaterfallDialog", "AdaptiveDialog", "TextPrompt with a custom validator", "ComponentDialog"],a:2,m:false,e:"A TextPrompt with a custom validator function validates user input such as email format and re-prompts if validation fails."},
+{id:448,d:"D5",q:"You need your bot to remember a user name across multiple conversations and sessions. Which memory scope should you use?",o:["Turn scope", "Dialog scope", "Conversation scope", "User scope"],a:3,m:false,e:"User scope persists data associated with a specific user across multiple conversations and sessions."},
+{id:449,d:"D5",q:"Bot App1 is deployed to Azure App Service. Users report the bot stops responding after 5 minutes of inactivity. What is the most likely cause?",o:["The App Service plan is on the Free tier with Always On disabled", "The Bot Framework Emulator timeout", "The Direct Line channel timeout", "The Azure AD token has expired"],a:0,m:false,e:"The Free tier of Azure App Service does not support Always On. The app idles out after inactivity causing the bot to stop responding."},
+{id:450,d:"D5",q:"You need to route user messages to either a QnA knowledge base or a LUIS model depending on intent. Which Bot Framework component handles this routing?",o:["Dispatcher / Orchestrator", "AdaptiveDialog", "SkillDialog", "ActivityHandler"],a:0,m:false,e:"The Dispatcher Orchestrator model routes incoming messages to the appropriate service such as QnA Maker or LUIS based on the detected intent."},
+{id:451,d:"D5",q:"You build a bot using Bot Framework Composer. You need to send a rich card showing a product image, title, and a Buy Now button. Which card type should you use?",o:["ThumbnailCard", "HeroCard", "AdaptiveCard", "SignInCard"],a:2,m:false,e:"AdaptiveCard is the most flexible card type. It supports images, text, and interactive buttons making it ideal for rich product displays."},
+{id:452,d:"D5",q:"A CLU model correctly identifies the intent but extracts the wrong entity value. You retrain with corrected labels. Does this meet the goal?",o:["Yes", "No"],a:0,m:false,e:"Yes. Correcting entity labels in the training data and retraining the CLU model improves entity extraction accuracy."},
+{id:453,d:"D5",q:"Your bot needs to support voice interactions via a smart speaker. The bot must synthesize responses as speech. Which two actions are required?",o:["Register the Direct Line Speech channel", "Create an Azure AI Speech resource", "Enable WebSockets on the App Service", "Use the Cortana channel", "Add SSML to bot responses"],a:[0, 1],m:true,e:"Direct Line Speech channel connects the bot to the Speech service. An Azure AI Speech resource provides the TTS and STT capabilities."},
+{id:454,d:"D5",q:"Your Bot Framework bot uses ConversationState to store dialog data. After the bot restarts, the state is lost. What storage provider should you use to persist state across restarts?",o:["MemoryStorage", "CosmosDbPartitionedStorage", "BlobStorage", "TableStorage"],a:1,m:false,e:"CosmosDbPartitionedStorage persists bot state to Azure Cosmos DB so conversation state survives bot restarts. MemoryStorage is in-memory only."},
+{id:455,d:"D5",q:"You use Azure Bot Service. You need to test your bot against a live Azure endpoint including authentication. Which tool should you use?",o:["Bot Framework Emulator with ngrok", "Azure Portal Test in Web Chat", "Bot Framework Composer preview", "Visual Studio Code debugger"],a:1,m:false,e:"The Test in Web Chat panel in the Azure Portal tests the bot against its live deployed endpoint including authentication without needing local tooling."},
+{id:530,d:"D6",q:"You need to deploy Azure OpenAI so that the model endpoint is only accessible from within your Azure virtual network. What should you configure?",o:["API key rotation", "A private endpoint for the Azure OpenAI resource", "Content filters", "A public endpoint with IP firewall rules"],a:1,m:false,e:"A private endpoint connects the Azure OpenAI resource to your VNet via a private IP making it inaccessible from the public internet."},
+{id:531,d:"D6",q:"You use Azure AI Foundry to evaluate a RAG solution. You need to measure how well the generated answers are grounded in the retrieved source documents. Which evaluation metric should you use?",o:["Coherence", "Groundedness", "Fluency", "Relevance"],a:1,m:false,e:"Groundedness measures whether the model response is factually supported by the retrieved source documents detecting hallucinations."},
+{id:532,d:"D6",q:"You need to build a generative AI solution where the model can access real-time data from your internal database at inference time. Which Azure OpenAI feature enables this?",o:["Fine-tuning", "Prompt caching", "Function calling", "Embeddings"],a:2,m:false,e:"Function calling allows Azure OpenAI models to return structured JSON to invoke developer-defined functions like database queries during inference."},
+{id:533,d:"D6",q:"You deploy a GPT-4 model in Azure AI Foundry. You need the model to consistently return JSON-formatted responses. Which technique should you apply?",o:["Lower the temperature to 0", "Set response_format to json_object", "Increase max_tokens", "Use the system role to set language"],a:1,m:false,e:"Setting response_format to json_object in the API call instructs the model to always return valid JSON output."},
+{id:534,d:"D6",q:"You are building a RAG solution using Azure AI Search and Azure OpenAI. After retrieval, the model produces answers not supported by the retrieved documents. What is this phenomenon called?",o:["Overfitting", "Hallucination", "Context overflow", "Token truncation"],a:1,m:false,e:"Hallucination is when a generative model produces plausible-sounding but factually incorrect or unsupported content not grounded in the provided context."},
+{id:535,d:"D6",q:"You use Azure AI Foundry prompt flow. You need to evaluate whether the flow outputs are relevant to the user question. Which built-in evaluator should you use?",o:["Violence evaluator", "Relevance evaluator", "Groundedness evaluator", "F1 score evaluator"],a:1,m:false,e:"The Relevance evaluator in Azure AI Foundry measures how well the generated response addresses and relates to the original user query."},
+{id:536,d:"D6",q:"You need to prevent users from asking the Azure OpenAI model questions unrelated to your product domain. Which approach should you use?",o:["Set Temperature to 0", "Add a strict system message defining the allowed scope", "Use the Frequency penalty parameter", "Reduce max_tokens"],a:1,m:false,e:"The system message can define strict instructions about what topics the model should and should not respond to limiting the model to the desired domain."},
+{id:537,d:"D6",q:"Your Azure OpenAI deployment reaches its token-per-minute (TPM) limit. You need to increase throughput without deploying a new model. What should you do?",o:["Increase the max_tokens parameter", "Request a quota increase for the deployment", "Deploy the model to a second region", "Reduce the temperature parameter"],a:1,m:false,e:"Requesting a quota increase raises the TPM limit for the existing deployment increasing throughput without redeployment."},
+{id:538,d:"D6",q:"You need to use Azure OpenAI to generate images from text prompts. Which model should you deploy?",o:["GPT-4", "text-embedding-ada-002", "DALL-E 3", "Whisper"],a:2,m:false,e:"DALL-E 3 is the Azure OpenAI image generation model. It creates images from natural language text prompts."},
+{id:539,d:"D6",q:"You implement prompt flow in Azure AI Foundry. You need to log all inputs, outputs, and latency for each flow run for monitoring. Which feature should you enable?",o:["Content filters", "Tracing", "Deployment slots", "Model fine-tuning"],a:1,m:false,e:"Tracing in Azure AI Foundry records detailed telemetry for each prompt flow execution including inputs, outputs, latency, and token usage."},
+{id:540,d:"D6",q:"You need to fine-tune an Azure OpenAI model with your domain-specific data. What file format is required for the training data?",o:["CSV", "JSON", "JSONL", "TSV"],a:2,m:false,e:"Azure OpenAI fine-tuning requires training data in JSONL format where each line is a valid JSON object representing one training example."},
+{id:541,d:"D6",q:"You use Azure OpenAI chat completions. You need to reduce the likelihood that the model repeats the same phrases across a long response. Which parameter should you increase?",o:["Temperature", "Frequency penalty", "Presence penalty", "Top P"],a:1,m:false,e:"Frequency penalty penalizes tokens that have already appeared in the response reducing repetition of specific words and phrases."},
+{id:542,d:"D6",q:"You need to build a solution using Azure AI Foundry that grounds model responses in your company internal documents stored in Azure Blob Storage. What should you configure as the data source?",o:["Azure AI Search index over the blob documents", "Direct blob connection in the system prompt", "Azure Cosmos DB vector store", "Azure SQL Database"],a:0,m:false,e:"Azure AI Search indexes documents from Blob Storage and enables vector and semantic retrieval. This index is then used as the grounding data source for RAG in Azure AI Foundry."},
+{id:543,d:"D6",q:"You deploy a GPT-35-Turbo model. The finish_reason in the response is length. What does this indicate?",o:["The model completed the response naturally", "The response was filtered by content filters", "The response was cut off because it reached max_tokens", "The model encountered an error"],a:2,m:false,e:"finish_reason of length means the model output was truncated because it reached the max_tokens limit before naturally completing the response."},
+{id:544,d:"D6",q:"You use Azure OpenAI in Foundry. You need to provide the model with examples of desired input-output pairs to improve response quality without retraining. Which technique should you use?",o:["Zero-shot prompting", "Few-shot prompting", "Fine-tuning", "RAG"],a:1,m:false,e:"Few-shot prompting includes sample input-output examples in the prompt itself guiding the model behavior without modifying its weights."},
+{id:545,d:"D6",q:"You need to convert spoken audio files to text using Azure OpenAI. Which model should you use?",o:["GPT-4 Vision", "DALL-E", "Whisper", "text-embedding-ada-002"],a:2,m:false,e:"Whisper is the Azure OpenAI speech-to-text model. It transcribes audio files into text."},
+{id:546,d:"D6",q:"Azure AI Foundry has two deployments of GPT-4. Your app must route requests to the deployment with the lowest current latency. Which feature should you configure?",o:["Prompt flow retry logic", "Load balancing across deployments", "Content filter priority", "Deployment versioning"],a:1,m:false,e:"Azure AI Foundry supports load balancing across multiple deployments routing requests to the deployment with available capacity and lowest latency."},
+{id:547,d:"D6",q:"You need to implement Prompt Shields in Azure AI Foundry to protect against jailbreak and indirect prompt injection attacks. Which service provides this?",o:["Azure OpenAI content filters", "Azure AI Content Safety", "Azure Defender for Cloud", "Microsoft Sentinel"],a:1,m:false,e:"Azure AI Content Safety provides Prompt Shields which detect direct jailbreak attacks and indirect prompt injection in both user prompts and documents."},
+{id:548,d:"D6",q:"You build a multi-turn chatbot with Azure OpenAI. Each new API call has no memory of previous turns. How should you maintain conversation context?",o:["Enable stateful mode in the API", "Include the full conversation history in the messages array on each call", "Use a system prompt only", "Store history in a database and fine-tune the model"],a:1,m:false,e:"Azure OpenAI is stateless. You must include the full conversation history in the messages array of each new API request."},
+{id:623,d:"D7",q:"You use Azure AI Content Safety to moderate user-generated text. The API returns a severity score of 4 for the Hate category. What does this indicate?",o:["No hateful content detected", "Low-severity hateful content", "Medium-severity hateful content", "High-severity hateful content"],a:2,m:false,e:"Azure AI Content Safety uses severity levels 0, 2, 4, 6. A score of 4 indicates medium-severity content in the specified category."},
+{id:624,d:"D7",q:"You need to detect whether user prompts to your Azure OpenAI chatbot contain attempts to bypass safety instructions. Which Azure AI Content Safety feature should you use?",o:["Blocklists", "Groundedness detection", "Prompt Shields", "Protected material detection"],a:2,m:false,e:"Prompt Shields specifically detects direct jailbreak attacks in user prompts and indirect prompt injection in documents passed to the model."},
+{id:625,d:"D7",q:"App1 uses Azure AI Content Safety to analyze images. You submit a benign landscape photo. What severity score should the API return for all harm categories?",o:["0", "2", "4", "6"],a:0,m:false,e:"A benign image with no harmful content returns a severity score of 0 across all harm categories including Hate, SelfHarm, Sexual, and Violence."}
+];;
+
+
+const DOMAINS={D1:"Plan & manage AI",D2:"Computer Vision",D3:"Natural Language",D4:"Knowledge mining",D5:"Conversational AI",D6:"Generative AI",D7:"Content Safety"};
+const DFULL={D1:"Plan & manage AI solutions",D2:"Computer Vision",D3:"Natural Language Processing",D4:"Knowledge mining & search",D5:"Conversational AI",D6:"Generative AI & OpenAI",D7:"Content Safety & Case Studies"};
+const DCLS={D1:"d1",D2:"d2",D3:"d3",D4:"d4",D5:"d5",D6:"d6",D7:"d7"};
+const DICONS={D1:"⚙️",D2:"👁️",D3:"💬",D4:"🔍",D5:"🤖",D6:"✨",D7:"🛡️"};
+const DCOLORS={D1:"#e3f2fd",D2:"#e8f5e9",D3:"#ede7f6",D4:"#fff3e0",D5:"#e0f7fa",D6:"#fce4ec",D7:"#e3f2fd"};
+
+let state={mode:"",questions:[],idx:0,answers:{},wrong:[],multiSel:[],startTime:0,tiv:null,best:null,attempted:0,dndSlots:[],ynSel:null,isCaseStudy:false};
+
+/* -------- helpers -------- */
+function isDragDrop(q){return /sequence|in sequence|Three actions|Four actions|Five actions|DRAG DROP|Select and Place/i.test(q.q);}
+function isYesNo(q){return q.o.length===2&&q.o[0]==="Yes"&&q.o[1]==="No";}
+function isMulti(q){return q.m===true;}
+function shuffle(a){return[...a].sort(()=>Math.random()-0.5);}
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
+
+function init(){
+  document.getElementById("totalQ").textContent=Q.length;
+  document.getElementById("totalProg").style.width=Math.min(Math.round(Q.length/350*100),100)+"%";
+  document.getElementById("totalProgLabel").textContent=Q.length+" questions loaded";
+  updateWrongCount();
+}
+init();
+function updateWrongCount(){document.getElementById("wrongCount").textContent=state.wrong.length?state.wrong.length+" to review":"No wrong answers yet";}
+
+/* -------- mode start -------- */
+function startMode(m){
+  clearInterval(state.tiv);
+  if(m==="domain"){buildDomainPicker();showScreen("dpick");return;}
+  if(m==="review"){if(!state.wrong.length){alert("No wrong answers yet!");return;}startQuiz("Review mistakes",shuffle(Q.filter(q=>state.wrong.includes(q.id))),false);return;}
+  if(m==="dragdrop"){const qs=Q.filter(isDragDrop);startQuiz("Drag & Drop / Sequence",shuffle(qs),false);return;}
+  if(m==="yesno"){const qs=Q.filter(isYesNo);startQuiz("Yes / No",shuffle(qs),false);return;}
+  if(m==="multi"){const qs=Q.filter(q=>isMulti(q)&&!isDragDrop(q)&&!isYesNo(q));startQuiz("Multi-select",shuffle(qs),false);return;}
+  if(m==="casestudy"){startQuiz("Case Study — Wide World Importers",shuffle(Q).slice(0,15),true);return;}
+  if(m==="full")startQuiz("Full exam",shuffle(Q),false);
+  if(m==="quick")startQuiz("Quick quiz",shuffle(Q).slice(0,20),false);
+}
+
+function buildDomainPicker(){
+  document.getElementById("dlist").innerHTML=Object.entries(DOMAINS).map(([k,v])=>{
+    const all=Q.filter(q=>q.d===k),cnt=all.length;
+    const dd=all.filter(isDragDrop).length,yn=all.filter(isYesNo).length,ms=all.filter(q=>isMulti(q)&&!isDragDrop(q)&&!isYesNo(q)).length,mcq=cnt-dd-yn-ms;
+    let sub=[];if(mcq>0)sub.push(mcq+" MCQ");if(ms>0)sub.push(ms+" multi");if(dd>0)sub.push(dd+" sequence");if(yn>0)sub.push(yn+" yes/no");
+    return`<button class="mbtn" onclick="startDomain('${k}')"><div class="mico" style="background:${DCOLORS[k]}">${DICONS[k]}</div><div><div class="mt">${DFULL[k]}</div><div class="md">${cnt} questions · ${sub.join(" · ")}</div></div></button>`;
+  }).join("");
+}
+function startDomain(d){startQuiz(DFULL[d],shuffle(Q.filter(q=>q.d===d)),false);}
+
+function startQuiz(title,qs,isCaseStudy){
+  state={...state,mode:title,questions:qs,idx:0,answers:{},startTime:Date.now(),dndSlots:[],ynSel:null,isCaseStudy};
+  clearInterval(state.tiv);
+  state.tiv=setInterval(updateTimer,1000);
+  buildNavPane(isCaseStudy);
+  showScreen("quiz");
+  renderQ();
+}
+function updateTimer(){const s=Math.floor((Date.now()-state.startTime)/1000);document.getElementById("timer").textContent=`${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;}
+
+/* -------- Nav pane -------- */
+function buildNavPane(isCaseStudy){
+  const nav=document.getElementById("navPane");
+  if(isCaseStudy){
+    nav.innerHTML=`
+      <div class="nav-section-title">Case Study</div>
+      <button class="nav-btn" onclick="showCaseSection('caseIntro',this)">Introductory Info</button>
+      <button class="nav-btn" onclick="showCaseSection('caseOverview',this)">Overview</button>
+      <button class="nav-btn" onclick="showCaseSection('caseRequirements',this)">Requirements</button>
+      <button class="nav-btn" onclick="showCaseSection('caseProductJSON',this)">Product JSON</button>
+      <div class="nav-divider"></div>
+      <div class="nav-section-title">Questions</div>
+      <button class="nav-question-btn" onclick="showQuestion(this)" id="navQBtn">&#x1F4AC; Question</button>`;
+  } else {
+    nav.innerHTML=`
+      <div class="nav-section-title">Navigation</div>
+      <button class="nav-question-btn" onclick="showQuestion(this)" id="navQBtn">&#x1F4AC; Question</button>
+      <div class="nav-divider"></div>
+      <div class="nav-section-title">Progress</div>
+      <div style="padding:8px 14px;font-size:12px;color:#666" id="navProgress">1 / ${state.questions.length}</div>`;
+  }
+}
+
+function showCaseSection(sectionId, btn){
+  // hide all reading sections and question panel
+  document.querySelectorAll(".case-reading,.question-panel").forEach(el=>{el.classList.remove("active");el.style.display="none";});
+  document.getElementById(sectionId).style.display="block";
+  document.getElementById(sectionId).classList.add("active");
+  // update nav active
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  if(btn)btn.classList.add("active");
+}
+
+function showQuestion(btn){
+  document.querySelectorAll(".case-reading,.question-panel").forEach(el=>{el.classList.remove("active");el.style.display="none";});
+  const qp=document.getElementById("questionPanel");
+  qp.style.display="flex";qp.classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  if(btn)btn.classList.add("active");
+}
+
+/* -------- Render question -------- */
+function renderQ(){
+  const q=state.questions[state.idx],total=state.questions.length;
+  document.getElementById("prog").style.width=Math.round((state.idx/total)*100)+"%";
+  document.getElementById("plbl").textContent=`${state.idx+1} / ${total}`;
+  document.getElementById("topQnum").textContent=`Question #${state.idx+1}`;
+  if(document.getElementById("navProgress"))document.getElementById("navProgress").textContent=`${state.idx+1} / ${total}`;
+  document.getElementById("bnext").disabled=true;
+  document.getElementById("bskip").disabled=false;
+  state.multiSel=[];state.ynSel=null;state.dndSlots=[];
+  document.getElementById("exp").classList.remove("show");
+  document.getElementById("exp").innerHTML="";
+
+  // Domain tag
+  const tagEl=document.getElementById("qpDomainTag");
+  tagEl.innerHTML=`<span class="dtag ${DCLS[q.d]}">${DFULL[q.d]}</span>${q.m&&!isDragDrop(q)?'<span class="mbadge2">Select all correct</span>':""}`;
+
+  // Always show question panel
+  showQuestion(document.getElementById("navQBtn"));
+
+  const hint=document.getElementById("hint");
+  // hide all option zones
+  document.getElementById("mcqOpts").style.display="none";
+  document.getElementById("ynSection").style.display="none";
+  document.getElementById("dndSection").style.display="none";
+  document.getElementById("qpType").style.display="none";
+  document.getElementById("qpContext").style.display="none";
+  document.getElementById("qpNote").style.display="none";
+  hint.classList.remove("show");
+
+  if(isYesNo(q)){
+    renderYesNo(q);
+  } else if(isDragDrop(q)){
+    renderDND(q);
+  } else {
+    renderMCQ(q);
+  }
+}
+
+/* ---- YES/NO ---- */
+function renderYesNo(q){
+  const {scenario,solution}=parseYesNo(q.q);
+  document.getElementById("qpLabel").textContent="Question";
+  document.getElementById("qpType").style.display="none";
+
+  // Build context: case note header + scenario + solution + goal
+  const CASE_NOTE=`Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.`;
+  let ctxHtml=`<span style="color:#555;font-size:12.5px">${CASE_NOTE.replace(/\n/g,"<br>")}</span>`;
+  if(scenario)ctxHtml+=`<br><br>${scenario.replace(/\.\s*/g,".<br>")}`;
+  if(solution)ctxHtml+=`<br><br>${solution}`;
+  ctxHtml+=`<br><br><strong>Does this meet the goal?</strong>`;
+  document.getElementById("qpContext").innerHTML=ctxHtml;
+  document.getElementById("qpContext").style.display="block";
+  document.getElementById("qpInstruction").textContent="";
+
+  document.getElementById("ynSection").style.display="block";
+  document.getElementById("ynOpts").innerHTML=
+    `<button class="yn-opt" onclick="pickYN(0)" id="yn0" data-idx="0"><span class="yn-ltr">A.</span>Yes</button>
+     <button class="yn-opt" onclick="pickYN(1)" id="yn1" data-idx="1"><span class="yn-ltr">B.</span>No</button>`;
+  document.getElementById("revealBtn").disabled=true;
+  document.getElementById("bnext").disabled=true;
+}
+
+function parseYesNo(txt){
+  const solIdx=txt.indexOf("Solution:");
+  if(solIdx>-1)return{scenario:txt.substring(0,solIdx).trim(),solution:txt.substring(solIdx).trim()};
+  return{scenario:"",solution:txt};
+}
+
+function pickYN(idx){
+  const q=state.questions[state.idx];
+  if(state.answers[q.id]!==undefined)return;
+  document.querySelectorAll(".yn-opt").forEach(el=>el.classList.remove("selected"));
+  document.getElementById("yn"+idx).classList.add("selected");
+  state.ynSel=idx;
+  document.getElementById("revealBtn").disabled=false;
+  document.getElementById("bnext").disabled=false;
+}
+
+function revealYN(){
+  const q=state.questions[state.idx];
+  if(state.answers[q.id]!==undefined||state.ynSel===null)return;
+  const sel=state.ynSel;
+  state.answers[q.id]=sel;
+  const ok=sel===q.a;
+  if(!ok&&!state.wrong.includes(q.id))state.wrong.push(q.id);
+  document.querySelectorAll(".yn-opt").forEach(el=>{
+    const i=parseInt(el.getAttribute("data-idx"));
+    el.classList.remove("selected");
+    if(i===q.a)el.classList.add("correct");
+    if(i===sel&&!ok)el.classList.add("wrong");
+    el.disabled=true;
+  });
+  showExp(ok,q.e);
+  document.getElementById("revealBtn").disabled=true;
+  document.getElementById("bskip").disabled=true;
+}
+
+/* ---- MCQ ---- */
+function renderMCQ(q){
+  document.getElementById("qpLabel").textContent="Question";
+  document.getElementById("qpInstruction").textContent=q.q;
+  if(q.m){document.getElementById("hint").textContent="Select ALL correct answers, then click Next.";document.getElementById("hint").classList.add("show");}
+  const ltrs=["A","B","C","D","E","F","G"];
+  document.getElementById("mcqOpts").style.display="flex";
+  document.getElementById("mcqOpts").innerHTML=q.o.map((o,i)=>
+    `<button class="mcq-opt" onclick="pickOpt(${i})" id="o${i}">
+      <span class="mcq-ltr">${ltrs[i]}.</span><span>${o}</span>
+    </button>`
+  ).join("");
+}
+
+function pickOpt(idx){
+  const q=state.questions[state.idx];
+  if(state.answers[q.id]!==undefined&&!q.m)return;
+  if(q.m){
+    if(state.answers[q.id]!==undefined)return;
+    const pos=state.multiSel.indexOf(idx);
+    if(pos===-1)state.multiSel.push(idx);else state.multiSel.splice(pos,1);
+    document.querySelectorAll(".mcq-opt").forEach(el=>{const i=parseInt(el.id.replace("o",""));el.classList.remove("selected");if(state.multiSel.includes(i))el.classList.add("selected");});
+    document.getElementById("bnext").disabled=state.multiSel.length===0;
+    return;
+  }
+  state.answers[q.id]=idx;const ok=idx===q.a;
+  if(!ok&&!state.wrong.includes(q.id))state.wrong.push(q.id);
+  document.querySelectorAll(".mcq-opt").forEach(el=>{
+    const i=parseInt(el.id.replace("o",""));
+    if(i===idx&&ok)el.classList.add("correct");
+    else if(i===idx&&!ok)el.classList.add("wrong");
+    else if(i===q.a)el.classList.add("reveal");
+    el.disabled=true;
+  });
+  showExp(ok,q.e);
+  document.getElementById("bnext").disabled=false;
+  document.getElementById("bskip").disabled=true;
+}
+
+function submitMulti(){
+  const q=state.questions[state.idx];
+  const sel=[...state.multiSel].sort();const ok=JSON.stringify(sel)===JSON.stringify([...q.a].sort());
+  state.answers[q.id]=sel;if(!ok&&!state.wrong.includes(q.id))state.wrong.push(q.id);
+  document.querySelectorAll(".mcq-opt").forEach(el=>{
+    const i=parseInt(el.id.replace("o",""));el.disabled=true;el.classList.remove("selected");
+    if(Array.isArray(q.a)&&q.a.includes(i))el.classList.add("correct");
+    else if(sel.includes(i))el.classList.add("wrong");
+  });
+  showExp(ok,q.e);document.getElementById("bnext").disabled=false;document.getElementById("bskip").disabled=true;
+}
+
+/* ---- DRAG & DROP (pipeline style) ---- */
+let dndDragEl=null,dndDragFrom=null;
+
+function renderDND(q){
+  document.getElementById("qpLabel").textContent="Question";
+  document.getElementById("qpType").textContent="DRAG DROP -";
+  document.getElementById("qpType").style.display="block";
+  document.getElementById("qpInstruction").textContent=q.q;
+  document.getElementById("qpNote").textContent="NOTE: Each correct selection is worth one point.";
+  document.getElementById("qpNote").style.display="block";
+  document.getElementById("dndSection").style.display="block";
+  document.getElementById("hint").textContent='Drag items from Services to the Answer Area stages. Click a placed item to return it to the pool.';
+  document.getElementById("hint").classList.add("show");
+
+  // Detect if pipeline-style (Source→Cracking→Preparation→Destination) or sequence
+  const correctArr=Array.isArray(q.a)?q.a:[q.a];
+  const stages=detectStages(q);
+  state.dndSlots=new Array(stages.length).fill(null);
+
+  // Build pool
+  const poolEl=document.getElementById("dndPool");
+  poolEl.innerHTML="";
+  const shuffled=shuffle(q.o.map((text,i)=>({text,origIdx:i})));
+  shuffled.forEach((item)=>{
+    const div=document.createElement("div");
+    div.className="dnd-item";div.draggable=true;div.dataset.orig=item.origIdx;div.textContent=item.text;
+    div.ondragstart=e=>{dndDragEl=div;dndDragFrom="pool";div.classList.add("dragging");e.dataTransfer.effectAllowed="move";};
+    div.ondragend=e=>{div.classList.remove("dragging");};
+    poolEl.appendChild(div);
+  });
+
+  // Build pipeline stages
+  const pipe=document.getElementById("dndPipeline");
+  pipe.innerHTML="";
+  stages.forEach((label,i)=>{
+    if(i>0){const arr=document.createElement("div");arr.className="dnd-arrow";arr.textContent="→";pipe.appendChild(arr);}
+    const stage=document.createElement("div");stage.className="dnd-stage";
+    const lbl=document.createElement("div");lbl.className="dnd-stage-label";lbl.textContent=label;
+    const target=document.createElement("div");target.className="dnd-drop-target";target.id="dndSlot"+i;target.textContent="Drop here";
+    target.ondragover=e=>{e.preventDefault();target.classList.add("drag-over");};
+    target.ondragleave=e=>{target.classList.remove("drag-over");};
+    target.ondrop=e=>{e.preventDefault();target.classList.remove("drag-over");dndDrop(i);};
+    target.onclick=()=>{if(target.classList.contains("filled"))dndReturn(i);};
+    stage.appendChild(lbl);stage.appendChild(target);pipe.appendChild(stage);
+  });
+
+  document.getElementById("dndRevealBtn").disabled=true;
+}
+
+function detectStages(q){
+  // If pipeline question (Source/Cracking/Preparation/Destination keywords)
+  if(/source|cracking|preparation|destination/i.test(q.q))return["Source","Cracking","Preparation","Destination"];
+  if(/collect|process|store|serve/i.test(q.q))return["Collect","Process","Store","Serve"];
+  // Default: numbered sequence steps
+  const count=Array.isArray(q.a)?q.a.length:1;
+  return Array.from({length:count},(_,i)=>"Step "+(i+1));
+}
+
+function dndDrop(slotIdx){
+  if(!dndDragEl)return;
+  const origIdx=parseInt(dndDragEl.dataset.orig);
+  const text=dndDragEl.textContent;
+  // return old item if slot occupied
+  if(state.dndSlots[slotIdx]!==null)dndReturnItem(state.dndSlots[slotIdx],slotIdx,false);
+  state.dndSlots[slotIdx]={origIdx,text};
+  // remove from pool or old slot
+  if(dndDragFrom==="pool"){
+    dndDragEl.remove();
+  } else if(dndDragFrom&&dndDragFrom.startsWith("slot")){
+    const old=parseInt(dndDragFrom.replace("slot",""));
+    state.dndSlots[old]=null;
+    const oldTarget=document.getElementById("dndSlot"+old);
+    oldTarget.className="dnd-drop-target";oldTarget.textContent="Drop here";oldTarget.draggable=false;oldTarget.ondragstart=null;
+  }
+  // fill slot
+  const target=document.getElementById("dndSlot"+slotIdx);
+  target.className="dnd-drop-target filled";target.textContent=text;target.draggable=true;
+  target.ondragstart=e=>{dndDragEl=target;dndDragFrom="slot"+slotIdx;target.classList.add("dragging");e.dataTransfer.effectAllowed="move";};
+  target.ondragend=e=>{target.classList.remove("dragging");};
+  dndDragEl=null;dndDragFrom=null;
+  const allFilled=state.dndSlots.every(x=>x!==null);
+  document.getElementById("dndRevealBtn").disabled=!allFilled;
+}
+
+function dndReturn(slotIdx){
+  if(state.dndSlots[slotIdx]===null)return;
+  dndReturnItem(state.dndSlots[slotIdx],slotIdx,true);
+  state.dndSlots[slotIdx]=null;
+  document.getElementById("dndRevealBtn").disabled=true;
+}
+
+function dndReturnItem(item,slotIdx,clearSlot){
+  const pool=document.getElementById("dndPool");
+  const div=document.createElement("div");
+  div.className="dnd-item";div.draggable=true;div.dataset.orig=item.origIdx;div.textContent=item.text;
+  div.ondragstart=e=>{dndDragEl=div;dndDragFrom="pool";div.classList.add("dragging");e.dataTransfer.effectAllowed="move";};
+  div.ondragend=e=>{div.classList.remove("dragging");};
+  pool.appendChild(div);
+  if(clearSlot){const t=document.getElementById("dndSlot"+slotIdx);if(t){t.className="dnd-drop-target";t.textContent="Drop here";t.draggable=false;t.ondragstart=null;}}
+}
+
+function revealDND(){
+  const q=state.questions[state.idx];
+  const correctArr=Array.isArray(q.a)?q.a:[q.a];
+  const userOrder=state.dndSlots.map(x=>x?x.origIdx:null);
+  const ok=JSON.stringify(userOrder)===JSON.stringify(correctArr);
+  state.answers[q.id]=userOrder;
+  if(!ok&&!state.wrong.includes(q.id))state.wrong.push(q.id);
+  state.dndSlots.forEach((item,i)=>{
+    const t=document.getElementById("dndSlot"+i);if(!t)return;
+    t.draggable=false;t.onclick=null;t.ondragstart=null;
+    if(item){
+      const correct=item.origIdx===correctArr[i];
+      t.className="dnd-drop-target "+(correct?"correct-drop":"wrong-drop");
+    }
+  });
+  // disable pool items
+  document.querySelectorAll("#dndPool .dnd-item").forEach(el=>{el.draggable=false;el.classList.add("placed-away");});
+  const corrHtml=correctArr.map((ci,i)=>`<strong>${detectStages(q)[i]||"Step "+(i+1)}:</strong> ${q.o[ci]}`).join("<br>");
+  showExp(ok,q.e+(ok?"":("<br><br><strong>Correct mapping:</strong><br>"+corrHtml)));
+  document.getElementById("dndRevealBtn").disabled=true;
+  document.getElementById("bnext").disabled=false;
+  document.getElementById("bskip").disabled=true;
+}
+
+/* ---- show explanation ---- */
+function showExp(ok,txt){
+  const el=document.getElementById("exp");
+  el.innerHTML=`<strong style="color:${ok?"#2e7d32":"#c62828"}">${ok?"✓ Correct!":"✗ Incorrect."}</strong> ${txt}`;
+  el.classList.add("show");
+}
+
+/* ---- navigation ---- */
+function skip(){
+  const q=state.questions[state.idx];
+  if(state.answers[q.id]!==undefined)return;
+  state.answers[q.id]=-1;
+  if(state.idx<state.questions.length-1){state.idx++;renderQ();}else finishQuiz();
+}
+
+function next(){
+  const q=state.questions[state.idx];
+  if(isYesNo(q)&&state.answers[q.id]===undefined&&state.ynSel!==null){revealYN();return;}
+  if(q.m&&!isDragDrop(q)&&state.answers[q.id]===undefined){submitMulti();return;}
+  if(state.idx<state.questions.length-1){state.idx++;renderQ();}else finishQuiz();
+}
+
+function isCorrect(q){
+  const a=state.answers[q.id];if(a===-1||a===undefined)return false;
+  if(isDragDrop(q)){const c=Array.isArray(q.a)?q.a:[q.a];return JSON.stringify(a)===JSON.stringify(c);}
+  if(q.m)return JSON.stringify([...(a||[])].sort())===JSON.stringify([...q.a].sort());
+  return a===q.a;
+}
+
+function finishQuiz(){
+  clearInterval(state.tiv);
+  const total=state.questions.length,correct=state.questions.filter(q=>isCorrect(q)).length;
+  const pct=Math.round((correct/total)*100);
+  state.attempted=Math.max(state.attempted||0,total);
+  if(!state.best||pct>state.best)state.best=pct;
+  document.getElementById("sb").textContent=state.best+"%";
+  document.getElementById("sa").textContent=state.attempted;
+  document.getElementById("rpct").textContent=pct+"%";
+  document.getElementById("scirc").className=pct>=70?"scirc pass-ring":"scirc fail-ring";
+  const byD={};state.questions.forEach(q=>{if(!byD[q.d])byD[q.d]={c:0,t:0};byD[q.d].t++;if(isCorrect(q))byD[q.d].c++;});
+  const el=Math.floor((Date.now()-state.startTime)/1000);
+  let html=`<div class="rrow"><span class="rlbl">Correct</span><span class="rval">${correct} / ${total}</span></div>`;
+  html+=`<div class="rrow"><span class="rlbl">Score</span><span class="rval" style="color:${pct>=70?"#2e7d32":"#c62828"}">${pct}% ${pct>=70?"🎉":"— Keep going!"}</span></div>`;
+  html+=`<div class="rrow"><span class="rlbl">Time</span><span class="rval">${String(Math.floor(el/60)).padStart(2,"0")}:${String(el%60).padStart(2,"0")}</span></div>`;
+  html+=`<div class="rrow"><span class="rlbl">Wrong / Skipped</span><span class="rval" style="color:${total-correct>0?"#c62828":"#2e7d32"}">${total-correct}</span></div>`;
+  html+=`<div class="dsec">By domain</div>`;
+  html+=Object.entries(byD).map(([d,v])=>`<div class="rrow"><span class="rlbl">${DFULL[d]}</span><span class="rval">${v.c}/${v.t} (${Math.round(v.c/v.t*100)}%)</span></div>`).join("");
+  document.getElementById("rrows").innerHTML=html;
+  updateWrongCount();showScreen("results");
+}
+function retryWrong(){if(!state.wrong.length){showScreen("home");return;}startQuiz("Review mistakes",shuffle(Q.filter(q=>state.wrong.includes(q.id))),false);}
+function exitQuiz(){clearInterval(state.tiv);showScreen("home");}
+</script>
+<div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a73e8;color:#fff;padding:12px 16px;align-items:center;justify-content:space-between;z-index:999;font-size:13px;font-weight:600">
+  <span>&#x1F4F1; Install AI-102 Exam app</span>
+  <div style="display:flex;gap:8px">
+    <button onclick="installApp()" style="background:#fff;color:#1a73e8;border:none;padding:7px 16px;border-radius:6px;font-weight:700;cursor:pointer;font-size:13px">Install</button>
+    <button onclick="document.getElementById('installBanner').style.display='none'" style="background:rgba(255,255,255,0.2);color:#fff;border:none;padding:7px 12px;border-radius:6px;cursor:pointer;font-size:13px">&#x2715;</button>
+  </div>
+</div>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(r=>console.log('SW registered'))
+      .catch(e=>console.log('SW error',e));
+  });
+}
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  document.getElementById('installBanner').style.display='flex';
+});
+function installApp(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').style.display='none';});
+  }
+}
+</script>
+</body>
+</html>
