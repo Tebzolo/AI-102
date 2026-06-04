@@ -310,6 +310,46 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 ::-webkit-scrollbar-thumb{background:#c7c7cc;border-radius:2px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .case-reading.active,.question-panel.active{animation:fadeIn .15s ease}
+
+/* ===== CASE STUDY PICKER ===== */
+#csPicker{background:#f5f5f7;min-height:100vh;max-width:600px;margin:0 auto;padding-bottom:40px}
+.cs-card{background:#fff;border-radius:12px;border:1.5px solid #e5e5ea;margin:0 16px 12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.cs-card-header{padding:16px;border-bottom:1px solid #f0f0f0}
+.cs-card-topic{font-size:10px;font-weight:700;color:#6e6e73;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.cs-card-title{font-size:15px;font-weight:600;color:#1d1d1f;margin-bottom:4px}
+.cs-card-desc{font-size:13px;color:#6e6e73;line-height:1.5}
+.cs-card-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cs-tag{font-size:11px;padding:3px 8px;border-radius:20px;background:#e3f2fd;color:#0C447C;font-weight:600}
+.cs-card-actions{padding:12px 16px;display:flex;gap:8px}
+.cs-btn{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #1a73e8;background:#fff;color:#1a73e8;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.cs-btn.primary{background:#1a73e8;color:#fff}
+.cs-btn:active{transform:scale(0.98)}
+
+
+/* ===== CASE STUDY COMBINED LAYOUT ===== */
+/* In case study mode: scenario shown above question on same scroll */
+.cs-combined-wrap{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
+.cs-scenario-panel{flex-shrink:0;max-height:45vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border-bottom:2px solid #1a73e8;background:#fff}
+.cs-scenario-panel.collapsed{max-height:44px;overflow:hidden}
+.cs-scenario-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f0f4ff;border-bottom:1px solid #dce8fd;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;position:sticky;top:0;z-index:2}
+.cs-scenario-toggle-title{font-size:12px;font-weight:700;color:#1a73e8;text-transform:uppercase;letter-spacing:.05em}
+.cs-scenario-toggle-icon{font-size:14px;color:#1a73e8;transition:transform .2s}
+.cs-scenario-toggle-icon.open{transform:rotate(180deg)}
+.cs-scenario-content{padding:14px 16px;font-size:13px;line-height:1.7;color:#1d1d1f}
+.cs-scenario-content h4{font-size:13px;font-weight:700;margin:10px 0 4px;color:#1d1d1f}
+.cs-scenario-content p{margin-bottom:5px}
+.cs-scenario-content ul{margin:4px 0 8px 18px}
+.cs-scenario-content li{margin-bottom:3px;line-height:1.6}
+.cs-scenario-content table{border-collapse:collapse;width:100%;font-size:12px;margin:8px 0;display:block;overflow-x:auto}
+.cs-scenario-content th{background:#f0f0f0;font-weight:700;padding:5px 8px;border:1px solid #ccc;text-align:left;white-space:nowrap}
+.cs-scenario-content td{padding:5px 8px;border:1px solid #ccc;font-size:12px;line-height:1.4}
+.cs-scenario-content pre{background:#f8f8f8;border:1px solid #ddd;padding:10px;font-size:11px;overflow-x:auto;border-radius:4px;margin:6px 0;font-family:monospace;-webkit-overflow-scrolling:touch;white-space:pre-wrap}
+.cs-question-panel{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px}
+.cs-q-header{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:4px}
+.cs-q-type{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:6px}
+.cs-q-text{font-size:14px;font-weight:500;line-height:1.65;color:#1d1d1f;margin-bottom:10px}
+.cs-q-note{font-size:12px;color:#555;margin-bottom:8px}
+
 </style>
 </head>
 <body>
@@ -355,9 +395,9 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
         <div class="mico" style="background:#fce4ec;width:36px;height:36px">&#x1F516;</div>
         <div><div class="mt" style="font-size:13px">Mistakes</div><div class="md" id="wrongCount">None yet</div></div>
       </button>
-      <button class="mbtn" style="padding:10px 8px" onclick="startMode('casestudy')">
+      <button class="mbtn" style="padding:10px 8px" onclick="showScreen('csPicker')">
         <div class="mico" style="background:#e8f5e9;width:36px;height:36px">&#x1F4D6;</div>
-        <div><div class="mt" style="font-size:13px">Case study</div><div class="md">Scenario mode</div></div>
+        <div><div class="mt" style="font-size:13px">Case studies</div><div class="md">2 full scenarios</div></div>
       </button>
       <button class="mbtn" style="padding:12px" onclick="startSimulation(701)" id="simBtn701">
         <div class="mico" style="background:#ede7f6;width:36px;height:36px">&#x1F9EA;</div>
@@ -379,6 +419,56 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 
 <!-- Domain picker replaced by home screen cards -->
 <div id="dpick" class="screen" style="display:none"></div>
+<!-- ==================== CASE STUDY PICKER ==================== -->
+<div id="csPicker" class="screen">
+  <div style="background:#1a73e8;padding:0 16px;height:44px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10">
+    <button onclick="showScreen('home')" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:0;line-height:1">&#8592;</button>
+    <span style="color:#fff;font-size:15px;font-weight:600;flex:1">Case Studies</span>
+  </div>
+  <div style="padding:14px 16px 4px">
+    <p style="font-size:12px;color:#6e6e73;line-height:1.5">Each case study has a full scenario with tables, requirements and questions. Use the navigation tabs to explore the content before answering.</p>
+  </div>
+
+  <!-- Case Study 1: Wide World Importers -->
+  <div class="cs-card">
+    <div class="cs-card-header">
+      <div class="cs-card-topic">Topic 9 — E-commerce platform</div>
+      <div class="cs-card-title">Wide World Importers</div>
+      <div class="cs-card-desc">An e-commerce company building multilingual AI solutions on Azure using microservices and serverless architecture.</div>
+      <div class="cs-card-meta">
+        <span class="cs-tag">&#x1F50D; Knowledge mining</span>
+        <span class="cs-tag">&#x1F4AC; Conversational AI</span>
+        <span class="cs-tag">&#x1F4C4; Document Intelligence</span>
+        <span class="cs-tag">D4 · D5 · D3</span>
+      </div>
+    </div>
+    <div class="cs-card-actions">
+      <button class="cs-btn" onclick="startCaseStudy(1,'read')">&#x1F4D6; Read scenario</button>
+      <button class="cs-btn primary" onclick="startCaseStudy(1,'quiz')">&#x1F4DD; Practice questions</button>
+    </div>
+  </div>
+
+  <!-- Case Study 2: Contoso Ltd -->
+  <div class="cs-card">
+    <div class="cs-card-header">
+      <div class="cs-card-topic">Topic 1 — Accounting firm</div>
+      <div class="cs-card-title">Contoso, Ltd.</div>
+      <div class="cs-card-desc">An international accounting company deploying a document processing workflow, customer chatbot, and searchable knowledgebase.</div>
+      <div class="cs-card-meta">
+        <span class="cs-tag">&#x1F916; QnA / Chatbot</span>
+        <span class="cs-tag">&#x1F50D; Cognitive Search</span>
+        <span class="cs-tag">&#x1F4C4; Form Recognizer</span>
+        <span class="cs-tag">D4 · D5 · D1</span>
+      </div>
+    </div>
+    <div class="cs-card-actions">
+      <button class="cs-btn" onclick="startCaseStudy(2,'read')">&#x1F4D6; Read scenario</button>
+      <button class="cs-btn primary" onclick="startCaseStudy(2,'quiz')">&#x1F4DD; Practice questions</button>
+    </div>
+  </div>
+</div>
+
+
 
 <!-- ==================== EXAM QUIZ SCREEN ==================== -->
 <div id="quiz" class="screen">
@@ -408,7 +498,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
     <!-- Right content area -->
     <div class="content-pane" id="contentPane">
       <!-- Case study sections (reading) -->
-      <div id="caseIntro" class="case-reading">
+      <div id="caseIntro" class="case-reading" data-cs="1">
         <h3>Introductory Info</h3>
         <p style="font-weight:700">Case study -</p>
         <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
@@ -419,7 +509,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
         <p>To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.</p>
       </div>
 
-      <div id="caseOverview" class="case-reading">
+      <div id="caseOverview" class="case-reading" data-cs="1">
         <p class="section-header">Overview -</p>
         <p>A company named Wide World Importers is developing an e-commerce platform.</p>
         <p>You are working with a solutions architect to design and implement the features of the e-commerce platform. The platform will use microservices and a serverless environment built on Azure.</p>
@@ -458,7 +548,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
         <p>An Azure Video Analyzer for Media (previously Video Indexer) resource named wwivi</p>
       </div>
 
-      <div id="caseRequirements" class="case-reading">
+      <div id="caseRequirements" class="case-reading" data-cs="1">
         <p class="section-header">Requirements -</p>
         <br>
         <p class="subsection-header">Business Goals -</p>
@@ -523,7 +613,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
         </ul>
       </div>
 
-      <div id="caseProductJSON" class="case-reading">
+      <div id="caseProductJSON" class="case-reading" data-cs="1">
         <p class="section-header">Product JSON Sample -</p>
         <p>You have the following JSON sample for a product.</p>
         <pre>{
@@ -550,6 +640,128 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
   "createdUtc": "2020-02-14T06:08:39Z",
 }</pre>
       </div>
+      <!-- ===== CONTOSO CASE STUDY ===== -->
+      <div id="cs2Intro" class="case-reading" data-cs="2">
+        <h3>Introductory Info</h3>
+        <p style="font-weight:700">Case study -</p>
+        <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
+        <p>To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.</p>
+        <p>At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section.</p>
+        <br>
+        <p style="font-weight:700">To start the case study -</p>
+        <p>To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.</p>
+      </div>
+
+      <div id="cs2Overview" class="case-reading" data-cs="2">
+        <p class="section-header">Overview -</p>
+        <br>
+        <p class="subsection-header">General Overview -</p>
+        <p>Contoso, Ltd. is an international accounting company that has offices in France, Portugal, and the United Kingdom.</p>
+        <p>Contoso has a professional services department that contains the roles shown in the following table.</p>
+        <table>
+          <tr><th>Name</th><th>Position</th><th>Office</th></tr>
+          <tr><td>Accountant</td><td>Consultant</td><td>United Kingdom</td></tr>
+          <tr><td>Accountant</td><td>Consultant</td><td>United Kingdom, France, Portugal</td></tr>
+          <tr><td>Customer Service</td><td>Agent</td><td>United Kingdom</td></tr>
+          <tr><td>Bookkeeper</td><td>Manager</td><td>United Kingdom, France, Portugal</td></tr>
+          <tr><td>Bookkeeper</td><td>Consultant</td><td>United Kingdom, France, Portugal</td></tr>
+        </table>
+        <br>
+        <p class="subsection-header">Existing Environment -</p>
+        <br>
+        <p class="subsection-header">Infrastructure -</p>
+        <p>Contoso has the following subscriptions:</p>
+        <ul>
+          <li>Azure</li>
+          <li>Microsoft 365</li>
+          <li>Microsoft Dynamics 365</li>
+          <li>Azure Active (Azure AD) Directory</li>
+        </ul>
+        <p>Contoso has Azure Active Directory groups for securing role-based access. The company uses the following group naming conventions:</p>
+        <p><span style="font-family:monospace">Country\[Level]\[Role]</span></p>
+        <p><span style="font-family:monospace">[Level]\[Role]</span></p>
+        <br>
+        <p class="subsection-header">Intellectual Property -</p>
+        <p>Contoso has the intellectual property shown in the following table.</p>
+        <table>
+          <tr><th>Content</th><th>Format</th><th>Language</th><th>Content store</th><th>Domain</th></tr>
+          <tr><td>Weekly webinars</td><td>Video</td><td>English</td><td>Azure Blob storage</td><td>Vid.contoso.com</td></tr>
+          <tr><td>Blogs</td><td>Text</td><td>English, French, Portuguese</td><td>WordPress</td><td>Pt-blog.contoso.com<br>Blog.contoso.com<br>Fr-blog.contoso.com</td></tr>
+          <tr><td>Wikis</td><td>Text</td><td>English, French, Portuguese</td><td>Azure Cosmos DB</td><td>Internal.contoso.com/wiki</td></tr>
+          <tr><td>Monthly conference recordings</td><td>Video</td><td>English</td><td>SharePoint Online</td><td>Contoso.sharepoint.com</td></tr>
+          <tr><td>Frequently asked questions</td><td>Text</td><td>English</td><td>SharePoint Online</td><td>Contoso.sharepoint.com</td></tr>
+        </table>
+        <p>Text-based content is provided only in one language and is not translated.</p>
+      </div>
+
+      <div id="cs2Requirements" class="case-reading" data-cs="2">
+        <p class="section-header">Requirements -</p>
+        <br>
+        <p class="subsection-header">Planned Projects -</p>
+        <p>Contoso plans to develop the following:</p>
+        <ul>
+          <li>A document processing workflow to extract information automatically from PDFs and images of financial documents.</li>
+          <li>A customer support chatbot that will answer questions by using FAQs.</li>
+          <li>A searchable knowledgebase of all the intellectual property.</li>
+        </ul>
+        <br>
+        <p class="subsection-header">Technical Requirements -</p>
+        <p>Contoso identifies the following technical requirements:</p>
+        <ul>
+          <li>All content must be approved before being published.</li>
+          <li>All planned projects must support English, French, and Portuguese.</li>
+          <li>All content must be secured by using role-based access control (RBAC).</li>
+          <li>RBAC role assignments must use the principle of least privilege.</li>
+          <li>RBAC roles must be assigned only to Azure Active Directory groups.</li>
+          <li>All solution responses must have a confidence score that is equal to or greater than 70 percent.</li>
+          <li>When the response confidence score of an AI response is lower than 70 percent, the response must be improved by human input.</li>
+        </ul>
+        <br>
+        <p class="subsection-header">Chatbot Requirements -</p>
+        <p>Contoso identifies the following requirements for the chatbot:</p>
+        <ul>
+          <li>Provide customers with answers to the FAQs.</li>
+          <li>Ensure that the customers can chat to a customer service agent.</li>
+          <li>Ensure that the members of a group named Management Accountants can approve the FAQs.</li>
+          <li>Ensure that the members of a group named Consultant Accountants can create and amend the FAQs.</li>
+          <li>Ensure that the members of a group named Agent CustomerServices can browse the FAQs.</li>
+        </ul>
+        <br>
+        <p class="subsection-header">Knowledgebase Requirements -</p>
+        <p>Contoso identifies the following requirements for the knowledgebase:</p>
+        <ul>
+          <li>All content in the knowledgebase must be searchable.</li>
+          <li>The solution must use a single Azure Cognitive Search service.</li>
+          <li>Images in videos must be extractable and searchable.</li>
+          <li>Text from PDFs must be extractable and searchable.</li>
+          <li>The solution must extract the key phrases from content.</li>
+          <li>All content must be indexed without writing any custom code.</li>
+        </ul>
+        <br>
+        <p class="subsection-header">Document Processing Requirements -</p>
+        <p>Contoso identifies the following requirements for the document processing workflow:</p>
+        <ul>
+          <li>Automate the extraction of data from financial documents using prebuilt AI models.</li>
+          <li>Support invoices, receipts, and business cards.</li>
+          <li>Store extracted data in Azure Cosmos DB.</li>
+          <li>Trigger processing automatically when new documents arrive in Azure Blob storage.</li>
+        </ul>
+      </div>
+
+      <div id="cs2Questions" class="case-reading" data-cs="2">
+        <p class="section-header">Case Study Questions -</p>
+        <p>This section contains questions based on the Contoso case study. Navigate to each question using the Question button in the navigation.</p>
+        <br>
+        <p class="subsection-header">Question topics covered:</p>
+        <ul>
+          <li>RBAC role assignments for QnA Maker / Language service</li>
+          <li>Azure Cognitive Search skillsets for indexing mixed content</li>
+          <li>Document Intelligence model selection</li>
+          <li>Chatbot confidence threshold configuration</li>
+          <li>Multi-language support implementation</li>
+        </ul>
+      </div>
+
 
       <!-- Question panel -->
       <div id="questionPanel" class="question-panel">
@@ -1018,7 +1230,27 @@ const Q=[
 {id:707,d:"D5",q:"SIMULATION: Create a QnA Maker knowledge base from a FAQ URL, test it, and publish it. Five actions in sequence?",o:["Sign in to qnamaker.ai \u2192 Create knowledge base \u2192 Link Azure QnA service \u2192 Enter FAQ URL as data source \u2192 Save and train \u2192 Test \u2192 Publish", "Create Language resource \u2192 Open Language Studio \u2192 Create custom Q&A project \u2192 Import FAQ \u2192 Train \u2192 Deploy \u2192 Test", "Open Azure portal \u2192 Create Cognitive Services \u2192 Create Bot \u2192 Link QnA Maker \u2192 Add FAQ \u2192 Train \u2192 Publish", "Sign in to portal \u2192 Create QnA resource \u2192 Download SDK \u2192 Write code to populate KB \u2192 Train via API \u2192 Publish via REST"],a:0,m:false,e:"qnamaker.ai → Create KB → Connect Azure QnA service → Add FAQ URL → Save and train → Test panel → Publish → get endpoint + key for bot integration."},
 {id:708,d:"D6",q:"SIMULATION: Deploy a GPT-35-Turbo model in Azure AI Foundry and test it in the Chat playground. Four actions in sequence?",o:["Sign in to ai.azure.com \u2192 Open your project \u2192 Go to Deployments \u2192 Click Deploy model \u2192 Select gpt-35-turbo \u2192 Configure capacity \u2192 Click Deploy \u2192 Open Chat playground and test", "Open Azure portal \u2192 Create OpenAI resource \u2192 Navigate to Keys \u2192 Copy API key \u2192 Run Python script \u2192 Test output", "Sign in to Azure portal \u2192 Create Cognitive Services \u2192 Select GPT model \u2192 Deploy to AKS \u2192 Configure ingress \u2192 Test via curl", "Open ai.azure.com \u2192 Create hub \u2192 Create compute \u2192 Launch JupyterLab \u2192 Run notebook \u2192 Deploy model \u2192 Test"],a:0,m:false,e:"ai.azure.com → Project → Deployments → Deploy model → gpt-35-turbo → set name and capacity → Deploy → Chat playground → enter system message and test."},
 {id:709,d:"D1",q:"SIMULATION: Configure a private endpoint for an Azure AI Services resource to prevent internet access. Four actions in sequence?",o:["Navigate to Azure AI Services resource \u2192 Networking tab \u2192 Select Disabled (no internet access) \u2192 Private endpoint connections \u2192 Add private endpoint \u2192 Select VNet and subnet \u2192 Create", "Create NSG \u2192 Add inbound deny rule \u2192 Attach to subnet \u2192 Restart service", "Open Firewall settings \u2192 Add IP rule \u2192 Disable public access \u2192 Create service endpoint", "Navigate to resource \u2192 Access control \u2192 Add deny assignment \u2192 Configure conditional access"],a:0,m:false,e:"Resource → Networking → set Allow access from = Disabled → Private endpoint connections tab → +Add → select VNet/subnet → Create. The resource is now only accessible via private IP."},
-{id:710,d:"D1",q:"SIMULATION: Enable diagnostic logging for an Azure AI Services resource and create a metric alert for call rate exceeding 1000 per day. Five actions in sequence?",o:["Navigate to resource \u2192 Monitoring > Diagnostic settings \u2192 Add setting \u2192 Select AllMetrics \u2192 Send to Log Analytics workspace \u2192 Navigate to Monitoring > Alerts \u2192 Create alert rule \u2192 Select Total Calls metric > 1000 \u2192 Create", "Create storage account \u2192 Link to resource \u2192 Enable audit log \u2192 Create Logic App \u2192 Configure trigger \u2192 Deploy", "Open Azure Monitor \u2192 Create workspace \u2192 Link subscription \u2192 Configure data collection rule \u2192 Create alert \u2192 Notify", "Navigate to resource \u2192 Activity log \u2192 Export \u2192 Create automation runbook \u2192 Configure schedule \u2192 Alert"],a:0,m:false,e:"Resource → Diagnostic settings → Add → select AllMetrics/AllLogs → Log Analytics workspace → Save. Then Alerts → Create → select resource → Condition: Total Calls > 1000 → action group → Create."}
+{id:710,d:"D1",q:"SIMULATION: Enable diagnostic logging for an Azure AI Services resource and create a metric alert for call rate exceeding 1000 per day. Five actions in sequence?",o:["Navigate to resource \u2192 Monitoring > Diagnostic settings \u2192 Add setting \u2192 Select AllMetrics \u2192 Send to Log Analytics workspace \u2192 Navigate to Monitoring > Alerts \u2192 Create alert rule \u2192 Select Total Calls metric > 1000 \u2192 Create", "Create storage account \u2192 Link to resource \u2192 Enable audit log \u2192 Create Logic App \u2192 Configure trigger \u2192 Deploy", "Open Azure Monitor \u2192 Create workspace \u2192 Link subscription \u2192 Configure data collection rule \u2192 Create alert \u2192 Notify", "Navigate to resource \u2192 Activity log \u2192 Export \u2192 Create automation runbook \u2192 Configure schedule \u2192 Alert"],a:0,m:false,e:"Resource → Diagnostic settings → Add → select AllMetrics/AllLogs → Log Analytics workspace → Save. Then Alerts → Create → select resource → Condition: Total Calls > 1000 → action group → Create."},
+// === Screenshot questions (Images 1-4) ===
+{id:809,d:"D2",q:"Wide World Importers product creation project. You need to develop code to upload images and meet accessibility requirements (alt text). Complete the code: VisualFeatureTypes value and image variable type?",o:["VisualFeatureTypes.Tags / Dictionary<string, string>", "VisualFeatureTypes.Description / Dictionary<string, string>", "VisualFeatureTypes.ImageType / List<string>", "VisualFeatureTypes.Objects / Dictionary<string, string>"],a:0,m:false,e:"VisualFeatureTypes.Tags generates tags used for alt text (accessibility requirement). Dictionary<string,string> stores language-code to alt-text mappings for EN/ES/PT."},
+{id:810,d:"D2",q:"WWI product creation: Complete code to analyze images for accessibility. Complete code: visual feature and image variable type?",o:["Tags / Dictionary", "Description / List", "ImageType / string", "Objects / Dictionary"],a:0,m:false,e:"Tags visual feature generates searchable tags for alt text generation. Dictionary maps language codes to alt text values."},
+{id:811,d:"D2",q:"Contoso case study. You are developing the knowledgebase. You use Azure Video Analyzer for Media (previously Video Indexer) to obtain transcripts of webinars. You need to ensure the knowledgebase meets the requirements (high accuracy for accounting jargon). What should you do?",o:["Create a custom language model", "Configure audio indexing for videos only", "Enable multi-language detection for videos", "Build a custom Person model for webinar presenters"],a:0,m:false,e:"A custom language model in Video Indexer lets you add domain-specific vocabulary and jargon (e.g. accounting terms), improving transcription accuracy for the knowledgebase requirement."},
+{id:812,d:"D3",q:"Wide World Importers product creation project. You need to build the REST endpoint URI to translate product descriptions. Data sovereignty must stay in the United States. Complete the URI: endpoint and path?",o:["api-nam.cognitive.microsofttranslator.com / /translate", "api.cognitive.microsofttranslator.com / /translate", "eastus.api.cognitive.microsoft.com / /translate", "api-nam.cognitive.microsofttranslator.com / /detect"],a:0,m:false,e:"api-nam uses North American Azure geography for US data sovereignty. /translate is the path for text translation. api.cognitive.microsofttranslator.com does not guarantee US data residency."},
+{id:813,d:"D4",q:"Contoso case study. You need to develop an extract solution for receipt images. The solution must meet the document processing requirements. The Form Recognizer API returns the following JSON: { 'docType': 'prebuilt:receipt', 'fields': { 'ReceiptType': { 'confidence': 0.672 }, 'MerchantName': { 'confidence': 0.913 } } }. Which expression should you use to trigger a manual review by a member of the Consultant-Bookkeeper group?",o:["documentResults.docType == 'prebuilt:receipt'", "documentResults.fields.*.confidence < 0.7", "documentResults.fields.ReceiptType.confidence > 0.7", "documentResults.fields.MerchantName.confidence < 0.7"],a:1,m:false,e:"documentResults.fields.*.confidence < 0.7 checks ALL extracted fields against the 70% threshold. This matches the Contoso requirement: when any field confidence is below 70%, trigger human review. Only checking MerchantName would miss other low-confidence fields."},
+{id:814,d:"D2",q:"Contoso case study. You are developing the knowledgebase solution. You use Azure Video Analyzer for Media to obtain transcripts of webinars. You need to ensure the solution meets the knowledgebase requirements. What should you do?",o:["Create a custom language model", "Configure audio indexing for videos only", "Enable multi-language detection for videos", "Build a custom Person model for webinar presenters"],a:0,m:false,e:"A custom language model adds domain-specific vocabulary (accounting jargon) to Video Indexer, improving transcription accuracy to meet the high-accuracy knowledgebase requirement."},
+{id:815,d:"D2",q:"WWI product creation project — develop code to call Computer Vision and generate alt text for images. Complete code: VisualFeatureTypes list and client method?",o:["VisualFeatureTypes.Tags / client.AnalyzeImageAsync", "VisualFeatureTypes.Description / client.AnalyzeImageAsync", "VisualFeatureTypes.ImageType / client.DetectObjectsAsync", "VisualFeatureTypes.Objects / client.AnalyzeImageAsync"],a:0,m:false,e:"VisualFeatureTypes.Tags is needed to generate image tags used for alt text. client.AnalyzeImageAsync calls the Computer Vision Image Analysis API."},
+{id:816,d:"D1",q:"Contoso case study. The document processing solution extracts data from financial documents. Members of the Consultant-Bookkeeper group must be able to process the financial documents but NOT approve them. Which RBAC role should you assign to the Consultant-Bookkeeper group?",o:["Cognitive Services User", "Cognitive Services Contributor", "Cognitive Services OpenAI Contributor", "Reader"],a:0,m:false,e:"Cognitive Services User grants the ability to call Cognitive Services APIs (process documents) without management permissions — satisfying least privilege. Contributor would allow resource management which is not required."},
+{id:817,d:"D5",q:"Contoso case study. The chatbot must have a confidence score of at least 70%. When the response confidence score is lower than 70%, the response must be improved by human input. Which Bot Framework SDK property should you configure?",o:["QnAMakerOptions.ScoreThreshold = 0.7", "QnAMakerOptions.StrictFilters", "QnADialogResponseOptions.CardNoMatchText", "QnAMakerOptions.RankerType"],a:0,m:false,e:"QnAMakerOptions.ScoreThreshold set to 0.7 means only responses with confidence >= 70% are returned automatically. Below this threshold, the bot can route to human review."},
+{id:818,d:"D4",q:"Contoso case study. The document processing workflow must process standardized financial documents that are fewer than 20 pages and formatted as PDF or JPEG. The solution must minimize development effort. Which Document Intelligence model should you use?",o:["prebuilt-invoice", "Custom template model", "prebuilt-document", "prebuilt-layout"],a:0,m:false,e:"The prebuilt-invoice model extracts standard invoice fields (vendor, amounts, dates, line items) without custom training, minimizing development effort for standardized financial documents."},
+// === WWI Case Study specific questions ===
+{id:801,d:"D2",q:"You are planning the product creation project. You need to recommend videos. Which four actions should you perform in sequence? To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order.",o:["Index the video by using the Azure Video Analyzer for Media (previously Video Indexer) API.", "Upload the video to blob storage.", "Analyze the video by using the Computer Vision API.", "Extract the transcript from Microsoft Stream.", "Send the transcript to the Language Understanding API as an utterance.", "Extract the transcript from the Azure Video Analyzer for Media (previously Video Indexer) API.", "Translate the transcript by using the Translator API.", "Upload the video to file storage."],a:[1, 0, 5, 6],m:false,e:"Upload video to blob → Index with Video Analyzer for Media → Extract transcript from Video Analyzer → Translate transcript with Translator API for multilingual support."},
+{id:802,d:"D4",q:"You need to implement the knowledgebase for Wide World Importers. Which Azure Cognitive Search skillset should you use to make images in videos searchable? Three actions in sequence?",o:["Use the image analysis cognitive skill to generate image descriptions", "Use the OCR skill to extract text from video frames", "Use the Video Indexer to extract keyframes and store in blob", "Use the key phrase extraction skill on image descriptions", "Index the output fields as searchable in the index"],a:[2, 0, 4],m:false,e:"Video Indexer extracts keyframes → Image analysis skill generates descriptions → Index output as searchable fields."},
+{id:803,d:"D5",q:"Wide World Importers chatbot — shopping on-the-go project. You need to ensure senior managers can publish QnA updates but all employees can edit Q&As. Which two RBAC roles should you assign?",o:["Cognitive Services QnA Maker Editor \u2014 to AllUsers group", "Cognitive Services QnA Maker Reader \u2014 to AllUsers group", "Cognitive Services QnA Maker Editor \u2014 to LeadershipTeam group", "Cognitive Services QnA Maker Owner \u2014 to AllUsers group", "Cognitive Services QnA Maker Owner \u2014 to LeadershipTeam group"],a:[0, 4],m:true,e:"All employees (AllUsers) need Editor role to create/amend Q&As. Senior managers (LeadershipTeam) need Owner role to publish updates."},
+{id:804,d:"D4",q:"Wide World Importers smart e-commerce project. The product index must meet 99.9% SLA for searches AND index writes. What is the minimum Azure Cognitive Search configuration?",o:["1 replica, 1 partition", "2 replicas, 1 partition", "3 replicas, 1 partition", "2 replicas, 2 partitions", "3 replicas, 2 partitions"],a:3,m:false,e:"99.9% SLA for both queries and index writes requires at least 2 replicas and 2 partitions in Azure Cognitive Search."},
+{id:805,d:"D4",q:"Wide World Importers — the stock level field in the product index must be updated immediately when stock changes. Which approach meets this requirement?",o:["Schedule the indexer to run every 5 minutes", "Use the Push API to update the index directly when stock changes", "Enable change detection on the Cosmos DB indexer", "Create a separate index for stock levels with a 1-minute indexer"],a:1,m:false,e:"The Push API updates index documents immediately without waiting for an indexer schedule, meeting the requirement for immediate stock level updates."},
+{id:806,d:"D4",q:"Wide World Importers needs to support autocompletion based on all product name variants (en, es, pt). Three actions in sequence?",o:["Add a suggester with the three product name fields as source fields", "Make API queries to autocomplete endpoint and include suggesterName", "Set the analyzer property for the three product name variants", "Add a suggester for each of the three product name fields", "Set the searchAnalyzer property for the three product name variants", "Make API queries to search endpoint with product name fields in searchFields"],a:[0, 2, 1],m:false,e:"Add single suggester with all 3 name fields → set analyzer property → query autocomplete endpoint with suggesterName."},
+{id:807,d:"D4",q:"Wide World Importers — store all raw insight data generated during indexing so it can be processed later. Which knowledge store projection type should you use?",o:["Table projection", "Object projection", "File projection", "Shaper projection"],a:1,m:false,e:"Object projections store the full enriched JSON documents in Azure Blob Storage, allowing the raw insight data to be processed later."},
+{id:808,d:"D3",q:"Wide World Importers product creation project — remove the need for manual translations of product descriptions, transcripts, and alt text into English, Spanish, and Portuguese. Which service?",o:["Azure Cognitive Services Translator text translation", "Azure Cognitive Services Translator document translation", "Azure AI Language custom text classification", "Azure AI Language named entity recognition"],a:0,m:false,e:"The Translator text translation API translates product text (descriptions, transcripts, alt text) into EN/ES/PT automatically, removing manual translation."}
 ];;
 
 
@@ -1170,7 +1402,7 @@ function buildDomainCards(){
     if(row2) acts.innerHTML+=`<div class="domain-action-row">${row2}</div>`;
 
     /* Case study button */
-    acts.innerHTML+=`<button class="dact-btn full-width" onclick="startDomain('${k}','casestudy')">
+    acts.innerHTML+=`<button class="dact-btn full-width" onclick="showScreen('csPicker')">
       <span class="dact-icon">&#x1F4D6;</span>
       <div><div>Case study mode</div><div class="dact-count">Full scenario navigation</div></div>
     </button>`;
@@ -1226,30 +1458,11 @@ function updateTimer(){const s=Math.floor((Date.now()-state.startTime)/1000);doc
 
 /* -------- Nav pane -------- */
 function buildNavPane(isCaseStudy){
-  const nav=document.getElementById("navPane");
-  const mobileTabs=document.getElementById("caseNavTabs");
-
   if(isCaseStudy){
-    const sections=[
-      {id:"caseIntro",label:"Intro"},
-      {id:"caseOverview",label:"Overview"},
-      {id:"caseRequirements",label:"Requirements"},
-      {id:"caseProductJSON",label:"JSON Sample"}
-    ];
-    nav.innerHTML=`
-      <div class="nav-section-title">Case Study</div>
-      <button class="nav-btn" onclick="showCaseSection('caseIntro',this)">Introductory Info</button>
-      <button class="nav-btn" onclick="showCaseSection('caseOverview',this)">Overview</button>
-      <button class="nav-btn" onclick="showCaseSection('caseRequirements',this)">Requirements</button>
-      <button class="nav-btn" onclick="showCaseSection('caseProductJSON',this)">Product JSON</button>
-      <div class="nav-divider"></div>
-      <div class="nav-section-title">Questions</div>
-      <button class="nav-question-btn" onclick="showQuestion(this)" id="navQBtn">&#x1F4AC; Question</button>`;
-    /* Mobile tabs */
-    mobileTabs.style.display='flex';
-    mobileTabs.innerHTML=sections.map(s=>`<button class="case-nav-tab" onclick="showCaseSection('${s.id}',null)">${s.label}</button>`).join('')+
-      `<button class="case-nav-tab question-tab" onclick="showQuestion(null)" id="mobileQBtn">&#x1F4AC; Question</button>`;
+    buildNavPaneForCS(activeCaseStudy||1);
   } else {
+    const nav=document.getElementById("navPane");
+    const mobileTabs=document.getElementById("caseNavTabs");
     nav.innerHTML=`
       <div class="nav-section-title">Navigation</div>
       <button class="nav-question-btn" onclick="showQuestion(this)" id="navQBtn">&#x1F4AC; Question</button>
@@ -1261,9 +1474,12 @@ function buildNavPane(isCaseStudy){
 }
 
 function showCaseSection(sectionId, btn){
-  document.querySelectorAll(".case-reading,.question-panel").forEach(el=>{el.classList.remove("active");el.style.display="none";});
-  document.getElementById(sectionId).style.display="block";
-  document.getElementById(sectionId).classList.add("active");
+  /* Hide all case reading sections and question panel */
+  document.querySelectorAll(".case-reading,.question-panel").forEach(el=>{
+    el.classList.remove("active");el.style.display="none";
+  });
+  const target = document.getElementById(sectionId);
+  if(target){target.style.display="block";target.classList.add("active");}
   document.querySelectorAll(".nav-btn,.case-nav-tab").forEach(b=>b.classList.remove("active"));
   if(btn)btn.classList.add("active");
 }
@@ -1647,7 +1863,10 @@ const HOTSPOT_TEMPLATES={
   526:{code:"response = openai.[BLANK_0].create(\n    engine = deployment,\n    messages = conversation,\n    data_sources = [{\n        \"type\": \"[BLANK_1]\",\n        \"parameters\": {\n            \"endpoint\": search_endpoint,\n            \"key\": search_key\n        }\n    }])",blanks:["Completion type", "Data source type"]},
   619:{code:"var client = new [BLANK_0](\n  new Uri(endpoint),\n  new AzureKeyCredential(key));\n\nvar request = new AnalyzeImageOptions(\n  BinaryData.FromStream(imageStream));\n\nvar response = await client.[BLANK_1];",blanks:["Client type", "Analyze method"]},
   620:{code:"var client = new [BLANK_0](\n  new Uri(endpoint),\n  new AzureKeyCredential(key));\n\nvar request = new [BLANK_1](text);\nvar response = await client.AnalyzeTextAsync(request);",blanks:["Client type", "Request type"]}
-};
+,
+  809:{code:"static async Task<string> SuggestAltText(ComputerVisionClient client,\n  string image)\n{\n  IList<VisualFeatureTypes> features =\n    new List<VisualFeatureTypes>() { [BLANK_0] };\n\n  ImageAnalysis analysis = await client.AnalyzeImageAsync(image, features);\n\n  var c = results.Brands.DetectedBrands[0];\n  var d = results.Description.Captions[0];\n  var e = results.Metadata[0];\n  var f = results.Tags[0];\n\n  if(f.Confidence>0.5) return(f.Text);\n}",blanks:["VisualFeatureTypes value"]},
+  812:{code:"var response = await client.GetAsync(\n  $\"https://[BLANK_0]/[BLANK_1]\" +\n  \"?api-version=3.0&to=es&to=pt&textType=plain\");",blanks:["Endpoint", "Path"]},
+  815:{code:"IList<VisualFeatureTypes> features =\n  new List<VisualFeatureTypes>() { [BLANK_0] };\n\nImageAnalysis analysis =\n  await client.[BLANK_1](imageUrl, features);\n\nforeach(var tag in analysis.Tags)\n{\n  altTextDict[tag.Name] = tag.Name;\n}",blanks:["VisualFeatureTypes value", "Method"]}};
 
 function buildHotspotCode(q,numDropdowns,dropLists){
   const tmpl=HOTSPOT_TEMPLATES[q.id];
@@ -2216,6 +2435,290 @@ const SIMULATIONS = {
     }
   }
 };
+
+/* ===== CASE STUDY SYSTEM ===== */
+
+/* Map of case study id -> section ids and nav labels */
+
+function buildWWIScenario(){
+  return `<h4>Overview</h4>
+<p>Wide World Importers is developing an e-commerce platform using microservices and serverless Azure. Customer base: English, Spanish, Portuguese.</p>
+<h4>Applications</h4>
+<table><tr><th>Name</th><th>Description</th></tr>
+<tr><td>Product Management</td><td>Employees create/manage products (English inputs)</td></tr>
+<tr><td>Inventory Tracking</td><td>Manages inventory, dispatching, refunds, consignments</td></tr></table>
+<h4>Azure Resources</h4>
+<ul><li>Azure AD — AllUsers (all employees), LeadershipTeam (senior managers)</li>
+<li>Azure Functions — posts to Event Grid on stock level changes</li>
+<li>Azure Cosmos DB — Product Management + Inventory Tracking data</li>
+<li>Azure Storage — blob containers for images, videos, PDFs</li>
+<li>Azure Cognitive Services (wwics) + Azure Video Analyzer for Media (wwivi)</li></ul>
+<h4>Accessibility Requirements</h4>
+<ul><li>All images must have relevant alt text</li>
+<li>All videos must have transcripts associated and included in product descriptions</li>
+<li>Product descriptions, transcripts, and alt text must be available in English, Spanish, and Portuguese</li></ul>
+<h4>Product Creation Requirements</h4>
+<ul><li>Minimize how long it takes for employees to create products and add assets</li>
+<li>Remove the need for manual translations</li></ul>
+<h4>Smart E-Commerce Requirements</h4>
+<ul><li>Cognitive Search SLA of 99.9% for searches and index writes</li>
+<li>Search insight from images, manuals, and videos associated with products</li>
+<li>Support autocompletion and suggestion based on all product name variants</li>
+<li>Store all raw insight data that was generated, so data can be processed later</li>
+<li>Update the stock level field in the product index immediately upon changes</li>
+<li>Update the product index hourly</li></ul>
+<h4>Shopping On-the-Go Requirements</h4>
+<ul><li>Answer common questions</li>
+<li>Support interactions in English, Spanish, and Portuguese</li>
+<li>Replace an existing FAQ process so all Q&amp;A is managed from a central location</li>
+<li>Provide all employees with the ability to edit Q&amp;As. Only senior managers must be able to publish updates</li>
+<li>Support purchases by providing information about relevant products. Product displays must include images and warnings when stock levels are low or out of stock</li></ul>
+<h4>Product JSON Sample</h4>
+<pre>{ "sku": "b1",
+  "name": { "en":"Bicycle","es":"Bicicleta","pt":"Bicicleta" },
+  "stocklevel": "Out of Stock",
+  "description": { "en":"Bicycle","es":"Bicicleta","pt":"Bicicleta" },
+  "image":{
+    "uri":"https://upload.worldwideimporters.org/bicycle.jpg",
+    "alttext":{ "en":"Bicycle","es":"Bicicleta","pt":"Bicicleta" }
+  },
+  "createdUtc":"2020-02-14T06:08:39Z",
+  "language":"en"
+}</pre>`;
+}
+
+function buildContosoScenario(){
+  return `<h4>Overview</h4>
+<p>Contoso, Ltd. is an international accounting company with offices in France, Portugal, and the United Kingdom.</p>
+<h4>Professional Services Roles</h4>
+<table><tr><th>Position</th><th>Office</th></tr>
+<tr><td>Accountant — Consultant</td><td>United Kingdom</td></tr>
+<tr><td>Accountant — Consultant</td><td>UK, France, Portugal</td></tr>
+<tr><td>Customer Service — Agent</td><td>United Kingdom</td></tr>
+<tr><td>Bookkeeper — Manager</td><td>UK, France, Portugal</td></tr>
+<tr><td>Bookkeeper — Consultant</td><td>UK, France, Portugal</td></tr></table>
+<h4>Infrastructure</h4>
+<p>Subscriptions: Azure, Microsoft 365, Dynamics 365, Azure AD</p>
+<p>Group naming: <code>Country\[Level]\[Role]</code> or <code>[Level]\[Role]</code></p>
+<h4>Intellectual Property</h4>
+<table><tr><th>Content</th><th>Format</th><th>Language</th><th>Content store</th><th>Domain</th></tr>
+<tr><td>Weekly webinars</td><td>Video</td><td>English</td><td>Azure Blob storage</td><td>Vid.contoso.com</td></tr>
+<tr><td>Blogs</td><td>Text</td><td>EN/FR/PT</td><td>WordPress</td><td>Pt-blog / Blog / Fr-blog.contoso.com</td></tr>
+<tr><td>Wikis</td><td>Text</td><td>EN/FR/PT</td><td>Azure Cosmos DB</td><td>Internal.contoso.com/wiki</td></tr>
+<tr><td>Monthly conference recordings</td><td>Video</td><td>English</td><td>SharePoint Online</td><td>Contoso.sharepoint.com</td></tr>
+<tr><td>Frequently asked questions</td><td>Text</td><td>English</td><td>SharePoint Online</td><td>Contoso.sharepoint.com</td></tr></table>
+<p><em>Text-based content is provided only in one language and is not translated.</em></p>
+<h4>Technical Requirements</h4>
+<ul><li>All content must be approved before being published</li>
+<li>All projects must support English, French, and Portuguese</li>
+<li>All content secured by RBAC — principle of least privilege, Azure AD groups only</li>
+<li>Solution responses must have confidence score ≥ 70%</li>
+<li>When confidence &lt; 70%, response must be improved by human input</li></ul>
+<h4>Chatbot Requirements</h4>
+<ul><li>Provide customers with answers to FAQs</li>
+<li>Ensure customers can chat to a customer service agent</li>
+<li>Management Accountants group — approve FAQs</li>
+<li>Consultant Accountants group — create and amend FAQs</li>
+<li>Agent CustomerServices group — browse FAQs</li>
+<li>When confidence score of AI response &lt; 70%, chatbot can provide other response options to customers</li></ul>
+<h4>Document Processing Requirements</h4>
+<p>The document processing solution must process standardized financial documents with these characteristics:</p>
+<ul><li>Contain fewer than 20 pages</li>
+<li>Be formatted as PDF or JPEG files</li>
+<li>Have a distinct standard for each office</li>
+<li>Solution must be able to extract tables and text from financial documents</li>
+<li>Members of Management-Bookkeeper group must define how to extract tables</li>
+<li>Members of Consultant-Bookkeeper group must be able to process the documents</li></ul>
+<h4>Document Processing JSON Sample</h4>
+<pre>"documentResults":[{
+  "docType":"prebuilt:receipt",
+  "pageRange":{ ... },
+  "fields":{
+    "ReceiptType":{
+      "type":"string",
+      "valueString":"Itemized",
+      "confidence":0.672
+    },
+    "MerchantName":{
+      "type":"string",
+      "valueString":"Tailwind",
+      "confidence":0.913,
+      "boundingBox":[],
+      "page":1,
+      "elements":["#/readResults/0/lines/0/words/0"]
+    }
+  }
+}]</pre>
+<h4>Knowledgebase Requirements</h4>
+<ul><li>All content in the knowledgebase must be searchable</li>
+<li>Single Azure Cognitive Search service</li>
+<li>Images in videos must be extractable and searchable</li>
+<li>Text from PDFs must be extractable and searchable</li>
+<li>Extract key phrases from content</li>
+<li>All content indexed without writing any custom code</li>
+<li>Supports searches for equivalent terms</li>
+<li>Can transcribe jargon with high accuracy</li>
+<li>Can search content in different formats including video</li></ul>`;
+}
+
+const CASE_STUDIES = {
+  1: {
+    name: "Wide World Importers",
+    topic: "Topic 9",
+    sections: [
+      {id:"caseIntro",        label:"Intro"},
+      {id:"caseOverview",     label:"Overview"},
+      {id:"caseRequirements", label:"Requirements"},
+      {id:"caseProductJSON",  label:"Product JSON"}
+    ],
+    questionFilter: q => [801,802,803,804,805,806,807,808,809,810,812,815].includes(q.id) || ['D3','D4','D5'].includes(q.d),
+    scenarioHTML: buildWWIScenario
+  },
+  2: {
+    name: "Contoso, Ltd.",
+    topic: "Topic 1",
+    sections: [
+      {id:"cs2Intro",        label:"Intro"},
+      {id:"cs2Overview",     label:"Overview"},
+      {id:"cs2Requirements", label:"Requirements"},
+      {id:"cs2Questions",    label:"Questions"}
+    ],
+    questionFilter: q => [811,813,814,816,817,818].includes(q.id) || ['D1','D4','D5'].includes(q.d),
+    scenarioHTML: buildContosoScenario
+  }
+};
+
+let activeCaseStudy = 1;
+
+function startCaseStudy(csId, mode) {
+  activeCaseStudy = csId;
+  const cs = CASE_STUDIES[csId];
+  if (!cs) return;
+
+  if (mode === 'read') {
+    /* Read-only: show scenario nav + first section */
+    const qs = shuffle(Q.filter(cs.questionFilter)).slice(0,12);
+    state={...state,mode:cs.name+' — Case Study',questions:qs,idx:0,answers:{},startTime:Date.now(),ddOrder:[],ynSel:null,isCaseStudy:true};
+    document.getElementById('qtitle').textContent=cs.name;
+    document.getElementById('topTopic').textContent=cs.topic;
+    clearInterval(state.tiv);
+    state.tiv=setInterval(updateTimer,1000);
+    buildNavPaneForCS(csId);
+    showScreen('quiz');
+    showCaseSection(cs.sections[0].id, null);
+  } else {
+    /* Quiz mode — combined scenario+question layout */
+    const specificIds=[801,802,803,804,805,806,807,808];
+    let qs;
+    if(csId===1){
+      /* WWI: use specific questions first, then supplement */
+      const specific=Q.filter(q=>specificIds.includes(q.id));
+      const extra=shuffle(Q.filter(q=>!specificIds.includes(q.id)&&['D4','D5','D3'].includes(q.d))).slice(0,7);
+      qs=[...shuffle(specific),...extra];
+    } else {
+      qs=shuffle(Q.filter(cs.questionFilter)).slice(0,12);
+    }
+    state={...state,mode:cs.name+' — Case Study',questions:qs,idx:0,answers:{},startTime:Date.now(),ddOrder:[],ynSel:null,isCaseStudy:true};
+    document.getElementById('qtitle').textContent=cs.name;
+    document.getElementById('topTopic').textContent=cs.topic;
+    clearInterval(state.tiv);
+    state.tiv=setInterval(updateTimer,1000);
+    /* Use combined layout: scenario above, question below */
+    buildCombinedCaseStudyLayout(csId);
+    showScreen('quiz');
+    renderQ();
+  }
+}
+
+function buildCombinedCaseStudyLayout(csId){
+  const cs=CASE_STUDIES[csId];
+  const nav=document.getElementById('navPane');
+  const mobileTabs=document.getElementById('caseNavTabs');
+  const contentPane=document.getElementById('contentPane');
+
+  /* Build mini scenario panel inside content pane */
+  /* Replace content pane with combined layout */
+  contentPane.innerHTML='';
+  const wrap=document.createElement('div');
+  wrap.className='cs-combined-wrap';
+  wrap.id='csCombinedWrap';
+
+  /* Scenario panel (collapsible) */
+  const scenarioPanel=document.createElement('div');
+  scenarioPanel.className='cs-scenario-panel';
+  scenarioPanel.id='csScenarioPanel';
+
+  const toggleBtn=document.createElement('div');
+  toggleBtn.className='cs-scenario-toggle';
+  toggleBtn.innerHTML=`<span class="cs-scenario-toggle-title">&#x1F4D6; Case Study — ${cs.name} (${cs.topic})</span><span class="cs-scenario-toggle-icon open" id="csToggleIcon">&#9660;</span>`;
+  toggleBtn.onclick=toggleCsScenario;
+
+  const scenarioContent=document.createElement('div');
+  scenarioContent.className='cs-scenario-content';
+  scenarioContent.id='csScenarioContent';
+  scenarioContent.innerHTML=cs.scenarioHTML?cs.scenarioHTML():'<p>See navigation tabs for full scenario.</p>';
+
+  scenarioPanel.appendChild(toggleBtn);
+  scenarioPanel.appendChild(scenarioContent);
+
+  /* Question panel */
+  const questionPanel=document.createElement('div');
+  questionPanel.className='cs-question-panel';
+  questionPanel.id='csQuestionArea';
+
+  /* Re-wire the existing question panel elements into csQuestionArea */
+  const existingQP=document.getElementById('questionPanel');
+  if(existingQP){questionPanel.appendChild(existingQP);}
+
+  wrap.appendChild(scenarioPanel);
+  wrap.appendChild(questionPanel);
+  contentPane.appendChild(wrap);
+
+  /* Nav: simplified for combined mode */
+  nav.innerHTML=`
+    <div class="nav-section-title">${cs.topic}</div>
+    <div class="nav-section-title" style="color:#1a73e8;font-size:10px">${cs.name}</div>
+    <div class="nav-divider"></div>
+    <div class="nav-section-title">Quick nav</div>
+    ${cs.sections.slice(1).map(s=>`<button class="nav-btn" onclick="scrollToSection('${s.id}')">${s.label}</button>`).join('')}`;
+  mobileTabs.style.display='none';
+}
+
+function scrollToSection(sectionId){
+  /* Expand scenario and scroll to section in the scenario content */
+  const panel=document.getElementById('csScenarioPanel');
+  if(panel&&panel.classList.contains('collapsed')){toggleCsScenario();}
+  const el=document.getElementById(sectionId+'_inline');
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function toggleCsScenario(){
+  const panel=document.getElementById('csScenarioPanel');
+  const icon=document.getElementById('csToggleIcon');
+  if(!panel)return;
+  panel.classList.toggle('collapsed');
+  if(icon)icon.classList.toggle('open');
+}
+
+function buildNavPaneForCS(csId) {
+  const cs = CASE_STUDIES[csId];
+  if (!cs) return;
+  const nav = document.getElementById('navPane');
+  const mobileTabs = document.getElementById('caseNavTabs');
+
+  nav.innerHTML = `
+    <div class="nav-section-title">${cs.topic}</div>
+    <div class="nav-section-title" style="color:#1a73e8;font-size:11px">${cs.name}</div>
+    ${cs.sections.map(s => `<button class="nav-btn" onclick="showCaseSection('${s.id}',this)">${s.label}</button>`).join('')}
+    <div class="nav-divider"></div>
+    <div class="nav-section-title">Questions</div>
+    <button class="nav-question-btn" onclick="showQuestion(this)" id="navQBtn">&#x1F4AC; Question</button>`;
+
+  mobileTabs.style.display = 'flex';
+  mobileTabs.innerHTML = cs.sections.map(s =>
+    `<button class="case-nav-tab" onclick="showCaseSection('${s.id}',null)">${s.label}</button>`
+  ).join('') + `<button class="case-nav-tab question-tab" onclick="showQuestion(null)" id="mobileQBtn">&#x1F4AC; Q</button>`;
+}
 
 /* ---- Step tracker ---- */
 function simMarkStep(idx){
