@@ -11,15 +11,44 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI-102 Exam Simulator</title>
-<style>
-/* ============ RESET & BASE ============ */
-*{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;-webkit-text-size-adjust:100%}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f7;color:#1d1d1f;min-height:100vh;overflow-x:hidden}
-#app{width:100%;max-width:100%;margin:0 auto;min-height:100vh}
-.screen{display:none}.screen.active{display:block}
-button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!important}/* 16px prevents iOS zoom */
+<style>/* ============ RESET & BASE ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;
+  background:#f5f5f7;
+  color:#1d1d1f;
+  min-height:100vh;
+  min-height:100dvh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+#app{width:100%;max-width:100%;margin:0 auto;min-height:100vh;min-height:100dvh}
+.screen{display:none!important}.screen.active{display:block!important}
+/* Explicit overrides for quiz screen which needs flex */
+#quiz.screen.active{display:flex!important;flex-direction:column}
+#simScreen.screen.active{display:flex!important;flex-direction:column}
+button{
+  font-family:inherit;
+  font-size:inherit;
+  color:inherit;
+  cursor:pointer;
+  border:none;
+  background:none;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+input,select,textarea{
+  font-family:inherit;
+  font-size:16px;/* Prevents iOS auto-zoom on focus */
+  color:inherit;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;height:auto;display:block}
 
 /* ============ HOME ============ */
 #home{background:#f5f5f7;min-height:100vh;padding-bottom:40px;max-width:600px;margin:0 auto}
@@ -40,7 +69,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 .prog-bar-fill{height:100%;background:#2e7d32;border-radius:4px;transition:width .4s}
 .prog-label{font-size:11px;color:#6e6e73;text-align:right}
 .mlist{padding:10px 16px;display:flex;flex-direction:column;gap:8px}
-.mbtn{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1.5px solid #e5e5ea;background:#fff;cursor:pointer;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,0.06);transition:all .15s;width:100%}
+.mbtn{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1.5px solid #e5e5ea;background:#fff;cursor:pointer;text-align:left;box-shadow:0 1px 3px rgba(0,0,0,0.06);width:100%}
 .mbtn:active{transform:scale(0.98);background:#f5f5f7}
 .mico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .mt{font-size:13.5px;font-weight:600;color:#1d1d1f}
@@ -59,7 +88,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 .domain-card-actions{padding:0 10px 10px;display:none;flex-direction:column;gap:6px}
 .domain-card-actions.open{display:flex}
 .domain-action-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.dact-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;border:1.5px solid #e5e5ea;background:#f9f9f9;cursor:pointer;font-size:12px;font-weight:600;color:#1d1d1f;transition:all .15s;text-align:left;width:100%}
+.dact-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:8px;border:1.5px solid #e5e5ea;background:#f9f9f9;cursor:pointer;font-size:12px;font-weight:600;color:#1d1d1f;width:100%;text-align:left;-webkit-tap-highlight-color:transparent}
 .dact-btn:active{background:#f0f0f0;transform:scale(0.98)}
 .dact-btn .dact-icon{font-size:15px;flex-shrink:0}
 .dact-btn .dact-count{font-size:10px;color:#6e6e73;font-weight:400;margin-top:1px}
@@ -67,71 +96,88 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 
 /* ============ EXAM SHELL ============ */
 #quiz{display:flex;flex-direction:column;height:100vh;height:100dvh;background:#fff;overflow:hidden}
+#quiz
 .exam-topbar{background:#1a73e8;color:#fff;padding:0 12px;height:44px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.exam-topbar .left{display:flex;align-items:center;gap:10px}
+.exam-topbar .right{display:flex;align-items:center;gap:10px}
 .exam-topbar .qnum{font-size:13px;font-weight:700}
 .exam-topbar .topic{font-size:12px;font-style:italic;font-weight:400}
-.exam-topbar .timer-badge{font-size:12px;background:rgba(255,255,255,0.2);padding:3px 9px;border-radius:20px;font-weight:600}
-.exam-topbar .exit-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:4px;cursor:pointer;min-height:32px}
+.timer-badge{font-size:12px;background:rgba(255,255,255,0.2);padding:3px 9px;border-radius:20px;font-weight:600}
+.exit-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:4px;cursor:pointer;min-height:32px}
 .exam-pbar{height:3px;background:#c5d9f5;flex-shrink:0}
 .exam-pfill{height:100%;background:#fff;transition:width .3s}
-
-/* Split layout — MOBILE: no left nav (hidden), full width content */
 .exam-body{display:flex;flex:1;overflow:hidden;min-height:0}
-.nav-pane{display:none} /* hidden on mobile, shown on wide screens */
-.content-pane{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;min-width:0}
+.nav-pane{display:none;width:180px;flex-shrink:0;background:#f8f9fa;border-right:1px solid #dee2e6;overflow-y:auto;flex-direction:column}
+.content-pane{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;min-width:0;min-height:0}
 
-/* Case study sections */
-.case-reading{padding:16px;flex:1;line-height:1.7;color:#1d1d1f;display:none;font-size:14px}
-.case-reading.active{display:block}
-.case-reading h3{font-size:14px;font-weight:700;margin-bottom:2px}
-.case-reading p{margin-bottom:6px;font-size:13.5px;line-height:1.7}
-.case-reading ul{margin:4px 0 8px 18px}
-.case-reading ul li{font-size:13.5px;margin-bottom:3px;line-height:1.6}
-.case-reading table{border-collapse:collapse;margin:8px 0;font-size:12px;width:100%;display:block;overflow-x:auto}
-.case-reading table th{background:#f0f0f0;font-weight:700;padding:6px 10px;border:1px solid #ccc}
-.case-reading table td{padding:6px 10px;border:1px solid #ccc}
-.case-reading pre{background:#f8f8f8;border:1px solid #ddd;padding:10px;font-size:11px;line-height:1.5;overflow-x:auto;border-radius:4px;margin:6px 0;font-family:monospace;-webkit-overflow-scrolling:touch}
-.case-reading .section-header{font-weight:700;margin:12px 0 2px;font-size:14px}
-.case-reading .subsection-header{font-weight:700;margin:8px 0 2px;font-size:13.5px;color:#333}
-
-/* Case study nav — mobile: horizontal scrolling tabs at top */
+/* Case study tabs (mobile) */
 .case-nav-tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;background:#f8f9fa;border-bottom:1px solid #dee2e6;flex-shrink:0;scrollbar-width:none}
 .case-nav-tabs::-webkit-scrollbar{display:none}
 .case-nav-tab{padding:10px 14px;font-size:12px;font-weight:500;color:#333;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent}
 .case-nav-tab.active{color:#1a73e8;border-bottom-color:#1a73e8;font-weight:600}
 .case-nav-tab.question-tab{color:#1a73e8;font-weight:700}
 
+/* Nav pane */
+.nav-section-title{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.08em;padding:10px 12px 4px}
+.nav-btn{display:block;width:100%;text-align:left;padding:8px 14px;font-size:12px;font-weight:500;color:#333;background:none;border:none;cursor:pointer;border-left:3px solid transparent;line-height:1.3}
+.nav-btn:hover,.nav-btn.active{background:#e3f0fd;color:#1a73e8}
+.nav-btn.active{border-left-color:#1a73e8;font-weight:600}
+.nav-divider{height:1px;background:#dee2e6;margin:6px 0}
+.nav-question-btn{display:block;width:100%;text-align:left;padding:8px 14px;font-size:12px;font-weight:600;color:#1a73e8;background:#e3f0fd;border:none;cursor:pointer;border-left:3px solid #1a73e8}
+
+/* Case reading overlay */
+#caseReadingOverlay{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#fff;padding:16px;font-size:13.5px;line-height:1.7;color:#1d1d1f}
+#caseReadingOverlay h3{font-size:14px;font-weight:700;margin-bottom:4px}
+#caseReadingOverlay p{margin-bottom:6px}
+#caseReadingOverlay ul{margin:4px 0 8px 18px}
+#caseReadingOverlay li{margin-bottom:3px;line-height:1.6}
+#caseReadingOverlay table{border-collapse:collapse;width:100%;font-size:12px;margin:8px 0;display:block;overflow-x:auto}
+#caseReadingOverlay th{background:#f0f0f0;font-weight:700;padding:6px 10px;border:1px solid #ccc}
+#caseReadingOverlay td{padding:6px 10px;border:1px solid #ccc}
+#caseReadingOverlay pre{background:#f8f8f8;border:1px solid #ddd;padding:10px;font-size:11px;overflow-x:auto;border-radius:4px;margin:6px 0;font-family:monospace;white-space:pre-wrap}
+.case-reading{display:none;font-size:13.5px;line-height:1.7;color:#1d1d1f}
+.section-header{font-weight:700;margin:14px 0 4px;font-size:14px}
+.subsection-header{font-weight:700;margin:10px 0 2px;font-size:13.5px;color:#333}
+
 /* Question panel */
-.question-panel{padding:14px 16px;display:none;flex-direction:column;gap:0}
-.question-panel.active{display:flex}
+.question-panel{padding:14px 16px;display:flex;flex-direction:column;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}
 .qp-label{font-size:13px;font-weight:700;margin-bottom:3px;color:#1d1d1f}
-.qp-type{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:5px}
-.qp-context{font-size:13px;line-height:1.75;margin-bottom:6px;color:#1d1d1f}
+.qp-type{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:5px;display:none}
+.qp-context{font-size:13px;line-height:1.75;margin-bottom:6px;color:#1d1d1f;display:none}
 .qp-instruction{font-size:14px;line-height:1.65;margin-bottom:8px;color:#1d1d1f;font-weight:500}
-.qp-note{font-size:12px;color:#555;margin-bottom:8px}
+.qp-note{font-size:12px;color:#555;margin-bottom:8px;display:none}
+.qtype-badge{font-size:10px;padding:3px 8px;border-radius:20px;background:#f0f4ff;color:#185FA5;font-weight:600;margin-left:6px}
+.mbadge2{font-size:10px;padding:2px 7px;border-radius:20px;background:#fff3e0;color:#e65100;font-weight:600;margin-left:6px}
 
-/* Domain tag */
+/* Domain tags */
 .dtag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:8px}
-.d1{background:#e3f2fd;color:#0C447C}.d2{background:#e8f5e9;color:#1b5e20}
-.d3{background:#ede7f6;color:#311b92}.d4{background:#fff3e0;color:#e65100}
-.d5{background:#e0f7fa;color:#006064}.d6{background:#fce4ec;color:#880e4f}
+.d1{background:#e3f2fd;color:#0C447C}
+.d2{background:#e8f5e9;color:#1b5e20}
+.d3{background:#ede7f6;color:#311b92}
+.d4{background:#fff3e0;color:#e65100}
+.d5{background:#e0f7fa;color:#006064}
+.d6{background:#fce4ec;color:#880e4f}
 .d7{background:#e3f2fd;color:#0C447C}
-.mbadge2{font-size:10px;padding:2px 7px;border-radius:20px;background:#fff3e0;color:#e65100;font-weight:600;margin-left:5px}
 
-/* MCQ options */
+/* Hint */
+.hint-box{padding:8px 12px;background:#fff3e0;border-radius:6px;font-size:12px;color:#e65100;margin-bottom:8px;display:none}
+.hint-box.show{display:block}
+
+/* ============ MCQ ============ */
 .mcq-opts{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .mcq-opt{display:flex;align-items:flex-start;gap:10px;padding:13px 14px;border:1.5px solid #ccc;border-radius:8px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:14px;line-height:1.5;min-height:48px;-webkit-tap-highlight-color:transparent}
 .mcq-opt:active{background:#f5f5f7}
 .mcq-opt.selected{border-color:#1a73e8;background:#e8f2fd}
 .mcq-opt.correct{border-color:#2e7d32;background:#e8f5e9}
 .mcq-opt.wrong{border-color:#c62828;background:#ffebee}
-.mcq-opt.reveal{border-color:#2e7d32;background:#e8f5e9}
+.mcq-opt.reveal{border-color:#2e7d32;background:#e8f5e9;color:#2e7d32}
+.mcq-opt:disabled,.mcq-opt[disabled]{cursor:default}
 .mcq-ltr{font-weight:700;color:#555;min-width:22px;flex-shrink:0;font-size:14px}
 .mcq-opt.correct .mcq-ltr{color:#2e7d32}
 .mcq-opt.wrong .mcq-ltr{color:#c62828}
 .mcq-opt.reveal .mcq-ltr{color:#2e7d32}
 
-/* Yes/No options */
+/* ============ YES/NO ============ */
 .yn-opts{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 .yn-opt{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid #ccc;border-radius:8px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:15px;min-height:52px;-webkit-tap-highlight-color:transparent}
 .yn-opt:active{background:#f5f5f7}
@@ -141,32 +187,12 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 .yn-opt.reveal{border-color:#2e7d32;background:#e8f5e9;color:#2e7d32;font-weight:600}
 .yn-ltr{font-weight:700;color:#555;min-width:20px;font-size:14px}
 
-/* Hint */
-.hint-box{padding:8px 12px;background:#fff3e0;border-radius:6px;font-size:12px;color:#e65100;margin-bottom:8px;display:none}
-.hint-box.show{display:block}
-
-/* Explanation */
-.exp-box{margin-top:12px;padding:12px 14px;background:#f0f4ff;border-radius:8px;border-left:3px solid #1a73e8;font-size:13px;line-height:1.65;color:#333;display:none}
-.exp-box.show{display:block}
-
-/* Bottom bar */
-.exam-bottombar{background:#f8f9fa;border-top:1px solid #dee2e6;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.bottom-left{font-size:12px;color:#666}
-.bottom-right{display:flex;gap:8px}
-.eb-btn{padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid #ccc;background:#fff;color:#333;min-height:44px;-webkit-tap-highlight-color:transparent}
-.eb-btn:active{background:#f0f0f0}
-.eb-btn:disabled{opacity:0.4;cursor:default}
-.eb-btn.primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
-.eb-btn.primary:active{background:#1557b0}
-.eb-btn.reveal-sol{background:#1a73e8;color:#fff;border-color:#1a73e8}
-.eb-btn.reveal-sol:disabled{background:#ccc;border-color:#ccc;opacity:1}
-
 /* ============ DRAG & DROP ============ */
 .dnd-layout{display:flex;flex-direction:column;gap:14px;margin-top:10px}
 .dnd-col-label{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:6px}
 .dnd-pool-col{width:100%}
-.dnd-pool{display:flex;flex-direction:column;gap:5px}
 .dnd-answer-col{width:100%}
+.dnd-pool{display:flex;flex-direction:column;gap:5px}
 .dnd-slots{display:flex;flex-direction:column;gap:5px}
 .dnd-item{padding:12px 14px;background:#fff;border:1.5px solid #1a73e8;border-radius:6px;font-size:14px;cursor:grab;user-select:none;line-height:1.45;color:#1d1d1f;min-height:48px;display:flex;align-items:center;touch-action:none}
 .dnd-item:active{background:#e8f2fd;cursor:grabbing}
@@ -189,20 +215,33 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 .hs-select select:disabled{cursor:default}
 .hs-arrow{position:absolute;right:6px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:10px;color:#555}
 
-/* ============ YES/NO CASE STUDY ============ */
-.q-topic-bar{background:#1a73e8;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;border-radius:8px 8px 0 0;margin-top:12px;margin-left:0;margin-right:0}
-.case-note{background:#fff;border:1px solid #e5e5ea;border-top:none;padding:12px 14px;font-size:13px;line-height:1.75;color:#2c2c2c}
-.case-note p{margin-bottom:5px}
-.q-body{background:#fff;border:1px solid #e5e5ea;border-top:none;padding:12px 14px;border-radius:0 0 8px 8px}
+/* ============ EXPLANATION ============ */
+.exp-box{margin-top:12px;padding:12px 14px;border-radius:8px;border-left:4px solid #1a73e8;font-size:13px;line-height:1.65;display:none}
+.exp-box.show{display:block}
+.exp-box.correct{background:#e8f5e9;border-color:#2e7d32;color:#1b5e20}
+.exp-box.incorrect{background:#ffebee;border-color:#c62828;color:#c62828}
+
+/* ============ BOTTOM BAR ============ */
+.exam-bottombar{background:#f8f9fa;border-top:1px solid #dee2e6;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.bottom-left{font-size:12px;color:#666}
+.bottom-right{display:flex;gap:8px}
+.eb-btn{padding:10px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid #ccc;background:#fff;color:#333;min-height:44px;-webkit-tap-highlight-color:transparent}
+.eb-btn:active{background:#f0f0f0}
+.eb-btn:disabled{opacity:0.4;cursor:default}
+.eb-btn.primary{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.eb-btn.primary:active{background:#1557b0}
+.eb-btn.reveal-sol{background:#1a73e8;color:#fff;border-color:#1a73e8}
+.eb-btn.reveal-sol:disabled{background:#ccc;border-color:#ccc;opacity:1}
 
 /* ============ RESULTS ============ */
-#results{background:#f5f5f7;min-height:100vh;padding:0}
+#results{background:#f5f5f7;min-height:100vh}
+#results
 #results > div{max-width:600px;margin:0 auto;padding:16px}
 .scirc{width:100px;height:100px;border-radius:50%;margin:0 auto 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid #1a73e8;background:#fff}
 .spct{font-size:26px;font-weight:700;color:#1d1d1f}
 .slbl{font-size:11px;color:#6e6e73}
-.pass-ring{border-color:#2e7d32!important}
-.fail-ring{border-color:#c62828!important}
+.pass-ring{border-color:#2e7d32}
+.fail-ring{border-color:#c62828}
 .rcard{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:14px}
 .rrow{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
 .rrow:last-child{border-bottom:none}
@@ -211,36 +250,53 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 .dsec{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;margin:12px 0 6px}
 .rbtn-row{display:flex;gap:8px}
 
-/* ============ DOMAIN PICKER (legacy, hidden) ============ */
-#dpick{display:none!important}
+/* ============ CASE STUDY PICKER ============ */
+#csPicker{background:#f5f5f7;min-height:100vh;max-width:600px;margin:0 auto;padding-bottom:40px}
+#csPicker
+.cs-card{background:#fff;border-radius:12px;border:1.5px solid #e5e5ea;margin:0 16px 12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.cs-card-header{padding:16px;border-bottom:1px solid #f0f0f0}
+.cs-card-topic{font-size:10px;font-weight:700;color:#6e6e73;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.cs-card-title{font-size:15px;font-weight:600;color:#1d1d1f;margin-bottom:4px}
+.cs-card-desc{font-size:13px;color:#6e6e73;line-height:1.5}
+.cs-card-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.cs-tag{font-size:11px;padding:3px 8px;border-radius:20px;background:#e3f2fd;color:#0C447C;font-weight:600}
+.cs-card-actions{padding:12px 16px;display:flex;gap:8px}
+.cs-btn{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #1a73e8;background:#fff;color:#1a73e8}
+.cs-btn.primary{background:#1a73e8;color:#fff}
+.cs-btn:active{transform:scale(0.98)}
+
+/* ============ FEEDBACK ============ */
+.sim-feedback,.inline-feedback{margin:12px 0;padding:14px 16px;border-radius:8px;font-size:14px;line-height:1.5;border-left:4px solid;display:none}
+.sim-feedback.show,.inline-feedback.show{display:block}
+.sim-feedback.success,.inline-feedback.success{background:#e8f5e9;color:#1b5e20;border-color:#2e7d32}
+.sim-feedback.error,.inline-feedback.error{background:#ffebee;color:#c62828;border-color:#c62828}
+.sim-feedback.info,.inline-feedback.info{background:#e3f2fd;color:#0C447C;border-color:#1a73e8}
+.sim-feedback.warn,.inline-feedback.warn{background:#fff8e1;color:#e65100;border-color:#ff8f00}
+.sim-feedback strong,.inline-feedback strong{display:block;margin-bottom:4px;font-size:14px}
+#simFeedback{margin:0 14px 8px;font-size:15px}
 
 /* ============ SIMULATION PORTAL ============ */
 #simScreen{background:#f3f2f1;min-height:100vh;height:100dvh;display:none;flex-direction:column;overflow:hidden}
-#simScreen.active{display:flex}
+#simScreen
 .sim-topbar{background:#1a73e8;color:#fff;padding:0 12px;height:44px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .sim-topbar-left{font-size:13px;font-weight:700}
 .sim-topbar-right{display:flex;gap:8px;align-items:center}
 .sim-timer{font-size:12px;background:rgba(255,255,255,0.2);padding:3px 9px;border-radius:20px;font-weight:600}
 .sim-exit{background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:4px;cursor:pointer;min-height:32px}
-.sim-scenario{background:#fff;border-bottom:1px solid #edebe9;padding:12px 14px;font-size:13px;line-height:1.6;flex-shrink:0}
+.sim-scenario{background:#fff;border-bottom:1px solid #edebe9;padding:12px 14px;font-size:13px;line-height:1.6;flex-shrink:0;color:#323130}
 .sim-scenario-title{font-size:10px;font-weight:700;color:#605e5c;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
-.sim-scenario p,.sim-scenario{color:#323130}
 .sim-portal{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#f3f2f1;min-height:0}
-.az-topbar{background:#0078d4;min-height:44px;display:flex;align-items:center;padding:0 10px;gap:10px;flex-shrink:0;flex-wrap:nowrap}
+.az-topbar{background:#0078d4;min-height:44px;display:flex;align-items:center;padding:0 10px;gap:10px;flex-shrink:0}
 .az-logo{color:#fff;font-size:13px;font-weight:700;white-space:nowrap}
 .az-search{flex:1;min-width:0;background:rgba(255,255,255,0.15);border:none;border-radius:4px;padding:6px 10px;color:#fff;font-size:14px;outline:none}
 .az-search::placeholder{color:rgba(255,255,255,0.7)}
-.az-icons{display:flex;gap:12px;flex-shrink:0}
-.az-icon{color:#fff;font-size:18px;cursor:pointer}
 .az-breadcrumb{background:#fff;padding:7px 14px;font-size:12px;color:#605e5c;border-bottom:1px solid #edebe9;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .az-breadcrumb span{color:#0078d4;cursor:pointer}
 .az-layout{display:flex;flex:1;overflow:hidden;min-height:0}
-.az-leftnav{width:140px;background:#fff;border-right:1px solid #edebe9;overflow-y:auto;flex-shrink:0;padding:6px 0;min-width:120px}
+.az-leftnav{width:140px;background:#fff;border-right:1px solid #edebe9;overflow-y:auto;flex-shrink:0;padding:6px 0}
 .az-nav-item{padding:8px 14px;font-size:13px;color:#323130;cursor:pointer;display:flex;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent}
 .az-nav-item:active,.az-nav-item:hover{background:#f3f2f1}
 .az-nav-item.active{background:#e1effa;color:#0078d4;font-weight:600}
-.az-nav-item i{font-size:15px;color:#605e5c}
-.az-nav-item.active i{color:#0078d4}
 .az-nav-section{padding:8px 14px 3px;font-size:10px;font-weight:700;color:#605e5c;text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
 .az-main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;min-width:0}
 .az-page-title{font-size:18px;font-weight:600;color:#323130;margin-bottom:3px}
@@ -281,74 +337,181 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 .sim-bottombar{background:#fff;border-top:1px solid #edebe9;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;gap:8px}
 .sim-bottombar>div:first-child{font-size:12px;color:#605e5c;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* ============ RESPONSIVE — tablets & wider ============ */
-@media(min-width:640px){
-  .nav-pane{display:flex;width:180px;flex-shrink:0;background:#f8f9fa;border-right:1px solid #dee2e6;overflow-y:auto;flex-direction:column}
-  .nav-section-title{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.08em;padding:10px 12px 4px}
-  .nav-btn{display:block;width:100%;text-align:left;padding:8px 14px;font-size:12px;font-weight:500;color:#333;background:none;border:none;cursor:pointer;border-left:3px solid transparent}
-  .nav-btn:hover{background:#e9ecef;color:#1a73e8}
-  .nav-btn.active{background:#e3f0fd;color:#1a73e8;border-left-color:#1a73e8;font-weight:600}
-  .nav-divider{height:1px;background:#dee2e6;margin:6px 0}
-  .nav-question-btn{display:block;width:100%;text-align:left;padding:8px 14px;font-size:12px;font-weight:600;color:#1a73e8;background:#e3f0fd;border:none;cursor:pointer;border-left:3px solid #1a73e8}
-  .case-nav-tabs{display:none}
-  .dnd-layout{flex-direction:row;align-items:flex-start}
-  .dnd-pool-col{width:200px;flex-shrink:0}
-  .dnd-answer-col{flex:1}
-  .az-leftnav{width:220px}
-  .exam-topbar{height:40px}
-  .hotspot-code{font-size:13px}
-}
-
-@media(min-width:900px){
-  #home{max-width:640px}
-  .question-panel{padding:20px 24px}
-  .case-reading{padding:20px 24px}
-}
-
-/* ============ MISC ============ */
-::-webkit-scrollbar{width:3px;height:3px}
-::-webkit-scrollbar-thumb{background:#c7c7cc;border-radius:2px}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.case-reading.active,.question-panel.active{animation:fadeIn .15s ease}
-
-/* ===== CASE STUDY PICKER ===== */
-#csPicker{background:#f5f5f7;min-height:100vh;max-width:600px;margin:0 auto;padding-bottom:40px}
-.cs-card{background:#fff;border-radius:12px;border:1.5px solid #e5e5ea;margin:0 16px 12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-.cs-card-header{padding:16px;border-bottom:1px solid #f0f0f0}
-.cs-card-topic{font-size:10px;font-weight:700;color:#6e6e73;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.cs-card-title{font-size:15px;font-weight:600;color:#1d1d1f;margin-bottom:4px}
-.cs-card-desc{font-size:13px;color:#6e6e73;line-height:1.5}
-.cs-card-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.cs-tag{font-size:11px;padding:3px 8px;border-radius:20px;background:#e3f2fd;color:#0C447C;font-weight:600}
-.cs-card-actions{padding:12px 16px;display:flex;gap:8px}
-.cs-btn{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #1a73e8;background:#fff;color:#1a73e8;transition:all .15s;-webkit-tap-highlight-color:transparent}
-.cs-btn.primary{background:#1a73e8;color:#fff}
-.cs-btn:active{transform:scale(0.98)}
-
-
-/* ===== CASE STUDY COMBINED LAYOUT ===== */
-/* In case study mode: scenario shown above question on same scroll */
-.cs-combined-wrap{display:flex;flex-direction:column;flex:1;overflow:hidden;min-height:0}
-.cs-scenario-panel{flex-shrink:0;max-height:45vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border-bottom:2px solid #1a73e8;background:#fff}
-.cs-scenario-panel.collapsed{max-height:44px;overflow:hidden}
-.cs-scenario-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f0f4ff;border-bottom:1px solid #dce8fd;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;position:sticky;top:0;z-index:2}
-.cs-scenario-toggle-title{font-size:12px;font-weight:700;color:#1a73e8;text-transform:uppercase;letter-spacing:.05em}
-.cs-scenario-toggle-icon{font-size:14px;color:#1a73e8;transition:transform .2s}
-.cs-scenario-toggle-icon.open{transform:rotate(180deg)}
-.cs-scenario-content{padding:14px 16px;font-size:13px;line-height:1.7;color:#1d1d1f}
+/* ============ CS SCENARIO BANNER ============ */
 .cs-scenario-content h4{font-size:13px;font-weight:700;margin:10px 0 4px;color:#1d1d1f}
-.cs-scenario-content p{margin-bottom:5px}
+.cs-scenario-content p{margin-bottom:5px;font-size:13px;line-height:1.6}
 .cs-scenario-content ul{margin:4px 0 8px 18px}
-.cs-scenario-content li{margin-bottom:3px;line-height:1.6}
+.cs-scenario-content li{margin-bottom:3px;line-height:1.5;font-size:13px}
 .cs-scenario-content table{border-collapse:collapse;width:100%;font-size:12px;margin:8px 0;display:block;overflow-x:auto}
 .cs-scenario-content th{background:#f0f0f0;font-weight:700;padding:5px 8px;border:1px solid #ccc;text-align:left;white-space:nowrap}
 .cs-scenario-content td{padding:5px 8px;border:1px solid #ccc;font-size:12px;line-height:1.4}
-.cs-scenario-content pre{background:#f8f8f8;border:1px solid #ddd;padding:10px;font-size:11px;overflow-x:auto;border-radius:4px;margin:6px 0;font-family:monospace;-webkit-overflow-scrolling:touch;white-space:pre-wrap}
-.cs-question-panel{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px}
-.cs-q-header{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:4px}
-.cs-q-type{font-size:13px;font-weight:700;color:#1d1d1f;margin-bottom:6px}
-.cs-q-text{font-size:14px;font-weight:500;line-height:1.65;color:#1d1d1f;margin-bottom:10px}
-.cs-q-note{font-size:12px;color:#555;margin-bottom:8px}
+.cs-scenario-content pre{background:#f8f8f8;border:1px solid #ddd;padding:10px;font-size:11px;overflow-x:auto;border-radius:4px;margin:6px 0;font-family:monospace;white-space:pre-wrap}
+.cs-scenario-content code{font-family:monospace;background:#f0f0f0;padding:1px 4px;border-radius:3px}
+
+/* ============ RESPONSIVE ============ */
+@media(min-width:640px){
+  .nav-pane{display:flex}
+  .hotspot-code{font-size:13px}
+  .dnd-layout{flex-direction:row;align-items:flex-start}
+  .dnd-pool-col{width:200px;flex-shrink:0}
+  .dnd-answer-col{flex:1}
+  .az-leftnav{width:200px}
+  .question-panel{padding:20px 24px}
+}
+@media(min-width:900px){
+  #home,#csPicker{max-width:640px}
+}
+@media(max-width:640px){
+  .sim-feedback,.inline-feedback{margin:10px 0;padding:12px 14px;font-size:13.5px}
+}
+
+/* ============ SCROLLBARS ============ */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:#c7c7cc;border-radius:2px}
+
+/* ============ ANIMATIONS ============ */
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============ DRAG & DROP — Exam style ============ */
+.dnd-exam-wrap{margin-top:10px;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}
+.dnd-exam-row{display:flex;align-items:flex-start;gap:0;width:100%;min-width:min-content}
+
+/* Labels */
+.dnd-exam-col-label{font-size:14px;font-weight:700;color:#1d1d1f;margin-bottom:8px;padding:0 4px}
+
+/* Left: Actions pool */
+.dnd-actions-col{flex:0 0 200px;min-width:180px;max-width:280px}
+.dnd-action-item{
+  display:flex;align-items:center;
+  padding:10px 14px;
+  border:1.5px solid #1a73e8;
+  background:#fff;
+  font-size:14px;
+  line-height:1.45;
+  color:#1d1d1f;
+  cursor:pointer;
+  margin-bottom:4px;
+  min-height:48px;
+  user-select:none;
+  -webkit-user-select:none;
+  transition:background .12s;
+  border-radius:2px;
+}
+.dnd-action-item:hover{background:#e8f2fd}
+.dnd-action-item.selected{background:#d0e8ff;border-color:#0052cc}
+.dnd-action-item.used{opacity:.38;cursor:default;background:#f5f5f5;border-color:#ccc}
+
+/* Middle: Transfer buttons */
+.dnd-transfer-col{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:6px;padding:0 8px;padding-top:30px;flex-shrink:0;
+}
+.dnd-transfer-btn{
+  width:38px;height:38px;border-radius:50%;
+  border:2.5px solid #1d1d1f;
+  background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:20px;font-weight:700;color:#1d1d1f;
+  transition:all .12s;
+  -webkit-tap-highlight-color:transparent;
+  flex-shrink:0;
+}
+.dnd-transfer-btn:hover{background:#f0f0f0}
+.dnd-transfer-btn:active{background:#e0e0e0;transform:scale(.95)}
+.dnd-transfer-btn:disabled{opacity:.35;cursor:default}
+
+/* Right: Answer slots */
+.dnd-answer-col{flex:1;min-width:180px}
+.dnd-slot{
+  display:flex;align-items:center;
+  padding:10px 14px;
+  border:1.5px solid #1a73e8;
+  background:#fff;
+  font-size:14px;
+  line-height:1.45;
+  color:#1d1d1f;
+  min-height:48px;
+  margin-bottom:4px;
+  cursor:pointer;
+  user-select:none;
+  transition:background .12s;
+  border-radius:2px;
+}
+.dnd-slot:empty::before,.dnd-slot.empty::before{content:'';display:block;width:100%}
+.dnd-slot.selected{background:#d0e8ff;border-color:#0052cc}
+.dnd-slot.drag-over{background:#e3f0fd;border-color:#0052cc;border-style:dashed}
+.dnd-slot.correct-slot{background:#e8f5e9;border-color:#2e7d32;color:#2e7d32;cursor:default}
+.dnd-slot.wrong-slot{background:#ffebee;border-color:#c62828;color:#c62828;cursor:default}
+/* drag ghost */
+.dnd-action-item.dragging,.dnd-slot.dragging{opacity:.35}
+
+/* Far right: Reorder buttons */
+.dnd-reorder-col{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:6px;padding:0 0 0 8px;padding-top:30px;flex-shrink:0;
+}
+
+/* Reveal button */
+.dnd-reveal-wrap{margin-top:12px}
+
+@media(max-width:640px){
+  .dnd-actions-col{flex:0 0 140px;min-width:130px;max-width:180px}
+  .dnd-answer-col{flex:1;min-width:130px}
+  .dnd-action-item,.dnd-slot{font-size:13px;padding:8px 10px;min-height:44px}
+  .dnd-transfer-btn{width:32px;height:32px;font-size:16px}
+  .dnd-transfer-col{padding:0 5px;padding-top:28px}
+  .dnd-reorder-col{padding:0 0 0 5px;padding-top:28px}
+  .dnd-exam-col-label{font-size:13px}
+  .dnd-exam-wrap{margin:10px -4px 0}
+}
+/* ---- end DND ---- */
+
+
+/* ============ HOTSPOT TABLE (Yes/No per statement) ============ */
+.hs-table-wrap{margin-top:12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.hs-code-block{font-family:'Courier New',Courier,monospace;font-size:13px;line-height:1.7;
+  background:#f8f8f8;border:1px solid #ddd;border-radius:4px;padding:14px 16px;
+  margin-bottom:14px;white-space:pre-wrap;color:#1d1d1f;overflow-x:auto}
+.hs-code-block .kw{color:#0000ff}
+.hs-code-block .str{color:#a31515}
+.hs-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.hs-table thead tr{border-bottom:2px solid #1d1d1f}
+.hs-table thead th{padding:10px 14px;font-weight:700;color:#1d1d1f;text-align:left}
+.hs-table thead th.hs-yn{text-align:center;width:70px;font-weight:700}
+.hs-table tbody tr{border-bottom:1px solid #e5e5ea}
+.hs-table tbody tr:last-child{border-bottom:none}
+.hs-table td.hs-stmt{padding:12px 14px;font-size:13.5px;line-height:1.55;color:#1d1d1f}
+.hs-table td.hs-yn{text-align:center;vertical-align:middle;padding:12px 8px}
+/* Radio button — exam style circles */
+.hs-radio{
+  width:20px;height:20px;border-radius:50%;
+  border:1.5px solid #555;
+  background:#fff;
+  display:inline-block;cursor:pointer;
+  vertical-align:middle;
+  transition:all .12s;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+}
+.hs-radio.selected{border-color:#1a73e8;border-width:2px;background:#fff}
+.hs-radio.selected::after{
+  content:'';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  width:10px;height:10px;border-radius:50%;background:#1a73e8;
+}
+.hs-radio.correct{border-color:#2e7d32;border-width:2px;background:#fff}
+.hs-radio.correct::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:#2e7d32}
+.hs-radio.wrong{border-color:#c62828;border-width:2px;background:#fff}
+.hs-radio.wrong::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:#c62828}
+.hs-radio.disabled{cursor:default;opacity:.6}
+.hs-table-note{font-size:13px;color:#333;margin-bottom:6px}
+.hs-answer-label{font-size:15px;font-weight:700;color:#1d1d1f;margin-bottom:10px}
+@media(max-width:640px){
+  .hs-table{font-size:12.5px}
+  .hs-table td.hs-stmt{padding:10px 10px}
+  .hs-table thead th.hs-yn{width:52px}
+  .hs-code-block{font-size:11.5px;padding:10px 12px}
+}
 
 </style>
 </head>
@@ -472,33 +635,113 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 
 <!-- ==================== EXAM QUIZ SCREEN ==================== -->
 <div id="quiz" class="screen">
+
   <!-- Top bar -->
   <div class="exam-topbar">
     <div class="left">
       <span class="qnum" id="topQnum">Question #1</span>
-      <span class="topic" id="topTopic">Topic 1</span>
+      <span class="topic" id="topTopic"></span>
     </div>
     <div class="right">
       <span class="timer-badge" id="timer">00:00</span>
       <button class="exit-btn" onclick="exitQuiz()">&#x2715; Exit</button>
     </div>
   </div>
+
   <!-- Progress bar -->
   <div class="exam-pbar"><div class="exam-pfill" id="prog" style="width:0%"></div></div>
 
-  <!-- Body: nav + content -->
-  <!-- Mobile: horizontal tab bar for case study nav -->
+  <!-- Mobile case-study tab bar -->
   <div class="case-nav-tabs" id="caseNavTabs" style="display:none"></div>
-  <div class="exam-body">
-    <!-- Left navigation pane (shown on tablet+) -->
-    <div class="nav-pane" id="navPane">
-      <!-- filled dynamically -->
-    </div>
 
-    <!-- Right content area -->
+  <!-- Main flex body -->
+  <div class="exam-body">
+
+    <!-- Left nav (tablet+) -->
+    <div class="nav-pane" id="navPane"></div>
+
+    <!-- Content pane — contains ONLY the question panel -->
     <div class="content-pane" id="contentPane">
-      <!-- Case study sections (reading) -->
-      <div id="caseIntro" class="case-reading" data-cs="1">
+
+      <!-- Scenario banner: shown in case-study quiz mode (populated by JS) -->
+      <div id="csScenarioBanner" style="display:none;flex-shrink:0;border-bottom:2px solid #1a73e8;background:#fff;max-height:40vh;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+        <div id="csScenarioToggle" onclick="toggleCsScenario()" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f0f4ff;border-bottom:1px solid #dce8fd;cursor:pointer;position:sticky;top:0;z-index:2;">
+          <span id="csScenarioTitle" style="font-size:12px;font-weight:700;color:#1a73e8;text-transform:uppercase;letter-spacing:.05em">&#x1F4D6; Case Study</span>
+          <span id="csToggleIcon" style="font-size:14px;color:#1a73e8;">&#9660;</span>
+        </div>
+        <div id="csScenarioContent" style="padding:14px 16px;font-size:13px;line-height:1.7;color:#1d1d1f;"></div>
+      </div>
+
+      <!-- Case reading overlay: shown when user taps a nav tab to read scenario -->
+      <div id="caseReadingOverlay" style="display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#fff;"></div>
+
+      <!-- Question panel — sole permanent child, always visible during quiz -->
+      <div id="questionPanel" class="question-panel" style="display:flex;flex-direction:column;">
+
+        <div id="qpDomainTag" style="margin-bottom:8px"></div>
+        <div id="qpLabel" class="qp-label">Question</div>
+        <div id="qpType" class="qp-type" style="display:none"></div>
+        <div id="qpContext" class="qp-context" style="display:none"></div>
+        <div id="qpInstruction" class="qp-instruction"></div>
+        <div id="qpNote" class="qp-note" style="display:none"></div>
+        <div class="hint-box" id="hint"></div>
+
+        <!-- MCQ -->
+        <div class="mcq-opts" id="mcqOpts" style="display:none"></div>
+
+        <!-- Yes / No -->
+        <div id="ynSection" style="display:none">
+          <div class="yn-opts" id="ynOpts"></div>
+          <div style="margin-top:10px">
+            <button class="eb-btn reveal-sol" id="revealBtn" onclick="revealYN()" disabled>Reveal Solution</button>
+          </div>
+        </div>
+
+        <!-- HOTSPOT -->
+        <div id="hotspotSection" style="display:none">
+          <div class="hotspot-wrap">
+            <div class="hotspot-code" id="hotspotCode"></div>
+          </div>
+          <button class="eb-btn reveal-sol" id="hsRevealBtn" onclick="revealHotspot()" style="margin-top:14px" disabled>Reveal Solution</button>
+        </div>
+
+        <!-- Drag and Drop -->
+        <div id="dndSection" style="display:none">
+          <div class="dnd-layout">
+            <div class="dnd-pool-col">
+              <div class="dnd-col-label" id="dndPoolLabel">Actions</div>
+              <div class="dnd-pool" id="dndPool"></div>
+            </div>
+            <div class="dnd-answer-col">
+              <div class="dnd-col-label">Answer Area</div>
+              <div class="dnd-slots" id="dndSlots"></div>
+            </div>
+          </div>
+          <button class="eb-btn reveal-sol" id="dndRevealBtn" onclick="revealDND()" style="margin-top:14px" disabled>Reveal Solution</button>
+        </div>
+
+        <!-- Explanation -->
+        <div class="exp-box" id="exp"></div>
+
+      </div><!-- /questionPanel -->
+
+    </div><!-- /contentPane -->
+  </div><!-- /exam-body -->
+
+  <!-- Bottom bar -->
+  <div class="exam-bottombar">
+    <div class="bottom-left"><span id="plbl">1 / 1</span></div>
+    <div class="bottom-right">
+      <button class="eb-btn" id="bskip" onclick="skip()">Skip</button>
+      <button class="eb-btn primary" id="bnext" onclick="next()" disabled>Next &#8594;</button>
+    </div>
+  </div>
+
+</div><!-- /quiz -->
+
+<!-- ===== CASE STUDY READING STORAGE (outside flex layout, never affects quiz layout) ===== -->
+<div id="caseStore" style="display:none">
+  <div id="caseIntro" class="case-reading" data-cs="1">
         <h3>Introductory Info</h3>
         <p style="font-weight:700">Case study -</p>
         <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
@@ -508,8 +751,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
         <p style="font-weight:700">To start the case study -</p>
         <p>To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.</p>
       </div>
-
-      <div id="caseOverview" class="case-reading" data-cs="1">
+  <div id="caseOverview" class="case-reading" data-cs="1">
         <p class="section-header">Overview -</p>
         <p>A company named Wide World Importers is developing an e-commerce platform.</p>
         <p>You are working with a solutions architect to design and implement the features of the e-commerce platform. The platform will use microservices and a serverless environment built on Azure.</p>
@@ -547,8 +789,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
         <p>An Azure Cognitive Services resource named wwics</p>
         <p>An Azure Video Analyzer for Media (previously Video Indexer) resource named wwivi</p>
       </div>
-
-      <div id="caseRequirements" class="case-reading" data-cs="1">
+  <div id="caseRequirements" class="case-reading" data-cs="1">
         <p class="section-header">Requirements -</p>
         <br>
         <p class="subsection-header">Business Goals -</p>
@@ -612,8 +853,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
           <li>Support purchases by providing information about relevant products to customers. Product displays must include images and warnings when stock levels are low or out of stock.</li>
         </ul>
       </div>
-
-      <div id="caseProductJSON" class="case-reading" data-cs="1">
+  <div id="caseProductJSON" class="case-reading" data-cs="1">
         <p class="section-header">Product JSON Sample -</p>
         <p>You have the following JSON sample for a product.</p>
         <pre>{
@@ -640,8 +880,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
   "createdUtc": "2020-02-14T06:08:39Z",
 }</pre>
       </div>
-      <!-- ===== CONTOSO CASE STUDY ===== -->
-      <div id="cs2Intro" class="case-reading" data-cs="2">
+  <div id="cs2Intro" class="case-reading" data-cs="2">
         <h3>Introductory Info</h3>
         <p style="font-weight:700">Case study -</p>
         <p>This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.</p>
@@ -651,8 +890,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
         <p style="font-weight:700">To start the case study -</p>
         <p>To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.</p>
       </div>
-
-      <div id="cs2Overview" class="case-reading" data-cs="2">
+  <div id="cs2Overview" class="case-reading" data-cs="2">
         <p class="section-header">Overview -</p>
         <br>
         <p class="subsection-header">General Overview -</p>
@@ -693,8 +931,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
         </table>
         <p>Text-based content is provided only in one language and is not translated.</p>
       </div>
-
-      <div id="cs2Requirements" class="case-reading" data-cs="2">
+  <div id="cs2Requirements" class="case-reading" data-cs="2">
         <p class="section-header">Requirements -</p>
         <br>
         <p class="subsection-header">Planned Projects -</p>
@@ -747,8 +984,7 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
           <li>Trigger processing automatically when new documents arrive in Azure Blob storage.</li>
         </ul>
       </div>
-
-      <div id="cs2Questions" class="case-reading" data-cs="2">
+  <div id="cs2Questions" class="case-reading" data-cs="2">
         <p class="section-header">Case Study Questions -</p>
         <p>This section contains questions based on the Contoso case study. Navigate to each question using the Question button in the navigation.</p>
         <br>
@@ -761,67 +997,6 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
           <li>Multi-language support implementation</li>
         </ul>
       </div>
-
-
-      <!-- Question panel -->
-      <div id="questionPanel" class="question-panel">
-        <div id="qpDomainTag"></div>
-        <div class="qp-label" id="qpLabel">Question</div>
-        <div class="qp-type" id="qpType" style="display:none"></div>
-        <div class="qp-context" id="qpContext" style="display:none"></div>
-        <div class="qp-instruction" id="qpInstruction"></div>
-        <div class="qp-note" id="qpNote" style="display:none"></div>
-        <div class="hint-box" id="hint"></div>
-
-        <!-- MCQ options -->
-        <div class="mcq-opts" id="mcqOpts" style="display:none"></div>
-
-        <!-- HOTSPOT dropdowns -->
-        <div id="hotspotSection" style="display:none">
-          <div class="hotspot-wrap">
-            <div class="hotspot-code" id="hotspotCode"></div>
-          </div>
-          <button class="eb-btn reveal-sol" id="hsRevealBtn" onclick="revealHotspot()" style="margin-top:14px" disabled>Reveal Solution</button>
-        </div>
-
-        <!-- Yes/No options -->
-        <div id="ynSection" style="display:none">
-          <div class="yn-opts" id="ynOpts"></div>
-          <div style="margin-top:10px">
-            <button class="eb-btn reveal-sol" id="revealBtn" onclick="revealYN()" disabled>Reveal Solution</button>
-          </div>
-        </div>
-
-        <!-- Drag & Drop (Microsoft exam style) -->
-        <div id="dndSection" style="display:none">
-          <div class="dnd-layout">
-            <div class="dnd-pool-col">
-              <div class="dnd-col-label" id="dndPoolLabel">Actions</div>
-              <div class="dnd-pool" id="dndPool"></div>
-            </div>
-            <div class="dnd-answer-col">
-              <div class="dnd-col-label">Answer Area</div>
-              <div class="dnd-slots" id="dndSlots"></div>
-            </div>
-          </div>
-          <button class="eb-btn reveal-sol" id="dndRevealBtn" onclick="revealDND()" style="margin-top:14px" disabled>Reveal Solution</button>
-        </div>
-
-        <div class="exp-box" id="exp"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom bar -->
-  <div class="exam-bottombar">
-    <div class="bottom-left">
-      <span class="plbl-small" id="plbl">1 / 1</span>
-    </div>
-    <div class="bottom-right">
-      <button class="eb-btn" id="bskip" onclick="skip()">Skip</button>
-      <button class="eb-btn primary" id="bnext" onclick="next()" disabled>Next &#8594;</button>
-    </div>
-  </div>
 </div>
 
 <!-- ==================== RESULTS ==================== -->
@@ -865,6 +1040,9 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
     <div class="sim-task-steps" id="simTaskSteps"></div>
   </div>
 
+  <!-- Simulation inline feedback -->
+  <div id="simFeedback" class="sim-feedback" style="margin:0 14px 8px;display:none"></div>
+
   <!-- Bottom bar -->
   <div class="sim-bottombar">
     <div style="font-size:12px;color:#605e5c" id="simHint"></div>
@@ -878,6 +1056,12 @@ input,select,textarea{-webkit-appearance:none;appearance:none;font-size:16px!imp
 </div><!-- #app -->
 
 <script>
+/* Safe getElementById — never throws on null */
+function el(id){return document.getElementById(id);}
+function elSet(id,prop,val){const e=document.getElementById(id);if(e)e[prop]=val;}
+function elStyle(id,prop,val){const e=document.getElementById(id);if(e)e.style[prop]=val;}
+function elClass(id,action,cls){const e=document.getElementById(id);if(e)e.classList[action](cls);}
+
 const Q=[
 // D1
 {id:1,d:"D1",q:"Create resource for sentiment analysis + OCR using single key/endpoint. HTTP method and resource type?",o:["PUT — CognitiveServices","PATCH — CognitiveServices","PUT — TextAnalytics","GET — CognitiveServices"],a:0,m:false,e:"PUT creates an Azure resource. CognitiveServices is the multi-service kind providing one key/endpoint for multiple services."},
@@ -1250,7 +1434,16 @@ const Q=[
 {id:805,d:"D4",q:"Wide World Importers — the stock level field in the product index must be updated immediately when stock changes. Which approach meets this requirement?",o:["Schedule the indexer to run every 5 minutes", "Use the Push API to update the index directly when stock changes", "Enable change detection on the Cosmos DB indexer", "Create a separate index for stock levels with a 1-minute indexer"],a:1,m:false,e:"The Push API updates index documents immediately without waiting for an indexer schedule, meeting the requirement for immediate stock level updates."},
 {id:806,d:"D4",q:"Wide World Importers needs to support autocompletion based on all product name variants (en, es, pt). Three actions in sequence?",o:["Add a suggester with the three product name fields as source fields", "Make API queries to autocomplete endpoint and include suggesterName", "Set the analyzer property for the three product name variants", "Add a suggester for each of the three product name fields", "Set the searchAnalyzer property for the three product name variants", "Make API queries to search endpoint with product name fields in searchFields"],a:[0, 2, 1],m:false,e:"Add single suggester with all 3 name fields → set analyzer property → query autocomplete endpoint with suggesterName."},
 {id:807,d:"D4",q:"Wide World Importers — store all raw insight data generated during indexing so it can be processed later. Which knowledge store projection type should you use?",o:["Table projection", "Object projection", "File projection", "Shaper projection"],a:1,m:false,e:"Object projections store the full enriched JSON documents in Azure Blob Storage, allowing the raw insight data to be processed later."},
-{id:808,d:"D3",q:"Wide World Importers product creation project — remove the need for manual translations of product descriptions, transcripts, and alt text into English, Spanish, and Portuguese. Which service?",o:["Azure Cognitive Services Translator text translation", "Azure Cognitive Services Translator document translation", "Azure AI Language custom text classification", "Azure AI Language named entity recognition"],a:0,m:false,e:"The Translator text translation API translates product text (descriptions, transcripts, alt text) into EN/ES/PT automatically, removing manual translation."}
+{id:808,d:"D3",q:"Wide World Importers product creation project — remove the need for manual translations of product descriptions, transcripts, and alt text into English, Spanish, and Portuguese. Which service?",o:["Azure Cognitive Services Translator text translation", "Azure Cognitive Services Translator document translation", "Azure AI Language custom text classification", "Azure AI Language named entity recognition"],a:0,m:false,e:"The Translator text translation API translates product text (descriptions, transcripts, alt text) into EN/ES/PT automatically, removing manual translation."},
+// === HOTSPOT TABLE questions ===
+{id:901,d:"D2",q:"You develop a test method to verify the results retrieved from a call to the Computer Vision API. The call is used to analyze the existence of company logos in images. The call returns a collection of brands named brands. You have the following code segment.",o:["Yes / Yes / No", "Yes / No / Yes", "No / Yes / Yes", "No / No / No"],a:0,m:false,stmts:["The code will display the name of each detected brand with a confidence equal to or higher than 75 percent.", "The code will display coordinates for the top-left corner of the rectangle that contains the brand logo of the displayed brands.", "The code will display coordinates for the bottom-right corner of the rectangle that contains the brand logo of the displayed brands."],code:"<span class=\"kw\">foreach</span> (<span class=\"kw\">var</span> brand <span class=\"kw\">in</span> brands)\n{\n    <span class=\"kw\">if</span> (brand.Confidence >= .75)\n        Console.WriteLine($<span class=\"str\">\"Logo of {brand.Name} between {brand.Rectangle.X}, {brand.Rectangle.Y} and {brand.Rectangle.W}, {brand.Rectangle.H}\"</span>);\n}",topic:"Topic 2",e:"brand.Confidence >= .75 filters brands at 75%+ (Yes). Rectangle.X and Rectangle.Y are the top-left coordinates (Yes). Rectangle.W and Rectangle.H are Width and Height, NOT bottom-right coordinates (No)."},
+{id:902,d:"D3",q:"You have the following code that uses the EntityLinker SDK. The code is called with the text: 'Our tour guide took us up the Space Needle during our trip to Seattle last week.'",o:["No / Yes / Yes", "Yes / No / No", "Yes / Yes / No", "No / No / Yes"],a:0,m:false,stmts:["The entityLinker function detects the language of the input text.", "The url property of each entity contains a Bing search link.", "The matches property of each entity contains the location of the entity in the document."],code:null,topic:"Topic 2",e:"EntityLinker does NOT detect language (No). The url property IS a Bing link (Yes). The matches property DOES contain locations in the document (Yes)."},
+{id:903,d:"D3",q:"You call the RecognizeEntities function with the text: 'Our tour of Paris included a visit to the Eiffel Tower.' For each statement, select Yes if true, otherwise No.",o:["No / No / No", "Yes / Yes / Yes", "No / Yes / No", "Yes / No / No"],a:2,m:false,stmts:["The words 'our' and 'included' will be returned as entities.", "Paris and Eiffel Tower will both be returned as entities.", "Key phrases will be returned in the response."],code:null,topic:"Topic 2",e:"'Our' and 'included' are not named entities (No). Paris and Eiffel Tower ARE both returned as Location entities (Yes). RecognizeEntities does NOT return key phrases — that requires a separate call (No)."},
+{id:904,d:"D3",q:"You use the Azure AI Language Python SDK. You call get_key_phrases() with the text: 'the cat sat on the mat'. For each statement, select Yes if true.",o:["Yes / No / No", "No / Yes / Yes", "Yes / Yes / No", "No / No / Yes"],a:0,m:false,stmts:["The function will output a list of key phrases.", "The output will contain the individual words 'the', 'cat', and 'sat'.", "A confidence score will be returned for each key phrase."],code:null,topic:"Topic 2",e:"get_key_phrases() returns a list of key phrases (Yes). Common stop words like 'the', 'cat', 'sat' are not returned as key phrases (No). Key Phrase Extraction does not return confidence scores (No)."},
+{id:905,d:"D4",q:"App1 analyzes medical records using Azure AI Document Intelligence with model=prebuilt-healthInsuranceCard.us. For each statement, select Yes if true.",o:["Yes / Yes / Yes", "No / Yes / Yes", "Yes / No / No", "No / No / No"],a:0,m:false,stmts:["The prebuilt-healthInsuranceCard.us model is suitable for extracting data from US health insurance cards.", "Text fields with a confidence score greater than 70 percent will be extracted.", "Form elements with a confidence score greater than 70 percent will be extracted."],code:null,topic:"Topic 2",e:"prebuilt-healthInsuranceCard.us is specifically designed for US health insurance cards (Yes). All text fields are extracted regardless of confidence (the app can filter by confidence, but the model extracts all). However the requirement states >70% — so Yes for both text and form elements meeting that threshold."},
+{id:906,d:"D6",q:"You use an Azure OpenAI model with Temperature=1, Top P=0.5, Max tokens=100. The API response shows: finish_reason=stop, completion_tokens=86, prompt_tokens=12. For each statement, select Yes if true.",o:["Yes / No / Yes", "No / Yes / Yes", "Yes / Yes / No", "No / No / No"],a:0,m:false,stmts:["You will be charged for 86 tokens.", "The response was truncated because it reached the maximum token limit.", "The prompt tokens count is included in the total tokens calculation."],code:null,topic:"Topic 2",e:"completion_tokens=86 so you are charged for 86 completion tokens (Yes). finish_reason=stop means the model finished naturally — NOT truncated (length would indicate truncation) (No). Prompt tokens ARE included in total_tokens = prompt_tokens + completion_tokens (Yes)."},
+{id:907,d:"D6",q:"You build a Python chatbot using openai.ChatCompletion.create() with system='You are a helpful assistant' and user='What is an LLM?'. For each statement, select Yes if true.",o:["No / No / Yes", "Yes / Yes / No", "No / Yes / No", "Yes / No / Yes"],a:0,m:false,stmts:["The response will have a high degree of certainty because Temperature defaults to 1.", "Changing only the user question will change the response.", "Changing only the system message will change the response."],code:null,topic:"Topic 2",e:"Temperature=1 (default) means creative/varied responses, NOT high certainty (No). Changing the user question changes what is asked so changes the response (No — same question asked, but changing it would change response: actually the statement says 'changing only the user question will change the response' which is Yes). Changing the system message changes the assistant persona so changes the response (Yes)."},
+{id:908,d:"D5",q:"You build a Microsoft Teams bot using OnMembersAddedAsync. The bot sends a welcome message. For each statement about bot behavior, select Yes if true.",o:["Yes / No / No", "No / Yes / Yes", "Yes / Yes / No", "No / No / Yes"],a:0,m:false,stmts:["OnMembersAddedAsync triggers when a new user joins the conversation.", "Existing members of the conversation will also receive the welcome message.", "OnMembersAddedAsync triggers when a user sends a message."],code:null,topic:"Topic 2",e:"OnMembersAddedAsync fires when new members are added to the conversation (Yes). Existing members do NOT receive the event — only newly added members do (No). OnMembersAddedAsync does NOT trigger on message activity — that uses OnMessageActivityAsync (No)."}
 ];;
 
 
@@ -1274,10 +1467,16 @@ let state={mode:"",questions:[],idx:0,answers:{},wrong:[],multiSel:[],startTime:
 /* -------- helpers -------- */
 function isDragDrop(q){return /sequence|in sequence|Three actions|Four actions|Five actions|Six actions|Eight actions|DRAG DROP|Select and Place/i.test(q.q);}
 function isSimulation(q){return q.q.startsWith('SIMULATION:');}
+function isHotspotTable(q){
+  /* Table hotspot = Yes/No per statement rows */
+  if(q.m||isDragDrop(q)||isYesNo(q))return false;
+  if(!q.stmts||!q.stmts.length)return false;
+  return true;
+}
 function isHotspot(q){
-  /* Hotspot = code completion with slash-separated options (BOX1/BOX2) */
+  /* Code hotspot = dropdown in code block */
   if(q.m)return false;
-  if(isDragDrop(q)||isYesNo(q))return false;
+  if(isDragDrop(q)||isYesNo(q)||isHotspotTable(q))return false;
   const slashOpts=q.o.filter(o=>o.includes(' / '));
   const isCodeQ=/complete|Complete|BOX\d|Complete code|Complete the|Complete command|Complete URI|Complete Speech|docker run|az type|completion type|response type|print value|method and|credential and|provider and|role and param|options type|data source/i.test(q.q);
   return slashOpts.length>=2&&isCodeQ;
@@ -1286,15 +1485,9 @@ function isYesNo(q){return q.o.length===2&&q.o[0]==="Yes"&&q.o[1]==="No";}
 function isMulti(q){return q.m===true;}
 function shuffle(a){return[...a].sort(()=>Math.random()-0.5);}
 function showScreen(id){
-  document.querySelectorAll(".screen").forEach(s=>{
-    s.classList.remove("active");
-    if(s.id==='simScreen') s.style.display='none';
-  });
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   const el=document.getElementById(id);
-  if(el){
-    el.classList.add("active");
-    if(id==='simScreen') el.style.display='flex';
-  }
+  if(el) el.classList.add("active");
 }
 
 function init(){
@@ -1447,7 +1640,14 @@ function startDomain(d, type){
 }
 
 function startQuiz(title,qs,isCaseStudy){
-  state={...state,mode:title,questions:qs,idx:0,answers:{},startTime:Date.now(),dndSlots:[],ynSel:null,isCaseStudy};
+  /* Clean up any previous case study UI */
+  const banner  = document.getElementById('csScenarioBanner');
+  const overlay = document.getElementById('caseReadingOverlay');
+  if(!isCaseStudy && banner) banner.style.display='none';
+  if(overlay){ overlay.style.display='none'; overlay.innerHTML=''; }
+
+  state={...state,mode:title,questions:qs,idx:0,answers:{},
+         startTime:Date.now(),dndSlots:[],ynSel:null,isCaseStudy};
   clearInterval(state.tiv);
   state.tiv=setInterval(updateTimer,1000);
   buildNavPane(isCaseStudy);
@@ -1458,107 +1658,147 @@ function updateTimer(){const s=Math.floor((Date.now()-state.startTime)/1000);doc
 
 /* -------- Nav pane -------- */
 function buildNavPane(isCaseStudy){
+  const nav=document.getElementById("navPane");
+  const mobileTabs=document.getElementById("caseNavTabs");
   if(isCaseStudy){
     buildNavPaneForCS(activeCaseStudy||1);
   } else {
-    const nav=document.getElementById("navPane");
-    const mobileTabs=document.getElementById("caseNavTabs");
-    nav.innerHTML=`
+    if(mobileTabs) mobileTabs.style.display="none";
+    if(nav) nav.innerHTML=`
       <div class="nav-section-title">Navigation</div>
-      <button class="nav-question-btn" onclick="showQuestion(this)" id="navQBtn">&#x1F4AC; Question</button>
+      <button class="nav-question-btn active" onclick="showQuestion(this)" id="navQBtn">&#x1F4AC; Question</button>
       <div class="nav-divider"></div>
       <div class="nav-section-title">Progress</div>
-      <div style="padding:8px 14px;font-size:12px;color:#666;display:none" id="navProgress">1 / ${state.questions.length}</div>`;
-    mobileTabs.style.display='none';
+      <div style="padding:8px 14px;font-size:12px;color:#666" id="navProgress">1 / ${state.questions.length}</div>`;
   }
 }
 
+
 function showCaseSection(sectionId, btn){
-  /* Hide all case reading sections and question panel */
-  document.querySelectorAll(".case-reading,.question-panel").forEach(el=>{
-    el.classList.remove("active");el.style.display="none";
-  });
-  const target = document.getElementById(sectionId);
-  if(target){target.style.display="block";target.classList.add("active");}
-  document.querySelectorAll(".nav-btn,.case-nav-tab").forEach(b=>b.classList.remove("active"));
-  if(btn)btn.classList.add("active");
+  /* Copy the requested section from caseStore into the overlay, show overlay */
+  const src = document.getElementById(sectionId);
+  const overlay = document.getElementById('caseReadingOverlay');
+  const qp = document.getElementById('questionPanel');
+  if(overlay){
+    if(src){
+      overlay.innerHTML = src.innerHTML;
+      overlay.style.display = 'flex';
+      overlay.style.flexDirection = 'column';
+    }
+  }
+  if(qp){ qp.style.display = 'none'; }
+  document.querySelectorAll('.nav-btn,.case-nav-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
 }
 
 function showQuestion(btn){
-  document.querySelectorAll(".case-reading,.question-panel").forEach(el=>{el.classList.remove("active");el.style.display="none";});
-  const qp=document.getElementById("questionPanel");
-  qp.style.display="flex";qp.classList.add("active");
-  document.querySelectorAll(".nav-btn,.case-nav-tab").forEach(b=>b.classList.remove("active"));
-  if(btn)btn.classList.add("active");
-  /* highlight mobile question tab */
-  const mqb=document.getElementById("mobileQBtn");
-  if(mqb)mqb.classList.add("active");
+  const overlay=document.getElementById('caseReadingOverlay');
+  const qp=document.getElementById('questionPanel');
+  if(overlay){overlay.style.display='none';overlay.innerHTML='';}
+  if(qp) qp.style.display='flex';
+  document.querySelectorAll('.nav-btn,.case-nav-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const mqb=document.getElementById('mobileQBtn');
+  if(mqb) mqb.classList.add('active');
 }
+
 
 /* -------- Render question -------- */
 function renderQ(){
-  const q=state.questions[state.idx],total=state.questions.length;
-  document.getElementById("prog").style.width=Math.round((state.idx/total)*100)+"%";
-  document.getElementById("plbl").textContent=`${state.idx+1} / ${total}`;
-  document.getElementById("topQnum").textContent=`Question #${state.idx+1}`;
-  if(document.getElementById("navProgress"))document.getElementById("navProgress").textContent=`${state.idx+1} / ${total}`;
+  if(!state.questions||!state.questions.length) return;
+  const q=state.questions[state.idx];
+  const total=state.questions.length;
+
+  /* Progress */
+  elStyle("prog","width",Math.round((state.idx+1)/total*100)+"%");
+  elSet("plbl","textContent",`${state.idx+1} / ${total}`);
+  elSet("topQnum","textContent",`Question #${state.idx+1}`);
+  elSet("navProgress","textContent",`${state.idx+1} / ${total}`);
+  const _tt=document.getElementById('topTopic');if(_tt)_tt.textContent='';
+
+  /* Make sure question panel is visible */
+  showQuestion(null);
+
+  /* ---- Build question panel HTML fresh each render ---- */
+  const panel=document.getElementById("questionPanel");
+  if(!panel) return;
+
+  /* Domain + type tags */
+  const isDD=isDragDrop(q);
+  const isYN=isYesNo(q);
+  const isHS=isHotspot(q);
+  const isMS=isMulti(q)&&!isDD&&!isYN&&!isHS;
+  let typeBadge='';
+  if(isDD) typeBadge='<span class="qtype-badge">Sequence</span>';
+  else if(isYN) typeBadge='<span class="qtype-badge">Yes / No</span>';
+  else if(isHotspotTable(q)) typeBadge='<span class="qtype-badge">Hotspot</span>';
+  else if(isHS) typeBadge='<span class="qtype-badge">Hotspot</span>';
+  else if(isMS) typeBadge='<span class="mbadge2">Select all correct</span>';
+
+  let hintHTML='';
+  if(isDD) hintHTML='<div class="hint-box show">Drag items from the left column to the Answer Area. Click a placed item to return it.</div>';
+  else if(isMS) hintHTML='<div class="hint-box show">Select ALL correct answers, then click Next.</div>';
+  else if(isHS) hintHTML='<div class="hint-box show">Select the correct option in each dropdown, then click Reveal Solution.</div>';
+
+  /* Yes/No gets the full case-note header layout */
+  let contextHTML='';
+  if(isYN){
+    const {scenario,solution}=parseYesNo(q.q);
+    const NOTE=`Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals.\nAfter you answer a question in this section, you will NOT be able to return to it.`;
+    let ctx=`<span style="color:#555;font-size:12.5px">${NOTE.replace(/\n/g,'<br>')}</span>`;
+    if(scenario) ctx+=`<br><br>${scenario.replace(/\.\s+/g,'.<br>')}`;
+    if(solution) ctx+=`<br><br>${solution}`;
+    ctx+=`<br><br><strong>Does this meet the goal?</strong>`;
+    contextHTML=`<div class="qp-context" style="display:block">${ctx}</div>`;
+  }
+
+  /* Instruction text */
+  let instrHTML='';
+  if(!isYN) instrHTML=`<div class="qp-instruction">${q.q}</div>`;
+  let noteHTML='';
+  if(isDD||isHS) noteHTML='<div class="qp-note" style="display:block">NOTE: Each correct selection is worth one point.</div>';
+
+  /* Answer zone placeholder — filled by type-specific renderer below */
+  panel.innerHTML=`
+    <div id="qpDomainTag" style="margin-bottom:8px">
+      <span class="dtag ${DCLS[q.d]}">${DFULL[q.d]}</span>${typeBadge}
+    </div>
+    ${contextHTML}
+    ${instrHTML}
+    ${noteHTML}
+    ${hintHTML}
+    <div id="answerZone"></div>
+    <div class="exp-box" id="exp"></div>`;
+
+  /* Reset nav buttons */
   document.getElementById("bnext").disabled=true;
   document.getElementById("bskip").disabled=false;
   state.multiSel=[];state.ynSel=null;state.dndSlots=[];
-  document.getElementById("exp").classList.remove("show");
-  document.getElementById("exp").innerHTML="";
 
-  // Domain tag
-  const tagEl=document.getElementById("qpDomainTag");
-  tagEl.innerHTML=`<span class="dtag ${DCLS[q.d]}">${DFULL[q.d]}</span>${q.m&&!isDragDrop(q)?'<span class="mbadge2">Select all correct</span>':""}`;
-
-  // Always show question panel
-  showQuestion(document.getElementById("navQBtn"));
-
-  const hint=document.getElementById("hint");
-  // hide all option zones
-  document.getElementById("mcqOpts").style.display="none";
-  document.getElementById("ynSection").style.display="none";
-  document.getElementById("dndSection").style.display="none";
-  document.getElementById("qpType").style.display="none";
-  document.getElementById("qpContext").style.display="none";
-  document.getElementById("qpNote").style.display="none";
-  hint.classList.remove("show");
-
-  if(isYesNo(q)){
-    renderYesNo(q);
-  } else if(isDragDrop(q)){
-    renderDND(q);
-  } else if(isHotspot(q)){
-    renderHotspot(q);
-  } else {
-    renderMCQ(q);
-  }
+  /* Render answer zone */
+  if(isYN)              renderYesNo(q);
+  else if(isDD)         renderDND(q);
+  else if(isHotspotTable(q)) renderHotspotTable(q);
+  else if(isHS)         renderHotspot(q);
+  else                  renderMCQ(q);
 }
+
 
 /* ---- YES/NO ---- */
 function renderYesNo(q){
-  const {scenario,solution}=parseYesNo(q.q);
-  document.getElementById("qpLabel").textContent="Question";
-  document.getElementById("qpType").style.display="none";
-
-  // Build context: case note header + scenario + solution + goal
-  const CASE_NOTE=`Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution.\nAfter you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen.`;
-  let ctxHtml=`<span style="color:#555;font-size:12.5px">${CASE_NOTE.replace(/\n/g,"<br>")}</span>`;
-  if(scenario)ctxHtml+=`<br><br>${scenario.replace(/\.\s*/g,".<br>")}`;
-  if(solution)ctxHtml+=`<br><br>${solution}`;
-  ctxHtml+=`<br><br><strong>Does this meet the goal?</strong>`;
-  document.getElementById("qpContext").innerHTML=ctxHtml;
-  document.getElementById("qpContext").style.display="block";
-  document.getElementById("qpInstruction").textContent="";
-
-  document.getElementById("ynSection").style.display="block";
-  document.getElementById("ynOpts").innerHTML=
-    `<button class="yn-opt" onclick="pickYN(0)" id="yn0" data-idx="0"><span class="yn-ltr">A.</span>Yes</button>
-     <button class="yn-opt" onclick="pickYN(1)" id="yn1" data-idx="1"><span class="yn-ltr">B.</span>No</button>`;
-  document.getElementById("revealBtn").disabled=true;
-  document.getElementById("bnext").disabled=true;
+  const az=document.getElementById('answerZone');
+  if(!az) return;
+  az.innerHTML=`
+    <div class="yn-opts" id="ynOpts">
+      <button class="yn-opt" onclick="pickYN(0)" id="yn0" data-idx="0"><span class="yn-ltr">A.</span>Yes</button>
+      <button class="yn-opt" onclick="pickYN(1)" id="yn1" data-idx="1"><span class="yn-ltr">B.</span>No</button>
+    </div>
+    <div style="margin-top:10px">
+      <button class="eb-btn reveal-sol" id="revealBtn" onclick="revealYN()" disabled>Reveal Solution</button>
+    </div>`;
+  document.getElementById('bnext').disabled=false;
 }
+
 
 function parseYesNo(txt){
   const solIdx=txt.indexOf("Solution:");
@@ -1572,8 +1812,8 @@ function pickYN(idx){
   document.querySelectorAll(".yn-opt").forEach(el=>el.classList.remove("selected"));
   document.getElementById("yn"+idx).classList.add("selected");
   state.ynSel=idx;
-  document.getElementById("revealBtn").disabled=false;
-  document.getElementById("bnext").disabled=false;
+  const _rb=el("revealBtn");if(_rb)_rb.disabled=false;
+  const _bn=el("bnext");if(_bn)_bn.disabled=false;
 }
 
 function revealYN(){
@@ -1591,23 +1831,23 @@ function revealYN(){
     el.disabled=true;
   });
   showExp(ok,q.e);
-  document.getElementById("revealBtn").disabled=true;
-  document.getElementById("bskip").disabled=true;
+  const _rb=el("revealBtn");if(_rb)_rb.disabled=true;
+  const _bs=el("bskip");if(_bs)_bs.disabled=true;
 }
 
 /* ---- MCQ ---- */
 function renderMCQ(q){
-  document.getElementById("qpLabel").textContent="Question";
-  document.getElementById("qpInstruction").textContent=q.q;
-  if(q.m){document.getElementById("hint").textContent="Select ALL correct answers, then click Next.";document.getElementById("hint").classList.add("show");}
   const ltrs=["A","B","C","D","E","F","G"];
-  document.getElementById("mcqOpts").style.display="flex";
-  document.getElementById("mcqOpts").innerHTML=q.o.map((o,i)=>
-    `<button class="mcq-opt" onclick="pickOpt(${i})" id="o${i}">
-      <span class="mcq-ltr">${ltrs[i]}.</span><span>${o}</span>
-    </button>`
-  ).join("");
+  const az=document.getElementById('answerZone');
+  if(!az) return;
+  az.innerHTML='<div class="mcq-opts" id="mcqOpts">'+
+    q.o.map((o,i)=>
+      `<button class="mcq-opt" onclick="pickOpt(${i})" id="o${i}">
+        <span class="mcq-ltr">${ltrs[i]}.</span><span>${o}</span>
+      </button>`
+    ).join('')+'</div>';
 }
+
 
 function pickOpt(idx){
   const q=state.questions[state.idx];
@@ -1616,231 +1856,461 @@ function pickOpt(idx){
     if(state.answers[q.id]!==undefined)return;
     const pos=state.multiSel.indexOf(idx);
     if(pos===-1)state.multiSel.push(idx);else state.multiSel.splice(pos,1);
-    document.querySelectorAll(".mcq-opt").forEach(el=>{const i=parseInt(el.id.replace("o",""));el.classList.remove("selected");if(state.multiSel.includes(i))el.classList.add("selected");});
-    document.getElementById("bnext").disabled=state.multiSel.length===0;
+    document.querySelectorAll('.mcq-opt').forEach(el=>{
+      const i=parseInt(el.id.replace('o',''));
+      el.classList.remove('selected');
+      if(state.multiSel.includes(i))el.classList.add('selected');
+    });
+    document.getElementById('bnext').disabled=state.multiSel.length===0;
     return;
   }
-  state.answers[q.id]=idx;const ok=idx===q.a;
+  state.answers[q.id]=idx;
+  const ok=idx===q.a;
   if(!ok&&!state.wrong.includes(q.id))state.wrong.push(q.id);
-  document.querySelectorAll(".mcq-opt").forEach(el=>{
-    const i=parseInt(el.id.replace("o",""));
-    if(i===idx&&ok)el.classList.add("correct");
-    else if(i===idx&&!ok)el.classList.add("wrong");
-    else if(i===q.a)el.classList.add("reveal");
+  document.querySelectorAll('.mcq-opt').forEach(el=>{
+    const i=parseInt(el.id.replace('o',''));
     el.disabled=true;
+    if(i===idx&&ok)el.classList.add('correct');
+    else if(i===idx&&!ok)el.classList.add('wrong');
+    else if(i===q.a)el.classList.add('reveal');
   });
   showExp(ok,q.e);
-  document.getElementById("bnext").disabled=false;
-  document.getElementById("bskip").disabled=true;
-}
-
-function submitMulti(){
-  const q=state.questions[state.idx];
-  const sel=[...state.multiSel].sort();const ok=JSON.stringify(sel)===JSON.stringify([...q.a].sort());
-  state.answers[q.id]=sel;if(!ok&&!state.wrong.includes(q.id))state.wrong.push(q.id);
-  document.querySelectorAll(".mcq-opt").forEach(el=>{
-    const i=parseInt(el.id.replace("o",""));el.disabled=true;el.classList.remove("selected");
-    if(Array.isArray(q.a)&&q.a.includes(i))el.classList.add("correct");
-    else if(sel.includes(i))el.classList.add("wrong");
-  });
-  showExp(ok,q.e);document.getElementById("bnext").disabled=false;document.getElementById("bskip").disabled=true;
-}
-
-/* ---- DRAG & DROP (Microsoft exam style: Actions left, ordered slots right) ---- */
-let dndDragEl=null,dndDragFrom=null; /* dragFrom: 'pool' | 'slot:N' */
-
-function renderDND(q){
-  /* Set up question panel display */
-  document.getElementById('qpLabel').textContent='Question';
-  document.getElementById('qpType').textContent='DRAG DROP -';
-  document.getElementById('qpType').style.display='block';
-  document.getElementById('qpInstruction').textContent=q.q;
-  document.getElementById('qpNote').textContent='NOTE: Each correct selection is worth one point. Select and Place:';
-  document.getElementById('qpNote').style.display='block';
-  document.getElementById('dndSection').style.display='block';
-  document.getElementById('hint').textContent='Drag items from the left column to the Answer Area. Click a placed item to return it.';
-  document.getElementById('hint').classList.add('show');
-
-  const correctArr=Array.isArray(q.a)?q.a:[q.a];
-  const numSlots=correctArr.length;
-
-  /* Set left column label based on question content */
-  const poolLabel=document.getElementById('dndPoolLabel');
-  if(/service|value|code/i.test(q.q)) poolLabel.textContent='Values';
-  else poolLabel.textContent='Actions';
-
-  /* Build shuffled pool — each option gets a unique pool-id */
-  const shuffled=[...q.o.map((text,origIdx)=>({text,origIdx}))].sort(()=>Math.random()-0.5);
-  const poolEl=document.getElementById('dndPool');
-  poolEl.innerHTML='';
-  shuffled.forEach(item=>{
-    poolEl.appendChild(makeDndItem(item.text,item.origIdx,'pool'));
-  });
-
-  /* Build answer slots */
-  state.dndSlots=new Array(numSlots).fill(null);
-  const slotsEl=document.getElementById('dndSlots');
-  slotsEl.innerHTML='';
-  for(let s=0;s<numSlots;s++){
-    const target=document.createElement('div');
-    target.className='dnd-slot-target';
-    target.id='dndSlot'+s;
-    target.textContent='';
-    target.ondragover=e=>{e.preventDefault();target.classList.add('drag-over');};
-    target.ondragleave=e=>{target.classList.remove('drag-over');};
-    target.ondrop=e=>{e.preventDefault();target.classList.remove('drag-over');dropOnSlot(s);};
-    target.onclick=()=>{if(target.classList.contains('filled'))returnToPool(s);};
-    slotsEl.appendChild(target);
-  }
-  document.getElementById('dndRevealBtn').disabled=true;
-}
-
-function makeDndItem(text,origIdx,from){
-  const div=document.createElement('div');
-  div.className='dnd-item';
-  div.draggable=true;
-  div.dataset.orig=origIdx;
-  div.dataset.text=text;
-  div.textContent=text;
-  div.ondragstart=e=>{
-    dndDragEl=div;
-    dndDragFrom=from;
-    setTimeout(()=>div.classList.add('dragging'),0);
-    e.dataTransfer.effectAllowed='move';
-  };
-  div.ondragend=e=>{div.classList.remove('dragging');};
-  return div;
-}
-
-function dropOnSlot(slotIdx){
-  if(!dndDragEl)return;
-  const text=dndDragEl.dataset.text;
-  const origIdx=parseInt(dndDragEl.dataset.orig);
-
-  /* If slot already filled — return its current item to pool */
-  if(state.dndSlots[slotIdx]!==null) returnToPool(slotIdx,true);
-
-  /* Remove drag source */
-  if(dndDragFrom==='pool'){
-    dndDragEl.remove();
-  } else if(dndDragFrom&&dndDragFrom.startsWith('slot:')){
-    const oldSlot=parseInt(dndDragFrom.split(':')[1]);
-    state.dndSlots[oldSlot]=null;
-    const oldTarget=document.getElementById('dndSlot'+oldSlot);
-    oldTarget.className='dnd-slot-target';
-    oldTarget.textContent='';
-    oldTarget.draggable=false;
-    oldTarget.ondragstart=null;
-    oldTarget.ondragend=null;
-  }
-
-  /* Fill target slot */
-  state.dndSlots[slotIdx]={origIdx,text};
-  const target=document.getElementById('dndSlot'+slotIdx);
-  target.className='dnd-slot-target filled';
-  target.textContent=text;
-  target.draggable=true;
-  target.ondragstart=e=>{
-    dndDragEl=target;
-    dndDragFrom='slot:'+slotIdx;
-    setTimeout(()=>target.classList.add('dragging'),0);
-    e.dataTransfer.effectAllowed='move';
-  };
-  target.ondragend=e=>{target.classList.remove('dragging');};
-
-  dndDragEl=null; dndDragFrom=null;
-  updateDndRevealBtn();
-}
-
-function returnToPool(slotIdx, silent){
-  if(state.dndSlots[slotIdx]===null)return;
-  const {origIdx,text}=state.dndSlots[slotIdx];
-  state.dndSlots[slotIdx]=null;
-  if(!silent){
-    const target=document.getElementById('dndSlot'+slotIdx);
-    target.className='dnd-slot-target';
-    target.textContent='';
-    target.draggable=false;
-    target.ondragstart=null;
-  }
-  const item=makeDndItem(text,origIdx,'pool');
-  document.getElementById('dndPool').appendChild(item);
-  updateDndRevealBtn();
-}
-
-function updateDndRevealBtn(){
-  const allFilled=state.dndSlots.every(x=>x!==null);
-  document.getElementById('dndRevealBtn').disabled=!allFilled;
-}
-
-function revealDND(){
-  const q=state.questions[state.idx];
-  const correctArr=Array.isArray(q.a)?q.a:[q.a];
-  const userOrder=state.dndSlots.map(x=>x?x.origIdx:null);
-  const ok=JSON.stringify(userOrder)===JSON.stringify(correctArr);
-  state.answers[q.id]=userOrder;
-  if(!ok&&!state.wrong.includes(q.id))state.wrong.push(q.id);
-
-  /* Colour each slot */
-  state.dndSlots.forEach((item,i)=>{
-    const t=document.getElementById('dndSlot'+i);
-    if(!t||!item)return;
-    t.draggable=false; t.onclick=null; t.ondragstart=null;
-    t.className='dnd-slot-target '+(item.origIdx===correctArr[i]?'correct-slot':'wrong-slot');
-  });
-
-  /* Disable pool items */
-  document.querySelectorAll('#dndPool .dnd-item').forEach(el=>{
-    el.draggable=false; el.classList.add('used');
-  });
-
-  /* Show correct answer if wrong */
-  const corrLines=correctArr.map((ci,i)=>`<strong>Step ${i+1}:</strong> ${q.o[ci]}`).join('<br>');
-  showExp(ok, q.e + (ok?'':'<br><br><strong>Correct order:</strong><br>'+corrLines));
-  document.getElementById('dndRevealBtn').disabled=true;
   document.getElementById('bnext').disabled=false;
   document.getElementById('bskip').disabled=true;
 }
 
-/* ---- HOTSPOT (dropdown selects in code) ---- */
-function renderHotspot(q){
-  document.getElementById('qpLabel').textContent='Question';
-  document.getElementById('qpType').textContent='HOTSPOT -';
-  document.getElementById('qpType').style.display='block';
-  document.getElementById('qpInstruction').textContent=q.q;
-  document.getElementById('qpNote').textContent='NOTE: Each correct selection is worth one point.';
-  document.getElementById('qpNote').style.display='block';
-  document.getElementById('hotspotSection').style.display='block';
-  document.getElementById('hint').textContent='Select the correct value for each dropdown, then click Reveal Solution.';
-  document.getElementById('hint').classList.add('show');
-  document.getElementById('hsRevealBtn').disabled=false;
+
+function submitMulti(){
+  const q=state.questions[state.idx];
+  const sel=[...state.multiSel].sort();
+  const ok=JSON.stringify(sel)===JSON.stringify([...q.a].sort());
+  state.answers[q.id]=sel;
+  if(!ok&&!state.wrong.includes(q.id))state.wrong.push(q.id);
+  document.querySelectorAll('.mcq-opt').forEach(el=>{
+    const i=parseInt(el.id.replace('o',''));
+    el.disabled=true;el.classList.remove('selected');
+    if(Array.isArray(q.a)&&q.a.includes(i))el.classList.add('correct');
+    else if(sel.includes(i))el.classList.add('wrong');
+  });
+  showExp(ok,q.e);
   document.getElementById('bnext').disabled=false;
+  document.getElementById('bskip').disabled=true;
+}
 
-  /* Split options on ' / ' to get per-dropdown values */
-  const rows=q.o.map(opt=>opt.split(' / ').map(s=>s.trim()));
-  const numDropdowns=rows[0].length;
 
-  /* Build unique option lists per dropdown position */
-  const dropLists=[];
-  for(let d=0;d<numDropdowns;d++){
-    const vals=[...new Set(rows.map(r=>r[d]||''))].filter(Boolean);
-    /* shuffle */
-    vals.sort(()=>Math.random()-0.5);
-    dropLists.push(vals);
+/* ---- DRAG & DROP (Microsoft exam style: Actions left, ordered slots right) ---- */
+
+function renderDND(q){
+  const az=document.getElementById('answerZone');
+  if(!az) return;
+  const correctArr=Array.isArray(q.a)?q.a:[q.a];
+  const numSlots=correctArr.length;
+  const shuffled=[...q.o.map((text,origIdx)=>({text,origIdx}))].sort(()=>Math.random()-0.5);
+
+  window._dndState={
+    q, correctArr, numSlots,
+    pool: shuffled.map(item=>({...item,used:false})),
+    slots: new Array(numSlots).fill(null),
+    selPool: -1,
+    selSlot: -1
+  };
+
+  az.innerHTML=`
+    <div class="dnd-exam-wrap">
+      <div class="dnd-exam-row">
+
+        <!-- LEFT: Actions pool -->
+        <div class="dnd-actions-col">
+          <div class="dnd-exam-col-label">Actions</div>
+          <div id="dndPool"></div>
+        </div>
+
+        <!-- MIDDLE: Transfer buttons -->
+        <div class="dnd-transfer-col">
+          <button class="dnd-transfer-btn" id="dndMoveRight" onclick="dndTransferToAnswer()" title="Move right">&#8250;</button>
+          <button class="dnd-transfer-btn" id="dndMoveLeft"  onclick="dndTransferToPool()"   title="Move left">&#8249;</button>
+        </div>
+
+        <!-- RIGHT: Answer slots -->
+        <div class="dnd-answer-col">
+          <div class="dnd-exam-col-label">Answer Area</div>
+          <div id="dndSlots"></div>
+        </div>
+
+        <!-- FAR RIGHT: Reorder buttons -->
+        <div class="dnd-reorder-col">
+          <button class="dnd-transfer-btn" id="dndMoveUp"   onclick="dndReorder(-1)" title="Move up">&#8963;</button>
+          <button class="dnd-transfer-btn" id="dndMoveDown" onclick="dndReorder(1)"  title="Move down">&#8964;</button>
+        </div>
+
+      </div>
+      <div class="dnd-reveal-wrap">
+        <button class="eb-btn reveal-sol" id="dndRevealBtn" onclick="revealDND()" disabled>Reveal Solution</button>
+      </div>
+    </div>`;
+
+  dndRenderPool();
+  dndRenderSlots();
+  dndUpdateButtons();
+}
+
+
+
+
+/* ============ DND HELPERS — Exam style ============ */
+
+function dndRenderPool(){
+  const pool=document.getElementById('dndPool');
+  if(!pool)return;
+  const ds=window._dndState;
+  if(!ds)return;
+  pool.innerHTML='';
+
+  let hasVisible=false;
+  ds.pool.forEach((item,idx)=>{
+    if(item.used)return;
+    hasVisible=true;
+    const div=document.createElement('div');
+    div.className='dnd-action-item'+(ds.selPool===idx?' selected':'');
+    div.setAttribute('data-pool-idx',idx);
+    div.textContent=item.text;
+
+    /* Click to select */
+    div.onclick=()=>dndSelectPool(idx);
+
+    /* Drag start */
+    div.draggable=true;
+    div.ondragstart=e=>{
+      e.dataTransfer.setData('pool-idx',String(idx));
+      e.dataTransfer.setData('slot-idx','');
+      e.dataTransfer.effectAllowed='move';
+      ds.selPool=idx;
+      setTimeout(()=>div.classList.add('dragging'),0);
+    };
+    div.ondragend=()=>div.classList.remove('dragging');
+
+    pool.appendChild(div);
+  });
+
+  if(!hasVisible){
+    pool.innerHTML='<div style="padding:10px;font-size:12px;color:#999;font-style:italic">All actions placed</div>';
+  }
+}
+
+
+function dndRenderSlots(){
+  const slotsEl=document.getElementById('dndSlots');
+  if(!slotsEl)return;
+  const ds=window._dndState;
+  slotsEl.innerHTML='';
+  ds.slots.forEach((item,idx)=>{
+    const div=document.createElement('div');
+    div.className='dnd-slot'+(ds.selSlot===idx&&item?' selected':'');
+    div.setAttribute('data-slot-idx',idx);
+    div.textContent=item?item.text:'';
+    div.style.minHeight='48px'; /* always visible even when empty */
+
+    /* Click to select */
+    div.onclick=()=>{if(item)dndSelectSlot(idx);};
+
+    /* Drop target — always active */
+    div.ondragover=e=>{e.preventDefault();div.classList.add('drag-over');};
+    div.ondragleave=e=>{e.currentTarget.classList.remove('drag-over');};
+    div.ondrop=e=>{
+      e.preventDefault();div.classList.remove('drag-over');
+      const poolIdx=e.dataTransfer.getData('pool-idx');
+      const fromSlot=e.dataTransfer.getData('slot-idx');
+      if(poolIdx!=='') dndDropToSlot(parseInt(poolIdx),idx);
+      else if(fromSlot!=='') dndMoveSlotToSlot(parseInt(fromSlot),idx);
+    };
+
+    /* Drag from slot if filled */
+    if(item){
+      div.draggable=true;
+      div.ondragstart=e=>{
+        e.dataTransfer.setData('slot-idx',String(idx));
+        e.dataTransfer.setData('pool-idx','');
+        e.dataTransfer.effectAllowed='move';
+        setTimeout(()=>div.classList.add('dragging'),0);
+      };
+      div.ondragend=()=>div.classList.remove('dragging');
+    }
+    slotsEl.appendChild(div);
+  });
+
+  /* Update reveal button */
+  const filled=ds.slots.filter(x=>x!==null).length;
+  const revBtn=document.getElementById('dndRevealBtn');
+  if(revBtn) revBtn.disabled=(filled<ds.numSlots);
+}
+
+
+function dndSelectPool(idx){
+  const ds=window._dndState;
+  ds.selPool=(ds.selPool===idx)?-1:idx;
+  ds.selSlot=-1;
+  dndRenderPool();dndRenderSlots();dndUpdateButtons();
+}
+
+function dndSelectSlot(idx){
+  const ds=window._dndState;
+  ds.selSlot=(ds.selSlot===idx)?-1:idx;
+  ds.selPool=-1;
+  dndRenderPool();dndRenderSlots();dndUpdateButtons();
+}
+
+function dndDropToSlot(poolIdx, slotIdx){
+  const ds=window._dndState;
+  const item=ds.pool[poolIdx];
+  if(!item||item.used)return;
+  /* If slot occupied, return it to pool */
+  if(ds.slots[slotIdx]!==null){
+    const old=ds.slots[slotIdx];
+    const pi=ds.pool.findIndex(p=>p.origIdx===old.origIdx);
+    if(pi>=0) ds.pool[pi].used=false;
+  }
+  item.used=true;
+  ds.slots[slotIdx]={...item};
+  ds.selPool=-1;ds.selSlot=-1;
+  dndRenderPool();dndRenderSlots();dndUpdateButtons();
+}
+
+function dndMoveSlotToSlot(fromSlot,toSlot){
+  const ds=window._dndState;
+  if(fromSlot===toSlot)return;
+  const tmp=ds.slots[toSlot];
+  ds.slots[toSlot]=ds.slots[fromSlot];
+  ds.slots[fromSlot]=tmp;
+  ds.selSlot=-1;
+  dndRenderPool();dndRenderSlots();dndUpdateButtons();
+}
+
+function dndTransferToAnswer(){
+  /* Move selected pool item to first empty slot */
+  const ds=window._dndState;
+  if(ds.selPool<0)return;
+  const item=ds.pool[ds.selPool];
+  if(!item||item.used)return;
+  const emptyIdx=ds.slots.findIndex(s=>s===null);
+  if(emptyIdx<0)return; /* no empty slots */
+  item.used=true;
+  ds.slots[emptyIdx]={...item};
+  ds.selPool=-1;
+  dndRenderPool();dndRenderSlots();dndUpdateButtons();
+}
+
+function dndTransferToPool(){
+  /* Remove selected slot item back to pool */
+  const ds=window._dndState;
+  if(ds.selSlot<0||!ds.slots[ds.selSlot])return;
+  const item=ds.slots[ds.selSlot];
+  const pi=ds.pool.findIndex(p=>p.origIdx===item.origIdx);
+  if(pi>=0) ds.pool[pi].used=false;
+  ds.slots[ds.selSlot]=null;
+  ds.selSlot=-1;
+  dndRenderPool();dndRenderSlots();dndUpdateButtons();
+}
+
+function dndReorder(dir){
+  /* Move selected slot item up (-1) or down (+1) */
+  const ds=window._dndState;
+  if(ds.selSlot<0)return;
+  const newIdx=ds.selSlot+dir;
+  if(newIdx<0||newIdx>=ds.numSlots)return;
+  const tmp=ds.slots[newIdx];
+  ds.slots[newIdx]=ds.slots[ds.selSlot];
+  ds.slots[ds.selSlot]=tmp;
+  ds.selSlot=newIdx;
+  dndRenderPool();dndRenderSlots();dndUpdateButtons();
+}
+
+function dndUpdateButtons(){
+  const ds=window._dndState;
+  const r=document.getElementById('dndMoveRight');
+  const l=document.getElementById('dndMoveLeft');
+  const u=document.getElementById('dndMoveUp');
+  const d=document.getElementById('dndMoveDown');
+  if(r) r.disabled=(ds.selPool<0||ds.pool[ds.selPool]?.used||ds.slots.every(s=>s!==null));
+  if(l) l.disabled=(ds.selSlot<0||!ds.slots[ds.selSlot]);
+  if(u) u.disabled=(ds.selSlot<=0);
+  if(d) d.disabled=(ds.selSlot<0||ds.selSlot>=ds.numSlots-1);
+}
+
+function revealDND(){
+  const ds=window._dndState;
+  if(!ds) return;
+  const q=ds.q;
+  const userOrder=ds.slots.map(s=>s?s.origIdx:null);
+  const ok=JSON.stringify(userOrder)===JSON.stringify(ds.correctArr);
+  state.answers[q.id]=userOrder;
+  if(!ok&&!state.wrong.includes(q.id))state.wrong.push(q.id);
+
+  /* Colour slots correct/wrong */
+  ds.slots.forEach((item,i)=>{
+    const el=document.querySelector(`[data-slot-idx="${i}"]`);
+    if(!el||!item)return;
+    el.className='dnd-slot '+(item.origIdx===ds.correctArr[i]?'correct-slot':'wrong-slot');
+    el.draggable=false;el.onclick=null;el.ondragstart=null;
+  });
+  /* Disable pool items */
+  document.querySelectorAll('.dnd-action-item').forEach(el=>{
+    el.classList.add('used');el.onclick=null;el.draggable=false;
+  });
+  /* Disable buttons */
+  ['dndMoveRight','dndMoveLeft','dndMoveUp','dndMoveDown','dndRevealBtn'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.disabled=true;
+  });
+  const corrLines=ds.correctArr.map((ci,i)=>`<strong>Step ${i+1}:</strong> ${q.o[ci]}`).join('<br>');
+  showExp(ok,q.e+(ok?'':'<br><br><strong>Correct order:</strong><br>'+corrLines));
+  document.getElementById('bnext').disabled=false;
+  document.getElementById('bskip').disabled=true;
+}
+
+/* Legacy DND vars declared above */
+
+
+/* ---- HOTSPOT (dropdown selects in code) ---- */
+function renderHotspotTable(q){
+  const az=document.getElementById('answerZone');
+  if(!az) return;
+
+  /* Parse correct answer row */
+  const correctOpt = q.o[q.a] || '';
+  const correctParts = correctOpt.split(/\s*\/\s*/).map(s=>s.trim().toLowerCase());
+
+  /* Build code block HTML if question has code */
+  let codeHTML = '';
+  if(q.code){
+    codeHTML = `<div class="hs-code-block">${q.code}</div>`;
   }
 
-  /* Build code block HTML with inline dropdowns */
-  /* Generate placeholder code context from question text */
-  const codeLines=buildHotspotCode(q,numDropdowns,dropLists);
-  document.getElementById('hotspotCode').innerHTML=codeLines;
+  /* Build table rows */
+  const stmts = q.stmts || [];
+  const rowsHTML = stmts.map((stmt, i) => `
+    <tr data-row="${i}">
+      <td class="hs-stmt">${stmt}</td>
+      <td class="hs-yn">
+        <span class="hs-radio" data-row="${i}" data-val="yes" onclick="hsTablePick(${i},'yes')"></span>
+      </td>
+      <td class="hs-yn">
+        <span class="hs-radio" data-row="${i}" data-val="no" onclick="hsTablePick(${i},'no')"></span>
+      </td>
+    </tr>`).join('');
 
-  /* Enable reveal when any dropdown changed */
-  document.querySelectorAll('.hs-dd').forEach(sel=>{
-    sel.addEventListener('change',()=>{
-      document.getElementById('hsRevealBtn').disabled=false;
-    });
-  });
+  az.innerHTML = `
+    ${codeHTML}
+    <p class="hs-table-note">For each of the following statements, select <strong>Yes</strong> if the statement is true. Otherwise, select <strong>No</strong>.</p>
+    <p class="hs-table-note" style="margin-bottom:10px">NOTE: Each correct selection is worth one point.</p>
+    <div class="hs-answer-label">Answer Area</div>
+    <div class="hs-table-wrap">
+      <table class="hs-table">
+        <thead>
+          <tr>
+            <th style="width:70%">Statements</th>
+            <th class="hs-yn">Yes</th>
+            <th class="hs-yn">No</th>
+          </tr>
+        </thead>
+        <tbody id="hsTableBody">
+          ${rowsHTML}
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px">
+      <button class="eb-btn reveal-sol" id="hsTableRevealBtn" onclick="revealHotspotTable()" disabled>Reveal Solution</button>
+    </div>`;
+
+  /* Track selections */
+  window._hsTableState = {
+    q,
+    selections: new Array(stmts.length).fill(null), /* 'yes' or 'no' */
+    correctParts,
+    revealed: false
+  };
+
+  document.getElementById('bnext').disabled = false;
 }
+
+function hsTablePick(rowIdx, val){
+  const s = window._hsTableState;
+  if(!s || s.revealed) return;
+  s.selections[rowIdx] = val;
+
+  /* Update radio visuals for this row */
+  document.querySelectorAll(`.hs-radio[data-row="${rowIdx}"]`).forEach(el=>{
+    el.classList.remove('selected');
+    if(el.getAttribute('data-val') === val) el.classList.add('selected');
+  });
+
+  /* Enable reveal once all rows answered */
+  const allAnswered = s.selections.every(v => v !== null);
+  const revBtn = document.getElementById('hsTableRevealBtn');
+  if(revBtn) revBtn.disabled = !allAnswered;
+}
+
+function revealHotspotTable(){
+  const s = window._hsTableState;
+  if(!s || s.revealed) return;
+  s.revealed = true;
+  const q = s.q;
+
+  let allCorrect = true;
+  s.selections.forEach((sel, i) => {
+    const correct = s.correctParts[i] || 'yes';
+    const isRight = (sel === correct);
+    if(!isRight) allCorrect = false;
+
+    /* Update Yes radio */
+    const yesEl = document.querySelector(`.hs-radio[data-row="${i}"][data-val="yes"]`);
+    const noEl  = document.querySelector(`.hs-radio[data-row="${i}"][data-val="no"]`);
+
+    if(yesEl && noEl){
+      /* Show correct answer */
+      if(correct === 'yes'){
+        yesEl.classList.add('correct');
+        noEl.classList.remove('selected');
+      } else {
+        noEl.classList.add('correct');
+        yesEl.classList.remove('selected');
+      }
+      /* Mark user wrong selection */
+      if(!isRight){
+        if(sel === 'yes') yesEl.classList.add('wrong');
+        else if(sel === 'no') noEl.classList.add('wrong');
+      }
+      yesEl.classList.add('disabled');
+      noEl.classList.add('disabled');
+    }
+  });
+
+  state.answers[q.id] = s.selections.join('/');
+  if(!allCorrect && !state.wrong.includes(q.id)) state.wrong.push(q.id);
+
+  const corrStr = s.correctParts.map((c,i)=>`<strong>Statement ${i+1}:</strong> ${c.charAt(0).toUpperCase()+c.slice(1)}`).join('<br>');
+  showExp(allCorrect, q.e + (allCorrect ? '' : '<br><br><strong>Correct answers:</strong><br>' + corrStr));
+  const revBtn = document.getElementById('hsTableRevealBtn');
+  if(revBtn) revBtn.disabled = true;
+  document.getElementById('bskip').disabled = true;
+}
+
+function renderHotspot(q){
+  const az=document.getElementById('answerZone');
+  if(!az) return;
+  const rows=q.o.map(opt=>opt.split(' / ').map(s=>s.trim()));
+  const numDD=rows[0].length;
+  const dropLists=[];
+  for(let d=0;d<numDD;d++){
+    const vals=[...new Set(rows.map(r=>r[d]||''))].filter(Boolean).sort(()=>Math.random()-0.5);
+    dropLists.push(vals);
+  }
+  az.innerHTML=`
+    <div class="hotspot-wrap">
+      <div class="hotspot-code" id="hotspotCode">${buildHotspotCode(q,numDD,dropLists)}</div>
+    </div>
+    <button class="eb-btn reveal-sol" id="hsRevealBtn" onclick="revealHotspot()" style="margin-top:14px">Reveal Solution</button>`;
+  document.getElementById('bnext').disabled=false;
+}
+
 
 const HOTSPOT_TEMPLATES={
   12:{code:"PUT https://management.azure.com/.../providers/\n  Microsoft.CognitiveServices/accounts/{name}\n{\n  \"sku\": { \"name\": \"S0\" },\n  \"kind\": \"[BLANK_0]\",\n  \"location\": \"westus\"\n}",blanks:["Resource kind", "Method"]},
@@ -1943,30 +2413,66 @@ function revealHotspot(){
   const corrDisplay=correctParts.map((p,i)=>`<strong>Box ${i+1}:</strong> ${p}`).join('<br>');
   showExp(allCorrect, q.e+(allCorrect?'':'<br><br><strong>Correct answer:</strong><br>'+corrDisplay));
   document.getElementById('hsRevealBtn').disabled=true;
-  document.getElementById('bskip').disabled=true;
+  const _bs=document.getElementById('bskip');if(_bs)_bs.disabled=true;
 }
 
 /* ---- show explanation ---- */
+
+/* ==================== INLINE FEEDBACK HELPER ==================== */
+function showFeedback(message, isSuccess = true, containerId = null) {
+  let container;
+  if (containerId) {
+    container = document.getElementById(containerId);
+  } else {
+    container = document.getElementById("simFeedback") || document.getElementById("questionPanel");
+  }
+  if (!container) return;
+  const feedbackId = containerId ? containerId + "-fb" : "simFeedback";
+  let fb = document.getElementById(feedbackId);
+  if (!fb) {
+    fb = document.createElement("div");
+    fb.id = feedbackId;
+    fb.className = "inline-feedback " + (isSuccess ? "success" : "error");
+    container.appendChild(fb);
+  }
+  fb.className = "inline-feedback " + (isSuccess ? "success" : "error");
+  fb.style.display = "block";
+  fb.innerHTML = "<strong>" + (isSuccess ? "✅ Success" : "❌ Issue") + "</strong> " + message;
+  if (isSuccess) {
+    setTimeout(() => { if (fb) fb.style.display = "none"; }, 8000);
+  }
+}
+function hideFeedback(containerId) {
+  const id = containerId ? containerId + "-fb" : "simFeedback";
+  const fb = document.getElementById(id);
+  if (fb) { fb.style.display = "none"; fb.innerHTML = ""; }
+}
 function showExp(ok,txt){
   const el=document.getElementById("exp");
-  el.innerHTML=`<strong style="color:${ok?"#2e7d32":"#c62828"}">${ok?"✓ Correct!":"✗ Incorrect."}</strong> ${txt}`;
-  el.classList.add("show");
+  if(!el)return;
+  el.innerHTML=`<strong>${ok?"\u2713 Correct!":"\u2717 Incorrect."}</strong> ${txt}`;
+  el.className="exp-box show "+(ok?"correct":"incorrect");
 }
+
 
 /* ---- navigation ---- */
 function skip(){
   const q=state.questions[state.idx];
   if(state.answers[q.id]!==undefined)return;
   state.answers[q.id]=-1;
-  if(state.idx<state.questions.length-1){state.idx++;renderQ();}else finishQuiz();
+  if(state.idx<state.questions.length-1){state.idx++;renderQ();}
+  else finishQuiz();
 }
+
 
 function next(){
   const q=state.questions[state.idx];
   if(isYesNo(q)&&state.answers[q.id]===undefined&&state.ynSel!==null){revealYN();return;}
-  if(q.m&&!isDragDrop(q)&&state.answers[q.id]===undefined){submitMulti();return;}
-  if(state.idx<state.questions.length-1){state.idx++;renderQ();}else finishQuiz();
+  if(isMulti(q)&&!isDragDrop(q)&&!isHotspot(q)&&state.answers[q.id]===undefined){submitMulti();return;}
+  if(state.idx<state.questions.length-1){state.idx++;renderQ();}
+  else finishQuiz();
 }
+
 
 function isCorrect(q){
   const a=state.answers[q.id];if(a===-1||a===undefined)return false;
@@ -1998,7 +2504,14 @@ function finishQuiz(){
   updateWrongCount();showScreen("results");
 }
 function retryWrong(){if(!state.wrong.length){showScreen("home");return;}startQuiz("Review mistakes",shuffle(Q.filter(q=>state.wrong.includes(q.id))),false);}
-function exitQuiz(){clearInterval(state.tiv);showScreen("home");}
+function exitQuiz(){
+  clearInterval(state.tiv);
+  const banner  = document.getElementById('csScenarioBanner');
+  const overlay = document.getElementById('caseReadingOverlay');
+  if(banner)  banner.style.display='none';
+  if(overlay){ overlay.style.display='none'; overlay.innerHTML=''; }
+  showScreen('home');
+}
 </script>
 <div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a73e8;color:#fff;padding:12px 16px;align-items:center;justify-content:space-between;z-index:999;font-size:13px;font-weight:600">
   <span>&#x1F4F1; Install AI-102 Exam app</span>
@@ -2035,6 +2548,27 @@ function installApp(){
 /* ===================================================================
    SIMULATION ENGINE — Interactive Azure Portal mockups
    =================================================================== */
+
+
+/* ==================== SIMULATION COMPLETION FUNCTIONS ==================== */
+function sim701Create() {
+  showFeedback("Resource <strong>captions12345678</strong> has been created successfully with Free F0 tier.", true, "simFeedback");
+  const btn = document.getElementById("simNextBtn");
+  if(btn) btn.disabled = false;
+  simMarkStep(3);
+}
+function sim708Deploy() {
+  showFeedback("GPT-35-Turbo model deployed successfully in Azure AI Foundry.", true, "simFeedback");
+  const btn = document.getElementById("simNextBtn");
+  if(btn) btn.disabled = false;
+  simMarkStep(2);
+}
+function sim708Test() {
+  showFeedback("Chat playground is now open.<br>You can test the deployed model.", true, "simFeedback");
+  const btn = document.getElementById("simNextBtn");
+  if(btn) btn.disabled = false;
+  simMarkStep(4);
+}
 
 const SIMULATIONS = {
 
@@ -2208,12 +2742,13 @@ const SIMULATIONS = {
         document.getElementById('simReviewPanel').style.display='none';
         document.getElementById('simDeployPanel').style.display='block';
         document.getElementById('deployedName').textContent='captions12345678';
-        simMarkStep(3);
-        document.getElementById('simHint').textContent='Deployment complete! Click "Go to resource" to finish.';
-        document.getElementById('simNextBtn').disabled=false;
-      };
+        sim701Create();
+      };;
 
-      window.simTaskDone = onComplete;
+      window.simTaskDone = function(){
+    showFeedback('The resource was created successfully. Click Next to continue.', true, 'simFeedback');
+    onComplete();
+  };
       document.getElementById('simHint').textContent='Step 1: Search for "Cognitive Services" in the search bar above.';
     }
   },
@@ -2398,12 +2933,10 @@ const SIMULATIONS = {
         const sel=document.querySelector('input[name="modelSel"]:checked');
         if(!sel||sel.value!=='gpt-35-turbo'){
           const msg=document.getElementById('deployMsg');
-          msg.className='az-notification error show';
-          msg.innerHTML='<i class="ti ti-alert-circle"></i> Please select gpt-35-turbo to continue.';
+          if(msg){msg.className='az-notification error show';msg.innerHTML='<i></i> Please select gpt-35-turbo to continue.';}
           return;
         }
         deployedModel=document.getElementById('deployName').value||'gpt-35-turbo';
-        // Update deployments table
         document.getElementById('deployTable').innerHTML=`
           <tr>
             <td style="padding:10px 12px">${deployedModel}</td>
@@ -2412,24 +2945,30 @@ const SIMULATIONS = {
             <td style="padding:10px 12px">${new Date().toLocaleDateString()}</td>
           </tr>`;
         simFoundryNav('deployments');
-        simMarkStep(3);
-        document.getElementById('simHint').textContent='Step 4: Click Chat playground in the left nav to test the model.';
-      };
+        sim708Deploy();
+      };;
 
       window.simSendChat = function(){
         const input=document.getElementById('chatInput');
+        if(!input)return;
         const msg=input.value.trim();
         if(!msg)return;
         const hist=document.getElementById('chatHistory');
-        hist.innerHTML=`
-          <div style="margin-bottom:8px;text-align:right"><span style="background:#0078d4;color:#fff;padding:6px 12px;border-radius:12px 12px 0 12px;font-size:13px;display:inline-block;max-width:80%">${msg}</span></div>
-          <div style="margin-bottom:8px"><span style="background:#f3f2f1;color:#323130;padding:6px 12px;border-radius:12px 12px 12px 0;font-size:13px;display:inline-block;max-width:80%">Hello! I'm GPT-3.5 Turbo running in Azure AI Foundry. I can help you with questions about Azure AI services, code, and more. What would you like to know?</span></div>`;
+        if(hist){
+          hist.innerHTML=`
+            <div style="margin-bottom:8px;text-align:right">
+              <span style="background:#0078d4;color:#fff;padding:6px 12px;border-radius:12px 12px 0 12px;font-size:13px;display:inline-block;max-width:80%">${msg}</span>
+            </div>
+            <div style="margin-bottom:8px">
+              <span style="background:#f3f2f1;color:#323130;padding:6px 12px;border-radius:12px 12px 12px 0;font-size:13px;display:inline-block;max-width:80%">
+                Hello! I am GPT-3.5 Turbo running in Azure AI Foundry. I can help you with Azure AI, code, and more. What would you like to know?
+              </span>
+            </div>`;
+        }
         input.value='';
-        simMarkStep(4);
-        document.getElementById('simNextBtn').disabled=false;
-        document.getElementById('simHint').textContent='✓ Simulation complete! The model responded successfully.';
+        sim708Test();
         onComplete();
-      };
+      };;
 
       document.getElementById('simHint').textContent='Step 1: Click Deployments in the left navigation.';
     }
@@ -2599,8 +3138,8 @@ function startCaseStudy(csId, mode) {
     /* Read-only: show scenario nav + first section */
     const qs = shuffle(Q.filter(cs.questionFilter)).slice(0,12);
     state={...state,mode:cs.name+' — Case Study',questions:qs,idx:0,answers:{},startTime:Date.now(),ddOrder:[],ynSel:null,isCaseStudy:true};
-    document.getElementById('qtitle').textContent=cs.name;
-    document.getElementById('topTopic').textContent=cs.topic;
+    const _qt=document.getElementById('qtitle')||document.getElementById('topQnum');if(_qt)_qt.textContent=cs.name;
+    const _tt=document.getElementById('topTopic');if(_tt)_tt.textContent=cs.topic;
     clearInterval(state.tiv);
     state.tiv=setInterval(updateTimer,1000);
     buildNavPaneForCS(csId);
@@ -2619,8 +3158,8 @@ function startCaseStudy(csId, mode) {
       qs=shuffle(Q.filter(cs.questionFilter)).slice(0,12);
     }
     state={...state,mode:cs.name+' — Case Study',questions:qs,idx:0,answers:{},startTime:Date.now(),ddOrder:[],ynSel:null,isCaseStudy:true};
-    document.getElementById('qtitle').textContent=cs.name;
-    document.getElementById('topTopic').textContent=cs.topic;
+    const _qt=document.getElementById('qtitle')||document.getElementById('topQnum');if(_qt)_qt.textContent=cs.name;
+    const _tt=document.getElementById('topTopic');if(_tt)_tt.textContent=cs.topic;
     clearInterval(state.tiv);
     state.tiv=setInterval(updateTimer,1000);
     /* Use combined layout: scenario above, question below */
@@ -2631,57 +3170,49 @@ function startCaseStudy(csId, mode) {
 }
 
 function buildCombinedCaseStudyLayout(csId){
-  const cs=CASE_STUDIES[csId];
-  const nav=document.getElementById('navPane');
-  const mobileTabs=document.getElementById('caseNavTabs');
-  const contentPane=document.getElementById('contentPane');
+  const cs = CASE_STUDIES[csId];
+  if(!cs) return;
+  const nav        = document.getElementById('navPane');
+  const mobileTabs = document.getElementById('caseNavTabs');
+  const banner     = document.getElementById('csScenarioBanner');
+  const title      = document.getElementById('csScenarioTitle');
+  const body       = document.getElementById('csScenarioContent');
+  const icon       = document.getElementById('csToggleIcon');
+  const overlay    = document.getElementById('caseReadingOverlay');
+  const qp         = document.getElementById('questionPanel');
 
-  /* Build mini scenario panel inside content pane */
-  /* Replace content pane with combined layout */
-  contentPane.innerHTML='';
-  const wrap=document.createElement('div');
-  wrap.className='cs-combined-wrap';
-  wrap.id='csCombinedWrap';
+  /* Populate + show banner */
+  if(banner){
+    if(title) title.textContent = '\uD83D\uDCD6 ' + cs.topic + ' \u2014 ' + cs.name;
+    if(body && cs.scenarioHTML) body.innerHTML = cs.scenarioHTML();
+    banner.style.display = 'block';
+    if(icon) icon.textContent = '\u25BC';
+    delete banner.dataset.collapsed;
+  }
+  /* Hide overlay, show question panel */
+  if(overlay){ overlay.style.display='none'; overlay.innerHTML=''; }
+  if(qp){ qp.style.display='flex'; }
 
-  /* Scenario panel (collapsible) */
-  const scenarioPanel=document.createElement('div');
-  scenarioPanel.className='cs-scenario-panel';
-  scenarioPanel.id='csScenarioPanel';
-
-  const toggleBtn=document.createElement('div');
-  toggleBtn.className='cs-scenario-toggle';
-  toggleBtn.innerHTML=`<span class="cs-scenario-toggle-title">&#x1F4D6; Case Study — ${cs.name} (${cs.topic})</span><span class="cs-scenario-toggle-icon open" id="csToggleIcon">&#9660;</span>`;
-  toggleBtn.onclick=toggleCsScenario;
-
-  const scenarioContent=document.createElement('div');
-  scenarioContent.className='cs-scenario-content';
-  scenarioContent.id='csScenarioContent';
-  scenarioContent.innerHTML=cs.scenarioHTML?cs.scenarioHTML():'<p>See navigation tabs for full scenario.</p>';
-
-  scenarioPanel.appendChild(toggleBtn);
-  scenarioPanel.appendChild(scenarioContent);
-
-  /* Question panel */
-  const questionPanel=document.createElement('div');
-  questionPanel.className='cs-question-panel';
-  questionPanel.id='csQuestionArea';
-
-  /* Re-wire the existing question panel elements into csQuestionArea */
-  const existingQP=document.getElementById('questionPanel');
-  if(existingQP){questionPanel.appendChild(existingQP);}
-
-  wrap.appendChild(scenarioPanel);
-  wrap.appendChild(questionPanel);
-  contentPane.appendChild(wrap);
-
-  /* Nav: simplified for combined mode */
-  nav.innerHTML=`
-    <div class="nav-section-title">${cs.topic}</div>
-    <div class="nav-section-title" style="color:#1a73e8;font-size:10px">${cs.name}</div>
-    <div class="nav-divider"></div>
-    <div class="nav-section-title">Quick nav</div>
-    ${cs.sections.slice(1).map(s=>`<button class="nav-btn" onclick="scrollToSection('${s.id}')">${s.label}</button>`).join('')}`;
-  mobileTabs.style.display='none';
+  /* Sidebar nav */
+  if(nav){
+    nav.innerHTML=`
+      <div class="nav-section-title">${cs.topic}</div>
+      <div style="padding:2px 14px 8px;font-size:11px;color:#1a73e8;font-weight:600">${cs.name}</div>
+      <div class="nav-divider"></div>
+      <button class="nav-btn" onclick="toggleCsScenario()">&#x1F4D6; Toggle scenario</button>
+      <div class="nav-divider"></div>
+      ${cs.sections.map(s=>`<button class="nav-btn" onclick="showCaseSection('${s.id}',this)">${s.label}</button>`).join('')}
+      <div class="nav-divider"></div>
+      <button class="nav-question-btn" onclick="showQuestion(this)" id="navQBtn">&#x1F4AC; Question</button>
+      <div class="nav-divider"></div>
+      <div style="padding:8px 14px;font-size:12px;color:#666" id="navProgress">1 / ${state.questions.length}</div>`;
+  }
+  if(mobileTabs){
+    mobileTabs.style.display='flex';
+    mobileTabs.innerHTML=cs.sections.map(s=>
+      `<button class="case-nav-tab" onclick="showCaseSection('${s.id}',this)">${s.label}</button>`
+    ).join('')+`<button class="case-nav-tab question-tab" onclick="showQuestion(this)" id="mobileQBtn">&#x1F4AC; Q</button>`;
+  }
 }
 
 function scrollToSection(sectionId){
@@ -2693,11 +3224,19 @@ function scrollToSection(sectionId){
 }
 
 function toggleCsScenario(){
-  const panel=document.getElementById('csScenarioPanel');
-  const icon=document.getElementById('csToggleIcon');
-  if(!panel)return;
-  panel.classList.toggle('collapsed');
-  if(icon)icon.classList.toggle('open');
+  const banner = document.getElementById('csScenarioBanner');
+  const icon   = document.getElementById('csToggleIcon');
+  if(!banner) return;
+  const collapsed = banner.dataset.collapsed === '1';
+  if(collapsed){
+    banner.style.maxHeight = '40vh';
+    banner.dataset.collapsed = '0';
+    if(icon) icon.style.transform = 'rotate(0deg)';
+  } else {
+    banner.style.maxHeight = '44px';
+    banner.dataset.collapsed = '1';
+    if(icon) icon.style.transform = 'rotate(-90deg)';
+  }
 }
 
 function buildNavPaneForCS(csId) {
