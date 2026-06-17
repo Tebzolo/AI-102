@@ -4357,6 +4357,305 @@ print(response['choices'][0]['message']['content'])<br>
       'Delete the compromised key.'
     ],
     userSequence: [null, null, null]
+  },
+
+  // ============================================================
+  // NEW 2025–2026 QUESTIONS — Azure AI Foundry modern features
+  // ============================================================
+  {
+    id: 301, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry SDK: Unified Package for Agents, Inference & Evaluation',
+    text: `<p>A developer is starting a new Azure AI Foundry project in 2026. They need to manage agents, run model inference, run evaluations, and work with a memory store — all from Python code.</p>
+    <p>Which single Python package should they install to access all of these capabilities?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'azure-ai-agents' },
+      { letter: 'B', text: 'azure-ai-projects' },
+      { letter: 'C', text: 'azure-cognitiveservices-vision-computervision' },
+      { letter: 'D', text: 'azure-ai-ml' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — azure-ai-projects</strong> is correct.<br><br>
+    As of the Dec 2025 / Jan 2026 SDK consolidation, <code>azure-ai-projects</code> v2 is the single canonical package for the entire Foundry surface: agents (built on the OpenAI Responses protocol), model inference, evaluations, memory store operations, and file management. The <code>azure-ai-agents</code> package has been removed as a separate dependency — it is now bundled inside <code>azure-ai-projects</code>. <code>azure-ai-ml</code> is the Azure Machine Learning SDK v2, not the Foundry agent SDK. The Computer Vision package predates Foundry and covers only vision tasks.`,
+    userChoice: null
+  },
+  {
+    id: 302, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry Agent Service: Grounding on Live Web Data',
+    text: `<p>You are building an Azure AI Foundry agent that must answer questions using current information from the public internet. You want to ground the agent's responses on live web search results.</p>
+    <p>Which tool class should you attach to the agent using the <code>azure-ai-projects</code> SDK?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'WebSearchTool' },
+      { letter: 'B', text: 'BingGroundingTool' },
+      { letter: 'C', text: 'A2APreviewTool' },
+      { letter: 'D', text: 'SharepointAgentTool' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — BingGroundingTool</strong> is correct.<br><br>
+    <code>BingGroundingTool</code> is the class in <code>azure-ai-projects</code> used to attach a Bing Search connection to a Foundry agent, enabling it to ground answers on live web data. The tool is configured using a Bing API Key connection created in the Foundry portal. <code>A2APreviewTool</code> enables agent-to-agent communication. <code>SharepointAgentTool</code> grounds agents on SharePoint content. There is no generic <code>WebSearchTool</code> class in the Foundry SDK.`,
+    userChoice: null
+  },
+  {
+    id: 303, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry Agent Service: Persistent Cross-Session Memory',
+    text: `<p>You are building a customer-service agent using Azure AI Foundry Agent Service. The agent must remember facts about each customer across multiple conversation sessions without you building and managing a separate database.</p>
+    <p>Which Foundry capability should you enable?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'Code Interpreter tool' },
+      { letter: 'B', text: 'Azure AI Search knowledge source' },
+      { letter: 'C', text: 'Memory Store (managed long-term memory)' },
+      { letter: 'D', text: 'File Search tool with a vector store' }
+    ],
+    correctOption: 'C',
+    solution: `<strong>C — Memory Store</strong> is correct.<br><br>
+    The <strong>Memory in Foundry Agent Service</strong> (Public Preview, released Dec 2025) is a managed long-term memory store that automatically extracts, consolidates, and retrieves facts across agent sessions. It provides short-term, long-term, and procedural memory without requiring you to deploy or manage an external database. Azure AI Search is an external index (not session-aware managed memory). File Search retrieves documents but does not maintain per-user cross-session state. Code Interpreter runs Python and manages files, not persistent user memory.`,
+    userChoice: null
+  },
+  {
+    id: 304, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry: Agent-to-Agent (A2A) Protocol Use Case',
+    text: `<p>You have an Azure AI Foundry agent. A second agent, built with Semantic Kernel and hosted externally, needs to call your Foundry agent as a tool in its workflow. Both agents should use a standardized, open protocol for this cross-framework communication.</p>
+    <p>Which protocol and tool class should you use to expose the Foundry agent to the Semantic Kernel orchestrator?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'OpenAPI spec + FunctionTool' },
+      { letter: 'B', text: 'Agent-to-Agent (A2A) protocol + A2APreviewTool' },
+      { letter: 'C', text: 'MCP server + MemorySearchPreviewTool' },
+      { letter: 'D', text: 'Azure Service Bus + EventGridTrigger' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — A2A protocol + A2APreviewTool</strong> is correct.<br><br>
+    The <strong>Agent-to-Agent (A2A) protocol</strong> is an open standard that allows Foundry agents to be called by any A2A-compliant client — including agents built with Semantic Kernel, LangChain, or other frameworks — with explicit auth and clean call/response semantics. In <code>azure-ai-projects</code>, you configure this with <code>A2APreviewTool</code>. MCP (Model Context Protocol) is for tool/resource discovery, not agent-to-agent orchestration. OpenAPI + FunctionTool works for arbitrary HTTP endpoints but is not the purpose-built A2A approach. Service Bus is an async messaging service, not an agent communication protocol.`,
+    userChoice: null
+  },
+  {
+    id: 305, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry: Eliminate Inline Secrets with Key Vault Connections',
+    text: `<p>Your organization has a compliance policy that prohibits storing API keys or connection strings inline in application code or environment variables. You are configuring an Azure AI Foundry project that connects to multiple backend services.</p>
+    <p>Which Foundry feature should you use to eliminate inline secrets?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'Managed Identity with a System-Assigned Principal' },
+      { letter: 'B', text: 'Key Vault connections in the Foundry portal' },
+      { letter: 'C', text: 'A private endpoint for each connected resource' },
+      { letter: 'D', text: 'Azure Policy with a deny assignment on keys' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — Key Vault connections</strong> is correct.<br><br>
+    <strong>Key Vault connections</strong> (GA, released Sep 2025) allow Azure AI Foundry projects to store and retrieve secrets via Azure Key Vault instead of embedding them inline. When a connection is defined this way, the SDK and portal automatically resolve secrets at runtime without exposing them in code or configuration files. Managed Identity reduces secrets for Azure-to-Azure auth but does not govern third-party API keys. Private endpoints control network routing, not secret storage. Azure Policy can enforce access rules but does not replace the secret-storage mechanism.`,
+    userChoice: null
+  },
+  {
+    id: 306, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry: Prompt Flow Replacement for New Development',
+    text: `<p>A team has been using Azure AI Foundry Prompt Flow to build and orchestrate LLM pipelines. They are planning a new agentic application. The architect notes that Prompt Flow is being retired on April 20, 2027.</p>
+    <p>Which technology should they use for new agentic application development in Azure AI Foundry?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'Azure Logic Apps' },
+      { letter: 'B', text: 'Azure Machine Learning Pipelines (SDK v2)' },
+      { letter: 'C', text: 'Microsoft Agent Framework (Foundry Agent Service)' },
+      { letter: 'D', text: 'Azure Durable Functions' }
+    ],
+    correctOption: 'C',
+    solution: `<strong>C — Microsoft Agent Framework (Foundry Agent Service)</strong> is correct.<br><br>
+    Microsoft has announced that Prompt Flow in Azure AI Foundry and Azure Machine Learning will be retired on <strong>April 20, 2027</strong>. The recommended migration target for existing Prompt Flow applications — and the recommended choice for new development — is the <strong>Microsoft Agent Framework</strong>, which is built into Foundry Agent Service. It supports multi-agent orchestration, tool integration, memory, and evaluation natively. Logic Apps, AML Pipelines, and Durable Functions are general workflow/compute services not designed as the Prompt Flow replacement.`,
+    userChoice: null
+  },
+  {
+    id: 307, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'HOTSPOT',
+    title: 'Foundry SDK v2: Correct Statements (Yes/No)',
+    text: `<p>You are reviewing statements about the consolidated <code>azure-ai-projects</code> v2 SDK released in January 2026. For each statement, select Yes if it is correct, or No if it is not.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'yesno_generic',
+    solution: `• <strong>The azure-ai-agents package must be installed separately alongside azure-ai-projects v2:</strong> <span class="correct-badge">No</span> — azure-ai-agents is no longer a separate dependency; it is bundled inside azure-ai-projects v2.<br>
+    • <strong>azure-ai-projects v2 agents are built on the OpenAI Responses protocol:</strong> <span class="correct-badge">Yes</span> — the v2 agent runtime uses OpenAI's Responses protocol.<br>
+    • <strong>Evaluation and memory store operations are included in azure-ai-projects v2:</strong> <span class="correct-badge">Yes</span> — evaluation operations (.evaluators, .evaluation_rules, .insights) and memory store (.memory_store) are first-class properties of AIProjectClient in v2.`,
+    statements: [
+      { text: 'The azure-ai-agents package must be installed separately alongside azure-ai-projects v2.', answer: 'No' },
+      { text: 'azure-ai-projects v2 agents are built on the OpenAI Responses protocol.', answer: 'Yes' },
+      { text: 'Evaluation and memory store operations are included in azure-ai-projects v2.', answer: 'Yes' }
+    ],
+    userSelections: {}
+  },
+  {
+    id: 308, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry: Multi-Agent Workflows in the Portal',
+    text: `<p>Your team wants to visually design and manage a workflow that coordinates multiple specialized Azure AI Foundry agents — for example, a research agent, a summarization agent, and a compliance agent — all within the Foundry portal.</p>
+    <p>Which portal experience provides this capability?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'Azure Machine Learning Studio designer' },
+      { letter: 'B', text: 'The new unified Foundry portal (ai.azure.com "New Foundry" experience)' },
+      { letter: 'C', text: 'Azure Logic Apps designer' },
+      { letter: 'D', text: 'Foundry Classic prompt flow canvas' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — The new unified Foundry portal</strong> is correct.<br><br>
+    The new unified Foundry portal experience at <strong>ai.azure.com</strong> (toggled via "New Foundry") introduced visual <strong>multi-agent workflow building</strong>, distinct from the single-agent flow of Foundry Classic. The <strong>Tools tab</strong> is the single entry point for connecting MCP servers, A2A endpoints, AI Search, SharePoint, Fabric, and 1,400+ integrations. Foundry Classic Prompt Flow supports single-model pipeline authoring, not multi-agent visual orchestration. Logic Apps and AML Studio are separate products not designed for Foundry multi-agent workflows.`,
+    userChoice: null
+  },
+  {
+    id: 309, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'azure-ai-evaluation: Measure Agent Groundedness',
+    text: `<p>You want to automatically measure whether your Foundry agent's responses are grounded in the retrieved source documents (i.e., not hallucinating facts not present in the sources). You are using the <code>azure-ai-evaluation</code> SDK.</p>
+    <p>Which evaluator should you use?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'CoherenceEvaluator' },
+      { letter: 'B', text: 'SimilarityEvaluator' },
+      { letter: 'C', text: 'GroundednessWithToolContextEvaluator' },
+      { letter: 'D', text: 'IntentResolutionEvaluator' }
+    ],
+    correctOption: 'C',
+    solution: `<strong>C — GroundednessWithToolContextEvaluator</strong> is correct.<br><br>
+    The <code>azure-ai-evaluation</code> 1.11.0 release added <strong>groundedness-with-tool-context</strong> evaluation, which measures whether the agent's answer is supported by the tool outputs (retrieved documents) rather than fabricated. <code>CoherenceEvaluator</code> measures logical consistency of the response. <code>SimilarityEvaluator</code> compares outputs to a reference answer (used in Prompt Flow migration parity checks). <code>IntentResolutionEvaluator</code> checks whether the agent correctly resolved the user's intent, not whether facts are grounded in sources.`,
+    userChoice: null
+  },
+  {
+    id: 310, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry Agent Service: Agent Tools Supported Behind VNet',
+    text: `<p>Your organization requires that all Azure AI Foundry agent tools operate within a private virtual network with no public egress (zero-trust deployment). You are evaluating which tools are supported in this configuration.</p>
+    <p>Which of the following agent tools is supported behind a VNet in Azure AI Foundry?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'Browser Automation' },
+      { letter: 'B', text: 'Computer Use' },
+      { letter: 'C', text: 'Azure AI Search knowledge source' },
+      { letter: 'D', text: 'Image Generation tool' }
+    ],
+    correctOption: 'C',
+    solution: `<strong>C — Azure AI Search knowledge source</strong> is correct.<br><br>
+    According to Azure AI Foundry network isolation documentation, the following tools <strong>work behind a VNet</strong>: MCP (private), Azure AI Search, Code Interpreter, Function Calling, Bing Grounding, SharePoint Grounding, and Foundry IQ. The following tools are <strong>NOT supported</strong> behind a VNet: File Search, OpenAPI, Azure Functions, Browser Automation, Computer Use, Image Generation, and A2A.`,
+    userChoice: null
+  },
+  {
+    id: 311, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry Local: Run Models Offline on Device',
+    text: `<p>A field engineer needs to run Azure AI models on a Windows laptop in locations with no internet connectivity. The solution must use local hardware acceleration (including NPU on the device) and require no Azure subscription at runtime.</p>
+    <p>Which Azure AI product should the engineer use?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'Azure AI Foundry Agent Service with a private endpoint' },
+      { letter: 'B', text: 'Foundry Local (v0.7+)' },
+      { letter: 'C', text: 'Azure Container Instances with a Cognitive Services container' },
+      { letter: 'D', text: 'Azure Stack Hub with an AKS cluster' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — Foundry Local</strong> is correct.<br><br>
+    <strong>Foundry Local</strong> (v0.7+ as of Sep 2025) enables running Azure AI models entirely on-device — including NPU support for Intel, AMD, and Qualcomm chipsets — with no internet connection required at inference time. It provides a local CLI and SDK that mirrors the Foundry cloud API surface. Azure AI Foundry Agent Service and Container Instances still require connectivity to Azure. Azure Stack Hub requires significant infrastructure investment and is not a per-device developer solution.`,
+    userChoice: null
+  },
+  {
+    id: 312, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'HOTSPOT',
+    title: 'Foundry Agent Service: Tools & Capabilities (Yes/No)',
+    text: `<p>You are evaluating Azure AI Foundry Agent Service capabilities. For each statement, select Yes if it is correct, or No if it is not.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'yesno_generic',
+    solution: `• <strong>Foundry agents can be published directly to Microsoft Teams with tenant-wide governance:</strong> <span class="correct-badge">Yes</span> — Foundry Agent Service supports one-click publish to Teams and Microsoft 365 Copilot.<br>
+    • <strong>The Foundry MCP server is hosted at mcp.ai.azure.com and was available from December 2025:</strong> <span class="correct-badge">Yes</span> — the Foundry MCP Server (Preview) went live December 3, 2025 at mcp.ai.azure.com.<br>
+    • <strong>Hosted Agents in Foundry Agent Service require you to provision and manage the underlying compute:</strong> <span class="correct-badge">No</span> — Hosted Agents are a session-isolated managed runtime with autoscaling and zero idle cost; you do not manage the underlying compute.`,
+    statements: [
+      { text: 'Foundry agents can be published directly to Microsoft Teams with tenant-wide governance.', answer: 'Yes' },
+      { text: 'The Foundry MCP server is hosted at mcp.ai.azure.com and was available from December 2025.', answer: 'Yes' },
+      { text: 'Hosted Agents in Foundry Agent Service require you to provision and manage the underlying compute.', answer: 'No' }
+    ],
+    userSelections: {}
+  },
+  {
+    id: 313, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry: Migrate from azure-ai-agents to azure-ai-projects v2',
+    text: `<p>A developer has an existing application that uses the <code>azure-ai-agents</code> package to create and run Foundry agents. They want to migrate to the consolidated <code>azure-ai-projects</code> v2 SDK.</p>
+    <p>Which of the following statements about the migration is TRUE?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'azure-ai-agents must still be installed as a dependency of azure-ai-projects v2.' },
+      { letter: 'B', text: 'Agent operations are now accessed through AIProjectClient, and azure-ai-agents is no longer a required package.' },
+      { letter: 'C', text: 'azure-ai-projects v2 only supports evaluation; agent management requires azure-ai-agents.' },
+      { letter: 'D', text: 'The migration requires rewriting agents to use the LangChain framework.' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B</strong> is correct.<br><br>
+    In <code>azure-ai-projects</code> v2 (2.0.0b3, released January 6, 2026), all agent management operations are exposed directly on <strong>AIProjectClient</strong>. The <code>azure-ai-agents</code> package is no longer listed as a separate dependency — it has been absorbed into <code>azure-ai-projects</code>. Agents, inference, evaluations, and memory store now live under a single import. No LangChain migration is required; the framework is Azure-native.`,
+    userChoice: null
+  },
+  {
+    id: 314, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Azure AI Evaluation SDK: Red Team Safety Testing',
+    text: `<p>You need to automatically test your Azure AI Foundry application for safety vulnerabilities — specifically, whether it can be manipulated into producing harmful content across multiple languages and attack categories (e.g., hate speech, violence, jailbreaks). You want to use a built-in SDK capability rather than building your own test harness.</p>
+    <p>Which azure-ai-evaluation feature should you use?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'RelevanceEvaluator with a multilingual dataset' },
+      { letter: 'B', text: 'Multilingual red team categories in the built-in red team scanner' },
+      { letter: 'C', text: 'ContentSafetyEvaluator with a custom blocklist' },
+      { letter: 'D', text: 'GroundednessWithToolContextEvaluator across language variants' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — Multilingual red team categories</strong> is correct.<br><br>
+    <code>azure-ai-evaluation</code> 1.11.0 added <strong>multilingual red team categories</strong> to the built-in red team scanner, enabling automated adversarial testing across multiple languages and attack types (hate speech, self-harm, violence, jailbreaks, prompt injection). This is the purpose-built safety testing capability. <code>ContentSafetyEvaluator</code> evaluates individual responses but is not a red team scanner. <code>RelevanceEvaluator</code> measures answer quality, not safety attacks. <code>GroundednessWithToolContextEvaluator</code> measures hallucination, not adversarial safety.`,
+    userChoice: null
+  },
+  {
+    id: 315, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'DRAG DROP',
+    title: 'Foundry: Match Feature to Capability (Sequence)',
+    text: `<p>You are designing an Azure AI Foundry solution with multiple requirements. Place the following actions in the correct order to deploy a production-ready Foundry agent with grounding, safety, and evaluation.</p>
+    <p>Which actions should you perform, in sequence?</p>`,
+    note: '',
+    render: 'sequence_generic',
+    solution: `<strong>Correct order:</strong><br>
+    1. <span class="correct-badge">Create an Azure AI Foundry hub and project, and configure a Key Vault connection for secrets.</span><br>
+    2. <span class="correct-badge">Create and configure a Foundry agent with BingGroundingTool and a Memory Store.</span><br>
+    3. <span class="correct-badge">Run azure-ai-evaluation red team and groundedness-with-tool-context evaluators against the agent.</span><br>
+    4. <span class="correct-badge">Deploy to Hosted Agents and publish to Microsoft Teams.</span><br><br>
+    <em>The correct sequence: first establish the infrastructure (hub/project/secrets), then build the agent with grounding and memory, then evaluate for quality and safety, then deploy and publish. Skipping evaluation before deployment is a common anti-pattern in production agentic solutions.</em>`,
+    correctOrder: [
+      'Create an Azure AI Foundry hub and project, and configure a Key Vault connection for secrets.',
+      'Create and configure a Foundry agent with BingGroundingTool and a Memory Store.',
+      'Run azure-ai-evaluation red team and groundedness-with-tool-context evaluators against the agent.',
+      'Deploy to Hosted Agents and publish to Microsoft Teams.'
+    ],
+    actions: [
+      'Deploy to Hosted Agents and publish to Microsoft Teams.',
+      'Create and configure a Foundry agent with BingGroundingTool and a Memory Store.',
+      'Run azure-ai-evaluation red team and groundedness-with-tool-context evaluators against the agent.',
+      'Create an Azure AI Foundry hub and project, and configure a Key Vault connection for secrets.',
+      'Migrate from Prompt Flow by rewriting in Azure Durable Functions.',
+      'Install azure-ai-agents as a separate package before creating agents.'
+    ],
+    userSequence: [null, null, null, null]
   }
 ];
 
