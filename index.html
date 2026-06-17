@@ -124,21 +124,6 @@
   .coach-msg { font-size: 13px; line-height: 1.6; color: #2a2540; }
   .coach-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; padding: 2px 8px; border-radius: 8px; margin-right: 8px; color: #fff; }
   .coach-tag.hint { background: #0067b8; } .coach-tag.why { background: #8661c5; } .coach-tag.check { background: #107c10; }
-  .coach-tag.agent { background: linear-gradient(90deg,#d83b01,#e3008c); }
-  .coach-act.agent { background: linear-gradient(90deg,#d83b01,#e3008c); color: #fff; border-color: transparent; }
-  .coach-act.agent:hover { filter: brightness(1.08); }
-  .agent-plan { margin: 10px 0; padding: 8px 11px; background: #faf7ff; border: 1px dashed #c7b8ea; border-radius: 8px; }
-  .agent-plan-title, .agent-plan-list { font-size: 11px; }
-  .agent-plan-title { font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: #4a2f8f; margin-bottom: 4px; }
-  .agent-plan-item { font-size: 12px; color: #4a2540; line-height: 1.7; }
-  .agent-transcript { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
-  .agent-step { display: flex; gap: 8px; align-items: flex-start; animation: agentfade .3s ease; }
-  .agent-step-dot { width: 7px; height: 7px; border-radius: 50%; background: #d83b01; margin-top: 6px; flex-shrink: 0; }
-  .agent-step-label { font-size: 12px; font-weight: 700; color: #2a2540; font-family: ui-monospace, monospace; }
-  .agent-step-detail { font-size: 12px; color: #4a2540; line-height: 1.5; }
-  .agent-final { margin-top: 4px; padding: 10px 11px; background: #fff5fb; border: 1px solid #f0c8e2; border-radius: 8px; font-size: 13px; line-height: 1.6; color: #2a2540; }
-  .agent-plan-list { font-size: 13px; margin: 8px 0; padding-left: 20px; line-height: 1.6; }
-  @keyframes agentfade { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: none; } }
   .coach-actions { display: flex; gap: 8px; padding: 0 16px 14px; flex-wrap: wrap; }
   .coach-act { background: #fff; border: 1px solid #c7b8ea; color: #4a2f8f; font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: 16px; cursor: pointer; font-family: inherit; transition: all .15s; }
   .coach-act:hover { background: #4a2f8f; color: #fff; border-color: #4a2f8f; }
@@ -158,7 +143,6 @@
   /* QUESTION BODY */
   .q-body { flex: 1; overflow-y: auto; padding: 24px 28px; background: var(--ms-bg); }
   .q-type-badge { display: inline-block; background: transparent; color: var(--ms-blue); font-size: 11px; font-weight: 700; padding: 0 0 2px; margin-bottom: 14px; border-bottom: 2px solid var(--ms-blue); letter-spacing: 0.6px; text-transform: uppercase; }
-  .hard-badge { display: inline-block; background: var(--ms-red, #d83b01); color: #fff; font-size: 9px; font-weight: 800; padding: 1px 7px; border-radius: 9px; letter-spacing: .5px; border-bottom: none; margin-left: 6px; vertical-align: middle; }
   .q-text { font-size: 14px; line-height: 1.65; margin-bottom: 16px; color: var(--ms-text); }
   .q-text p { margin-bottom: 8px; }
   .q-text ul { padding-left: 20px; margin-bottom: 8px; }
@@ -378,8 +362,177 @@
   .vote-seg-a { background: var(--ms-blue); }
   .vote-seg-b { background: var(--ms-green); }
 
+  /* Tap-to-place selection state (touch fallback for drag & drop / sequence
+     items, since native HTML5 drag events don't fire on touchscreens) */
+  .drag-item.tap-selected, .seq-item.tap-selected {
+    background: var(--ms-blue);
+    color: #fff;
+    border-color: var(--ms-blue-dk);
+    box-shadow: 0 0 0 2px rgba(0,103,184,.35);
+  }
+  .dnd-tap-hint {
+    font-size: 11.5px;
+    color: var(--ms-blue-dk);
+    background: #deecf9;
+    border: 1px solid #b9dcf0;
+    border-radius: var(--radius);
+    padding: 7px 11px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
   /* LOCKED badge for series questions */
   .lock-banner { background: var(--ms-amber-bg); border: 1px solid #f7c948; border-left: 3px solid var(--ms-amber-c); border-radius: var(--radius); padding: 8px 12px; font-size: 12px; color: #7a4100; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+  /* ============================================================
+     MOBILE-RESPONSIVE OVERRIDES
+     ============================================================ */
+
+  /* Hamburger button — hidden on desktop */
+  .hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px 14px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  /* Mobile nav overlay */
+  .nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+  }
+  .nav-overlay.open { display: block; }
+
+  @media (max-width: 700px) {
+    /* ── Top bar ── */
+    .hamburger-btn { display: flex; align-items: center; }
+    .top-bar .logo { padding: 10px 12px; font-size: 12px; }
+    .top-bar .logo span { display: none; }
+    .top-bar .exam-title { display: none; }
+    .top-bar .timer-block { padding: 8px 12px; border-left: 1px solid rgba(255,255,255,0.15); }
+    .timer { font-size: 16px; }
+
+    /* ── Progress bar ── */
+    .progress-bar-wrap { padding: 6px 12px; gap: 8px; }
+    .progress-label { display: none; }
+
+    /* ── Main layout: stack nav below content ── */
+    .main-layout { flex-direction: column; min-height: auto; }
+
+    /* ── Left nav: slides in as drawer ── */
+    .left-nav {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100%;
+      z-index: 300;
+      transition: left 0.25s ease;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.25);
+    }
+    .left-nav.open { left: 0; }
+
+    /* ── Content area fills screen ── */
+    .content-area { min-height: calc(100vh - 100px); }
+
+    /* ── Question header ── */
+    .q-header { padding: 10px 14px 8px; flex-wrap: wrap; gap: 6px; }
+    .q-id { font-size: 13px; }
+    .q-topic { font-size: 11px; }
+    .flag-btn { padding: 5px 10px; font-size: 11px; }
+    .coach-btn { padding: 5px 10px 5px 9px; font-size: 11px; }
+
+    /* ── Question body ── */
+    .q-body { padding: 14px 14px; }
+    .q-text { font-size: 13px; }
+
+    /* ── Coach panel ── */
+    .coach-panel { margin: 0 12px 12px; }
+
+    /* ── Bottom nav ── */
+    .bottom-nav { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+    .btn { padding: 9px 16px; font-size: 13px; }
+    .btn-group { flex-wrap: wrap; }
+
+    /* ── Drag & drop: stack panels vertically ── */
+    .drag-drop-area { flex-direction: column; gap: 14px; }
+    .values-panel, .answer-panel { min-width: 0; }
+    .sequence-area { flex-direction: column; gap: 14px; }
+    .seq-actions, .seq-answer { min-width: 0; }
+
+    /* ── Hotspot rows: wrap label+select ── */
+    .hotspot-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .hotspot-label { min-width: 0; font-size: 12px; }
+    .hotspot-select { min-width: 0; width: 100%; }
+
+    /* ── Code blocks: shrink font ── */
+    .code-block { font-size: 11px; padding: 12px; }
+
+    /* ── Start / section screen ── */
+    .start-screen { padding: 16px; align-items: flex-start; min-height: 100svh; }
+    .start-card { width: 100%; max-width: 100%; }
+    .start-card-header { padding: 20px 16px; }
+    .start-card-header h1 { font-size: 18px; }
+    .start-card-body { padding: 16px; }
+    .info-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .info-item .val { font-size: 13px; }
+    .section-card { padding: 12px 14px; gap: 10px; }
+    .section-icon { width: 38px; height: 38px; font-size: 20px; }
+    .section-name { font-size: 14px; }
+    .domain-legend-grid { grid-template-columns: 1fr; }
+
+    /* ── Results modal ── */
+    .modal { width: 100%; max-width: 100%; margin: 0; border-radius: 0; max-height: 100svh; overflow-y: auto; }
+    .modal-overlay { align-items: flex-end; }
+    .score-num { font-size: 48px; }
+    .result-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .modal-footer { flex-wrap: wrap; }
+
+    /* ── Case study split: already stacks ── */
+    .cs-split { flex-direction: column; min-height: auto; }
+    .cs-left, .cs-right { min-width: 0; }
+    .cs-left { width: 100%; border-right: none; border-bottom: 1px solid var(--ms-border); }
+    /* Scenario reference material can keep its own scroll box... */
+    .cs-scenario { max-height: 280px; }
+    /* ...but the actual question + answer options must NOT be height-capped,
+       or they get trapped in a tiny nested scrollbox separate from the page
+       scroll and effectively disappear on phones. Let it flow with the page. */
+    .cs-question { max-height: none; overflow-y: visible; flex: none; }
+
+    /* ── Skill pipeline: vertical ── */
+    .skillset-pipeline { flex-direction: column; gap: 10px; }
+    .pipe-arrow { display: none; }
+
+    /* ── Discussion vote bars ── */
+    .disc-vote { grid-template-columns: 22px 1fr 38px; }
+  }
+
+  @media (max-width: 400px) {
+    .info-grid { grid-template-columns: 1fr; }
+    .result-grid { grid-template-columns: 1fr; }
+    .exp-pills { flex-direction: column; }
+    .exp-pill { text-align: center; }
+    .btn-group { width: 100%; }
+    .btn-group .btn { flex: 1; text-align: center; }
+  }
+
+  /* Desktop-only elements hidden on mobile */
+  @media (max-width: 700px) {
+    .desktop-only { display: none !important; }
+  }
+  /* Mobile-only elements hidden on desktop */
+  @media (min-width: 701px) {
+    .mobile-only { display: none !important; }
+    .hamburger-btn { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -431,12 +584,16 @@
 
 <!-- EXAM UI -->
 <div id="examUI" class="hidden">
+  <!-- Mobile nav overlay -->
+  <div class="nav-overlay" id="navOverlay" onclick="closeNavDrawer()"></div>
+
   <!-- Top Bar -->
   <div class="top-bar">
+    <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleNavDrawer()" aria-label="Toggle question list">☰</button>
     <div class="logo"><span>MS</span> Microsoft</div>
     <div class="exam-title">AI-102: <span id="sectionTitle">Practice</span></div>
     <div style="display:flex;align-items:center;gap:16px">
-      <button class="btn btn-secondary" style="padding:6px 12px;font-size:12px" onclick="backToSections()">☰ Sections</button>
+      <button class="btn btn-secondary desktop-only" style="padding:6px 12px;font-size:12px" onclick="backToSections()">☰ Sections</button>
       <div class="timer-block">
         <div>Time Remaining</div>
         <div class="timer" id="timerDisplay">25:00</div>
@@ -460,6 +617,7 @@
           <div class="legend-item"><div class="legend-dot" style="background:#ffcc00"></div>Flagged</div>
           <div class="legend-item"><div class="legend-dot" style="background:#555"></div>Not answered</div>
         </div>
+        <button class="btn btn-secondary mobile-only" style="width:100%;margin-top:10px;font-size:12px" onclick="closeNavDrawer();backToSections()">← Back to Sections</button>
       </div>
     </div>
 
@@ -496,7 +654,6 @@
           <button class="coach-act" onclick="coachAction('hint')">💡 Give me a hint</button>
           <button class="coach-act" onclick="coachAction('why')">🧠 Why this matters</button>
           <button class="coach-act" onclick="coachAction('check')">✅ How am I doing?</button>
-          <button class="coach-act agent" onclick="runStudyAgent()">🤖 Plan my study (Agent)</button>
         </div>
       </div>
 
@@ -2894,7 +3051,7 @@ response = client.AnalyzeText(request);</div>`,
     id: 22, topic: 7, discussions: 0,
     type: 'HOTSPOT',
     title: 'Azure OpenAI On Your Data — Chat Playground Code',
-    text: `<p>You have a chatbot that uses Azure OpenAI (now in Microsoft Foundry Models) to generate responses.</p>
+    text: `<p>You have a chatbot that uses Azure OpenAI to generate responses.</p>
     <p>You need to upload company data by using Chat playground. The solution must ensure that the chatbot uses the data to answer user questions.</p>
     <p>How should you complete the code? Select the appropriate options in the answer area.</p>
     <div class="code-block">completion = openai.<span style="background:rgba(255,255,0,0.15);padding:1px 4px">[obj]</span>.create(<br>
@@ -3925,7 +4082,7 @@ print(response['choices'][0]['message']['content'])<br>
     id: 241, topic: 7, discussions: 0, isLearnPool: true,
     type: 'MULTIPLE CHOICE',
     title: 'Azure OpenAI: Ground Answers on Private Docs',
-    text: `<p>A chatbot built on Azure OpenAI (now in Microsoft Foundry Models) must answer strictly from your company's product manuals and cite them, with no model retraining.</p>
+    text: `<p>A chatbot built on Azure OpenAI must answer strictly from your company's product manuals and cite them, with no model retraining.</p>
     <p>Which approach should you use?</p>`,
     note: '',
     render: 'mcq',
@@ -3939,7 +4096,7 @@ print(response['choices'][0]['message']['content'])<br>
     id: 242, topic: 7, discussions: 0, isLearnPool: true,
     type: 'MULTIPLE CHOICE',
     title: 'Azure OpenAI: Image Generation',
-    text: `<p>Your app must generate original images from natural-language text prompts using an Azure OpenAI (now in Microsoft Foundry Models) model.</p>
+    text: `<p>Your app must generate original images from natural-language text prompts using an Azure OpenAI model.</p>
     <p>Which model should you deploy?</p>`,
     note: '',
     render: 'mcq',
@@ -4226,1412 +4383,305 @@ print(response['choices'][0]['message']['content'])<br>
     ],
     userSequence: [null, null, null]
   },
-  // ══ Topic 4 & 5 coverage (original, Learn-grounded, normal sections) ══
-  // Concepts mirror common AI-102 Knowledge Mining + Conversational items.
 
-  // ---- KNOWLEDGE MINING: Azure AI Search (topic 4) ----
+  // ============================================================
+  // NEW 2025–2026 QUESTIONS — Azure AI Foundry modern features
+  // ============================================================
   {
-    id: 400, topic: 4, discussions: 0, isExtra: true,
+    id: 301, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
     type: 'MULTIPLE CHOICE',
-    title: 'AI Search: Index Heterogeneous Data Sources',
-    text: `<p>You have data spread across an on-premises SQL Server database, Azure Cosmos DB (Core/SQL API), Azure Table storage, and an Azure SQL database. You must make all of it searchable through the Azure AI Search REST API.</p>
-    <p>What is the recommended approach for the on-premises SQL Server data, which has no native indexer connector?</p>`,
+    title: 'Foundry SDK: Unified Package for Agents, Inference & Evaluation',
+    text: `<p>A developer is starting a new Azure AI Foundry project in 2026. They need to manage agents, run model inference, run evaluations, and work with a memory store — all from Python code.</p>
+    <p>Which single Python package should they install to access all of these capabilities?</p>`,
     note: '',
-    render: 'mcq',
     options: [
-      'A. Move or export the on-premises data to a supported source (e.g., Azure SQL or Azure Blob/Data Lake) that an indexer can crawl',
-      'B. Configure read replicas on the Cosmos DB account',
-      'C. Ingest the logs into Azure Data Explorer',
-      'D. Convert the Cosmos DB account to the MongoDB API'
+      { letter: 'A', text: 'azure-ai-agents' },
+      { letter: 'B', text: 'azure-ai-projects' },
+      { letter: 'C', text: 'azure-cognitiveservices-vision-computervision' },
+      { letter: 'D', text: 'azure-ai-ml' }
     ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Azure AI Search indexers pull from <em>supported</em> Azure sources (Azure SQL, Cosmos DB, Blob/Data Lake, Table storage). On-premises SQL Server isn't directly crawlable, so you move/export that data into a supported store (Azure SQL or Blob/Data Lake) the indexer can reach. The other options don't make the data indexable by Search.`,
+    correctOption: 'B',
+    solution: `<strong>B — azure-ai-projects</strong> is correct.<br><br>
+    As of the Dec 2025 / Jan 2026 SDK consolidation, <code>azure-ai-projects</code> v2 is the single canonical package for the entire Foundry surface: agents (built on the OpenAI Responses protocol), model inference, evaluations, memory store operations, and file management. The <code>azure-ai-agents</code> package has been removed as a separate dependency — it is now bundled inside <code>azure-ai-projects</code>. <code>azure-ai-ml</code> is the Azure Machine Learning SDK v2, not the Foundry agent SDK. The Computer Vision package predates Foundry and covers only vision tasks.`,
     userChoice: null
   },
   {
-    id: 401, topic: 4, discussions: 0, isExtra: true,
+    id: 302, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
     type: 'MULTIPLE CHOICE',
-    title: 'AI Search: Knowledge Store Required Fields',
-    text: `<p>You have an Azure AI Search enrichment pipeline that runs sentiment analysis on social media posts. You need to define a <strong>knowledge store</strong> that persists the posts and the sentiment results to Azure Storage.</p>
-    <p>Which two fields must you include in the knowledge store definition? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. storageContainer',
-      'B. storageConnectionString',
-      'C. files',
-      'D. tables',
-      'E. projections'
-    ],
-    correctOptions: ['B', 'E'],
-    solution: `<strong>Correct Answer: B and E</strong><br><br>
-    A knowledge store is defined inside the skillset with a <code>storageConnectionString</code> (B) pointing at the Azure Storage account, and a set of <code>projections</code> (E) that describe how enriched content is shaped into tables, objects, and files. The container/table/file <em>names</em> live inside the projection definitions rather than as the top-level required keys.<br><em>(On older exam phrasings the pair is sometimes given as storageConnectionString + the projection collections; focus on: connection string + projections.)</em>`,
-    userChoices: []
-  },
-  {
-    id: 402, topic: 4, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'AI Search: Document-Level Security Filtering',
-    text: `<p>You build an app on Azure AI Search for internal documents. You must ensure each user only sees documents their Microsoft Entra (Azure AD) groups are allowed to see (document-level filtering).</p>
-    <p>Which three actions should you include? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. Create one index per group.',
-      'B. Retrieve all the groups in the tenant.',
-      'C. Retrieve the group memberships of the signed-in user.',
-      'D. Add the allowed group IDs to each index document.',
-      'E. Supply the user\u2019s groups as a filter on the search request.'
-    ],
-    correctOptions: ['C', 'D', 'E'],
-    solution: `<strong>Correct Answer: C, D and E</strong><br><br>
-    Trimming search results by group means: store the allowed group IDs on each document (<strong>D</strong>), look up the <em>current user's</em> group memberships at query time (<strong>C</strong>), and pass those groups as an OData <code>filter</code> (e.g. <code>groups/any(g: search.in(...))</code>) on the request (<strong>E</strong>). One index per group (A) doesn't scale, and retrieving every group in the tenant (B) is unnecessary and leaky.`,
-    userChoices: []
-  },
-  {
-    id: 403, topic: 4, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'AI Search: Index Field Attributes for Full-Text Search',
-    text: `<p>You create an index for an Azure AI Search service connected to an Azure SQL database. A field named <code>MessageCopy</code> holds the text of social media messages. Users will run full-text searches against this field, and the field values must be returned to users in results.</p>
-    <p>Which attributes should you enable for <code>MessageCopy</code>?</p>`,
+    title: 'Foundry Agent Service: Grounding on Live Web Data',
+    text: `<p>You are building an Azure AI Foundry agent that must answer questions using current information from the public internet. You want to ground the agent's responses on live web search results.</p>
+    <p>Which tool class should you attach to the agent using the <code>azure-ai-projects</code> SDK?</p>`,
     note: '',
-    render: 'mcq',
     options: [
-      'A. Sortable and Retrievable',
-      'B. Filterable and Retrievable',
-      'C. Searchable and Facetable',
-      'D. Searchable and Retrievable'
+      { letter: 'A', text: 'WebSearchTool' },
+      { letter: 'B', text: 'BingGroundingTool' },
+      { letter: 'C', text: 'A2APreviewTool' },
+      { letter: 'D', text: 'SharepointAgentTool' }
     ],
-    correctOption: 'D',
-    solution: `<strong>Correct Answer: D</strong><br><br>
-    Full-text search over a field requires <strong>Searchable</strong>; returning the field's value in results requires <strong>Retrievable</strong>. Sortable/Filterable/Facetable add ordering, filtering, and faceted navigation, which aren't asked for here and add index overhead.`,
+    correctOption: 'B',
+    solution: `<strong>B — BingGroundingTool</strong> is correct.<br><br>
+    <code>BingGroundingTool</code> is the class in <code>azure-ai-projects</code> used to attach a Bing Search connection to a Foundry agent, enabling it to ground answers on live web data. The tool is configured using a Bing API Key connection created in the Foundry portal. <code>A2APreviewTool</code> enables agent-to-agent communication. <code>SharepointAgentTool</code> grounds agents on SharePoint content. There is no generic <code>WebSearchTool</code> class in the Foundry SDK.`,
     userChoice: null
   },
   {
-    id: 404, topic: 4, discussions: 0, isExtra: true,
+    id: 303, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry Agent Service: Persistent Cross-Session Memory',
+    text: `<p>You are building a customer-service agent using Azure AI Foundry Agent Service. The agent must remember facts about each customer across multiple conversation sessions without you building and managing a separate database.</p>
+    <p>Which Foundry capability should you enable?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'Code Interpreter tool' },
+      { letter: 'B', text: 'Azure AI Search knowledge source' },
+      { letter: 'C', text: 'Memory Store (managed long-term memory)' },
+      { letter: 'D', text: 'File Search tool with a vector store' }
+    ],
+    correctOption: 'C',
+    solution: `<strong>C — Memory Store</strong> is correct.<br><br>
+    The <strong>Memory in Foundry Agent Service</strong> (Public Preview, released Dec 2025) is a managed long-term memory store that automatically extracts, consolidates, and retrieves facts across agent sessions. It provides short-term, long-term, and procedural memory without requiring you to deploy or manage an external database. Azure AI Search is an external index (not session-aware managed memory). File Search retrieves documents but does not maintain per-user cross-session state. Code Interpreter runs Python and manages files, not persistent user memory.`,
+    userChoice: null
+  },
+  {
+    id: 304, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry: Agent-to-Agent (A2A) Protocol Use Case',
+    text: `<p>You have an Azure AI Foundry agent. A second agent, built with Semantic Kernel and hosted externally, needs to call your Foundry agent as a tool in its workflow. Both agents should use a standardized, open protocol for this cross-framework communication.</p>
+    <p>Which protocol and tool class should you use to expose the Foundry agent to the Semantic Kernel orchestrator?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'OpenAPI spec + FunctionTool' },
+      { letter: 'B', text: 'Agent-to-Agent (A2A) protocol + A2APreviewTool' },
+      { letter: 'C', text: 'MCP server + MemorySearchPreviewTool' },
+      { letter: 'D', text: 'Azure Service Bus + EventGridTrigger' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — A2A protocol + A2APreviewTool</strong> is correct.<br><br>
+    The <strong>Agent-to-Agent (A2A) protocol</strong> is an open standard that allows Foundry agents to be called by any A2A-compliant client — including agents built with Semantic Kernel, LangChain, or other frameworks — with explicit auth and clean call/response semantics. In <code>azure-ai-projects</code>, you configure this with <code>A2APreviewTool</code>. MCP (Model Context Protocol) is for tool/resource discovery, not agent-to-agent orchestration. OpenAPI + FunctionTool works for arbitrary HTTP endpoints but is not the purpose-built A2A approach. Service Bus is an async messaging service, not an agent communication protocol.`,
+    userChoice: null
+  },
+  {
+    id: 305, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry: Eliminate Inline Secrets with Key Vault Connections',
+    text: `<p>Your organization has a compliance policy that prohibits storing API keys or connection strings inline in application code or environment variables. You are configuring an Azure AI Foundry project that connects to multiple backend services.</p>
+    <p>Which Foundry feature should you use to eliminate inline secrets?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'Managed Identity with a System-Assigned Principal' },
+      { letter: 'B', text: 'Key Vault connections in the Foundry portal' },
+      { letter: 'C', text: 'A private endpoint for each connected resource' },
+      { letter: 'D', text: 'Azure Policy with a deny assignment on keys' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — Key Vault connections</strong> is correct.<br><br>
+    <strong>Key Vault connections</strong> (GA, released Sep 2025) allow Azure AI Foundry projects to store and retrieve secrets via Azure Key Vault instead of embedding them inline. When a connection is defined this way, the SDK and portal automatically resolve secrets at runtime without exposing them in code or configuration files. Managed Identity reduces secrets for Azure-to-Azure auth but does not govern third-party API keys. Private endpoints control network routing, not secret storage. Azure Policy can enforce access rules but does not replace the secret-storage mechanism.`,
+    userChoice: null
+  },
+  {
+    id: 306, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry: Prompt Flow Replacement for New Development',
+    text: `<p>A team has been using Azure AI Foundry Prompt Flow to build and orchestrate LLM pipelines. They are planning a new agentic application. The architect notes that Prompt Flow is being retired on April 20, 2027.</p>
+    <p>Which technology should they use for new agentic application development in Azure AI Foundry?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'Azure Logic Apps' },
+      { letter: 'B', text: 'Azure Machine Learning Pipelines (SDK v2)' },
+      { letter: 'C', text: 'Microsoft Agent Framework (Foundry Agent Service)' },
+      { letter: 'D', text: 'Azure Durable Functions' }
+    ],
+    correctOption: 'C',
+    solution: `<strong>C — Microsoft Agent Framework (Foundry Agent Service)</strong> is correct.<br><br>
+    Microsoft has announced that Prompt Flow in Azure AI Foundry and Azure Machine Learning will be retired on <strong>April 20, 2027</strong>. The recommended migration target for existing Prompt Flow applications — and the recommended choice for new development — is the <strong>Microsoft Agent Framework</strong>, which is built into Foundry Agent Service. It supports multi-agent orchestration, tool integration, memory, and evaluation natively. Logic Apps, AML Pipelines, and Durable Functions are general workflow/compute services not designed as the Prompt Flow replacement.`,
+    userChoice: null
+  },
+  {
+    id: 307, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
     type: 'HOTSPOT',
-    title: 'AI Search: Match Field Attribute to Capability',
-    text: `<p>Select the index field attribute that enables each capability.</p>`,
+    title: 'Foundry SDK v2: Correct Statements (Yes/No)',
+    text: `<p>You are reviewing statements about the consolidated <code>azure-ai-projects</code> v2 SDK released in January 2026. For each statement, select Yes if it is correct, or No if it is not.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
-    render: 'casestudy_hotspot',
-    solution: `• <strong>Run full-text queries against the field:</strong> <span class="correct-badge">Searchable</span><br>
-    • <strong>Return the value in search results:</strong> <span class="correct-badge">Retrievable</span><br>
-    • <strong>Use the field in $filter / facets:</strong> <span class="correct-badge">Filterable / Facetable</span>`,
-    dropdowns: {
-      'fts': { label: 'Run full-text queries:', options: ['Searchable', 'Retrievable', 'Sortable'], correct: 'Searchable' },
-      'ret': { label: 'Return value in results:', options: ['Searchable', 'Retrievable', 'Filterable'], correct: 'Retrievable' },
-      'filt': { label: 'Use in $filter / facets:', options: ['Sortable', 'Retrievable', 'Filterable / Facetable'], correct: 'Filterable / Facetable' }
-    },
+    render: 'yesno_generic',
+    solution: `• <strong>The azure-ai-agents package must be installed separately alongside azure-ai-projects v2:</strong> <span class="correct-badge">No</span> — azure-ai-agents is no longer a separate dependency; it is bundled inside azure-ai-projects v2.<br>
+    • <strong>azure-ai-projects v2 agents are built on the OpenAI Responses protocol:</strong> <span class="correct-badge">Yes</span> — the v2 agent runtime uses OpenAI's Responses protocol.<br>
+    • <strong>Evaluation and memory store operations are included in azure-ai-projects v2:</strong> <span class="correct-badge">Yes</span> — evaluation operations (.evaluators, .evaluation_rules, .insights) and memory store (.memory_store) are first-class properties of AIProjectClient in v2.`,
+    statements: [
+      { text: 'The azure-ai-agents package must be installed separately alongside azure-ai-projects v2.', answer: 'No' },
+      { text: 'azure-ai-projects v2 agents are built on the OpenAI Responses protocol.', answer: 'Yes' },
+      { text: 'Evaluation and memory store operations are included in azure-ai-projects v2.', answer: 'Yes' }
+    ],
     userSelections: {}
   },
-
-  // ---- KNOWLEDGE MINING: Document Intelligence (topic 4) ----
   {
-    id: 410, topic: 4, discussions: 0, isExtra: true,
+    id: 308, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
     type: 'MULTIPLE CHOICE',
-    title: 'Document Intelligence: Invoice Field Extraction',
-    text: `<p>You build an app that extracts shipping address, billing address, customer ID, amount due, due date, total tax, and subtotal from scanned vendor invoices. You must minimize development effort.</p>
-    <p>Which Azure AI Document Intelligence model should you use?</p>`,
+    title: 'Foundry: Multi-Agent Workflows in the Portal',
+    text: `<p>Your team wants to visually design and manage a workflow that coordinates multiple specialized Azure AI Foundry agents — for example, a research agent, a summarization agent, and a compliance agent — all within the Foundry portal.</p>
+    <p>Which portal experience provides this capability?</p>`,
     note: '',
-    render: 'mcq',
-    options: ['A. prebuilt invoice model', 'B. prebuilt read model', 'C. custom neural model', 'D. general document model'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — prebuilt invoice model</strong><br><br>
-    Those fields are exactly what the <strong>prebuilt invoice</strong> model returns out of the box, with no training — the least-effort option. Read does OCR only; a custom neural model needs labeled training; the general document model extracts generic key-value pairs but not the rich invoice schema.`,
-    userChoice: null
-  },
-  {
-    id: 411, topic: 4, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Document Intelligence: Receipt/Expense Extraction',
-    text: `<p>You build an app that processes scanned expense claims and extracts merchant information, transaction date/time, taxes paid, and total cost. You must minimize development effort.</p>
-    <p>Which model should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: ['A. the prebuilt receipt model', 'B. a custom template model', 'C. a custom neural model', 'D. the prebuilt read model'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — prebuilt receipt model</strong><br><br>
-    Merchant, transaction date/time, tax, and total are standard <strong>prebuilt receipt</strong> fields — no training required. Custom models add effort; Read returns text/layout but not labeled receipt fields.`,
-    userChoice: null
-  },
-  {
-    id: 412, topic: 4, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Document Intelligence: Add a New Format with Least Effort',
-    text: `<p>App1 uses a custom Document Intelligence model to recognize contract documents. You must make it support one additional contract format while minimizing development effort.</p>
-    <p>What should you do?</p>`,
-    note: '',
-    render: 'mcq',
     options: [
-      'A. Add the additional contract format to the existing training set and retrain the model.',
-      'B. Create a brand-new training set with only the new format and train a separate model.',
-      'C. Lower the confidence score threshold of App1.',
-      'D. Lower the accuracy threshold of App1.'
+      { letter: 'A', text: 'Azure Machine Learning Studio designer' },
+      { letter: 'B', text: 'The new unified Foundry portal (ai.azure.com "New Foundry" experience)' },
+      { letter: 'C', text: 'Azure Logic Apps designer' },
+      { letter: 'D', text: 'Foundry Classic prompt flow canvas' }
     ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Extending an existing custom model to a new layout is done by <strong>adding labeled samples of the new format to the existing training set and retraining</strong> — least effort and keeps one model. Lowering thresholds doesn't teach the model a new layout; a separate model adds routing/maintenance overhead.`,
+    correctOption: 'B',
+    solution: `<strong>B — The new unified Foundry portal</strong> is correct.<br><br>
+    The new unified Foundry portal experience at <strong>ai.azure.com</strong> (toggled via "New Foundry") introduced visual <strong>multi-agent workflow building</strong>, distinct from the single-agent flow of Foundry Classic. The <strong>Tools tab</strong> is the single entry point for connecting MCP servers, A2A endpoints, AI Search, SharePoint, Fabric, and 1,400+ integrations. Foundry Classic Prompt Flow supports single-model pipeline authoring, not multi-agent visual orchestration. Logic Apps and AML Studio are separate products not designed for Foundry multi-agent workflows.`,
     userChoice: null
   },
   {
-    id: 413, topic: 4, discussions: 0, isExtra: true,
+    id: 309, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
     type: 'MULTIPLE CHOICE',
-    title: 'Document Intelligence: Add QR/Barcode Reading with Least Effort',
-    text: `<p>App1 analyzes business cards using the business card model. You must update App1 so it can also interpret QR codes/barcodes on the cards, with minimal administrative effort.</p>
-    <p>What should you do first?</p>`,
+    title: 'azure-ai-evaluation: Measure Agent Groundedness',
+    text: `<p>You want to automatically measure whether your Foundry agent's responses are grounded in the retrieved source documents (i.e., not hallucinating facts not present in the sources). You are using the <code>azure-ai-evaluation</code> SDK.</p>
+    <p>Which evaluator should you use?</p>`,
     note: '',
-    render: 'mcq',
     options: [
-      'A. Implement the Read model (which adds barcode/QR detection).',
-      'B. Deploy a custom model.',
-      'C. Implement the contract model.',
-      'D. Replace the card workflow with Custom Vision.'
+      { letter: 'A', text: 'CoherenceEvaluator' },
+      { letter: 'B', text: 'SimilarityEvaluator' },
+      { letter: 'C', text: 'GroundednessWithToolContextEvaluator' },
+      { letter: 'D', text: 'IntentResolutionEvaluator' }
     ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Read model</strong><br><br>
-    The Document Intelligence <strong>Read</strong> model includes barcode/QR-code detection in recent API versions, so enabling Read is the lowest-effort way to add that capability. Custom or contract models don't add barcode reading, and Custom Vision is a different service entirely.`,
+    correctOption: 'C',
+    solution: `<strong>C — GroundednessWithToolContextEvaluator</strong> is correct.<br><br>
+    The <code>azure-ai-evaluation</code> 1.11.0 release added <strong>groundedness-with-tool-context</strong> evaluation, which measures whether the agent's answer is supported by the tool outputs (retrieved documents) rather than fabricated. <code>CoherenceEvaluator</code> measures logical consistency of the response. <code>SimilarityEvaluator</code> compares outputs to a reference answer (used in Prompt Flow migration parity checks). <code>IntentResolutionEvaluator</code> checks whether the agent correctly resolved the user's intent, not whether facts are grounded in sources.`,
     userChoice: null
   },
   {
-    id: 414, topic: 4, discussions: 0, isExtra: true,
+    id: 310, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
     type: 'MULTIPLE CHOICE',
-    title: 'Document Intelligence: Custom Skill in AI Search for Invoices',
-    text: `<p>Search1 (Azure AI Search) indexes content. You must add a custom skill so the pipeline can recognize and extract invoice properties during indexing.</p>
-    <p>Which service should the custom skill call?</p>`,
+    title: 'Foundry Agent Service: Agent Tools Supported Behind VNet',
+    text: `<p>Your organization requires that all Azure AI Foundry agent tools operate within a private virtual network with no public egress (zero-trust deployment). You are evaluating which tools are supported in this configuration.</p>
+    <p>Which of the following agent tools is supported behind a VNet in Azure AI Foundry?</p>`,
     note: '',
-    render: 'mcq',
-    options: ['A. Azure AI Document Intelligence', 'B. Azure AI Immersive Reader', 'C. Azure AI Custom Vision', 'D. Azure OpenAI'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Azure AI Document Intelligence</strong><br><br>
-    Extracting structured invoice properties is the job of <strong>Document Intelligence</strong>; you wrap it as a custom (Web API) skill so the AI Search indexer enriches documents with the extracted fields. Immersive Reader (accessibility), Custom Vision (image classification/detection), and OpenAI (generation) don't extract invoice schemas.`,
-    userChoice: null
-  },
-  {
-    id: 415, topic: 4, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Document Intelligence: Custom Model Type for Varied Layouts',
-    text: `<p>You must recommend a Document Intelligence model for: expenditure-request authorization forms, structured/unstructured survey forms, and structured employment-application forms. The solution must minimize development effort and cost.</p>
-    <p>For the <strong>structured, consistently-laid-out</strong> forms, which custom model type is most cost-effective?</p>`,
-    note: '',
-    render: 'mcq',
-    options: ['A. custom template model', 'B. custom neural model', 'C. prebuilt invoice model', 'D. Read model'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — custom template model</strong><br><br>
-    For forms with a <strong>consistent layout</strong>, the <strong>custom template</strong> model trains quickly, with fewer samples and lower cost. The <strong>custom neural</strong> model is reserved for variable/unstructured layouts (e.g. the unstructured survey forms). Prebuilt invoice doesn't fit arbitrary internal forms.`,
-    userChoice: null
-  },
-  {
-    id: 416, topic: 4, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Document Intelligence: Supported Training Inputs',
-    text: `<p>You will train a custom <em>extraction</em> model in Document Intelligence Studio (Standard S0). You have files in formats: PDF, JPG, TIFF, DOCX, and XLSX.</p>
-    <p>Which files can be used to train the custom extraction model?</p>`,
-    note: '',
-    render: 'mcq',
     options: [
-      'A. The PDF and image files (PDF, JPG, TIFF) only',
-      'B. The DOCX and XLSX files only',
-      'C. All five formats',
-      'D. The PDF files only'
+      { letter: 'A', text: 'Browser Automation' },
+      { letter: 'B', text: 'Computer Use' },
+      { letter: 'C', text: 'Azure AI Search knowledge source' },
+      { letter: 'D', text: 'Image Generation tool' }
     ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Custom model training accepts <strong>PDF and image formats (JPEG/JPG, PNG, BMP, TIFF)</strong> — and in recent versions Office formats for some scenarios — but the safe, classic answer for custom <em>extraction</em> training is the document/image set: PDF, JPG, TIFF. Pure spreadsheets/word files aren't valid training inputs for layout-based extraction in the classic flow.`,
+    correctOption: 'C',
+    solution: `<strong>C — Azure AI Search knowledge source</strong> is correct.<br><br>
+    According to Azure AI Foundry network isolation documentation, the following tools <strong>work behind a VNet</strong>: MCP (private), Azure AI Search, Code Interpreter, Function Calling, Bing Grounding, SharePoint Grounding, and Foundry IQ. The following tools are <strong>NOT supported</strong> behind a VNet: File Search, OpenAPI, Azure Functions, Browser Automation, Computer Use, Image Generation, and A2A.`,
     userChoice: null
   },
   {
-    id: 417, topic: 4, discussions: 0, isExtra: true,
+    id: 311, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry Local: Run Models Offline on Device',
+    text: `<p>A field engineer needs to run Azure AI models on a Windows laptop in locations with no internet connectivity. The solution must use local hardware acceleration (including NPU on the device) and require no Azure subscription at runtime.</p>
+    <p>Which Azure AI product should the engineer use?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'Azure AI Foundry Agent Service with a private endpoint' },
+      { letter: 'B', text: 'Foundry Local (v0.7+)' },
+      { letter: 'C', text: 'Azure Container Instances with a Cognitive Services container' },
+      { letter: 'D', text: 'Azure Stack Hub with an AKS cluster' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — Foundry Local</strong> is correct.<br><br>
+    <strong>Foundry Local</strong> (v0.7+ as of Sep 2025) enables running Azure AI models entirely on-device — including NPU support for Intel, AMD, and Qualcomm chipsets — with no internet connection required at inference time. It provides a local CLI and SDK that mirrors the Foundry cloud API surface. Azure AI Foundry Agent Service and Container Instances still require connectivity to Azure. Azure Stack Hub requires significant infrastructure investment and is not a per-device developer solution.`,
+    userChoice: null
+  },
+  {
+    id: 312, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'HOTSPOT',
+    title: 'Foundry Agent Service: Tools & Capabilities (Yes/No)',
+    text: `<p>You are evaluating Azure AI Foundry Agent Service capabilities. For each statement, select Yes if it is correct, or No if it is not.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'yesno_generic',
+    solution: `• <strong>Foundry agents can be published directly to Microsoft Teams with tenant-wide governance:</strong> <span class="correct-badge">Yes</span> — Foundry Agent Service supports one-click publish to Teams and Microsoft 365 Copilot.<br>
+    • <strong>The Foundry MCP server is hosted at mcp.ai.azure.com and was available from December 2025:</strong> <span class="correct-badge">Yes</span> — the Foundry MCP Server (Preview) went live December 3, 2025 at mcp.ai.azure.com.<br>
+    • <strong>Hosted Agents in Foundry Agent Service require you to provision and manage the underlying compute:</strong> <span class="correct-badge">No</span> — Hosted Agents are a session-isolated managed runtime with autoscaling and zero idle cost; you do not manage the underlying compute.`,
+    statements: [
+      { text: 'Foundry agents can be published directly to Microsoft Teams with tenant-wide governance.', answer: 'Yes' },
+      { text: 'The Foundry MCP server is hosted at mcp.ai.azure.com and was available from December 2025.', answer: 'Yes' },
+      { text: 'Hosted Agents in Foundry Agent Service require you to provision and manage the underlying compute.', answer: 'No' }
+    ],
+    userSelections: {}
+  },
+  {
+    id: 313, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Foundry: Migrate from azure-ai-agents to azure-ai-projects v2',
+    text: `<p>A developer has an existing application that uses the <code>azure-ai-agents</code> package to create and run Foundry agents. They want to migrate to the consolidated <code>azure-ai-projects</code> v2 SDK.</p>
+    <p>Which of the following statements about the migration is TRUE?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'azure-ai-agents must still be installed as a dependency of azure-ai-projects v2.' },
+      { letter: 'B', text: 'Agent operations are now accessed through AIProjectClient, and azure-ai-agents is no longer a required package.' },
+      { letter: 'C', text: 'azure-ai-projects v2 only supports evaluation; agent management requires azure-ai-agents.' },
+      { letter: 'D', text: 'The migration requires rewriting agents to use the LangChain framework.' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B</strong> is correct.<br><br>
+    In <code>azure-ai-projects</code> v2 (2.0.0b3, released January 6, 2026), all agent management operations are exposed directly on <strong>AIProjectClient</strong>. The <code>azure-ai-agents</code> package is no longer listed as a separate dependency — it has been absorbed into <code>azure-ai-projects</code>. Agents, inference, evaluations, and memory store now live under a single import. No LangChain migration is required; the framework is Azure-native.`,
+    userChoice: null
+  },
+  {
+    id: 314, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
+    type: 'MULTIPLE CHOICE',
+    title: 'Azure AI Evaluation SDK: Red Team Safety Testing',
+    text: `<p>You need to automatically test your Azure AI Foundry application for safety vulnerabilities — specifically, whether it can be manipulated into producing harmful content across multiple languages and attack categories (e.g., hate speech, violence, jailbreaks). You want to use a built-in SDK capability rather than building your own test harness.</p>
+    <p>Which azure-ai-evaluation feature should you use?</p>`,
+    note: '',
+    options: [
+      { letter: 'A', text: 'RelevanceEvaluator with a multilingual dataset' },
+      { letter: 'B', text: 'Multilingual red team categories in the built-in red team scanner' },
+      { letter: 'C', text: 'ContentSafetyEvaluator with a custom blocklist' },
+      { letter: 'D', text: 'GroundednessWithToolContextEvaluator across language variants' }
+    ],
+    correctOption: 'B',
+    solution: `<strong>B — Multilingual red team categories</strong> is correct.<br><br>
+    <code>azure-ai-evaluation</code> 1.11.0 added <strong>multilingual red team categories</strong> to the built-in red team scanner, enabling automated adversarial testing across multiple languages and attack types (hate speech, self-harm, violence, jailbreaks, prompt injection). This is the purpose-built safety testing capability. <code>ContentSafetyEvaluator</code> evaluates individual responses but is not a red team scanner. <code>RelevanceEvaluator</code> measures answer quality, not safety attacks. <code>GroundednessWithToolContextEvaluator</code> measures hallucination, not adversarial safety.`,
+    userChoice: null
+  },
+  {
+    id: 315, topic: null, discussions: 0, isLearnPool: true,
+    domain: 'genai',
     type: 'DRAG DROP',
-    title: 'Document Intelligence: Train a Custom Model in Studio',
-    text: `<p>You have a storage account (sa1) and a Document Intelligence resource (DI1). You need to create and train a custom model in Document Intelligence Studio with minimal effort.</p>
-    <p>Arrange the four actions in the correct order.</p>`,
+    title: 'Foundry: Match Feature to Capability (Sequence)',
+    text: `<p>You are designing an Azure AI Foundry solution with multiple requirements. Place the following actions in the correct order to deploy a production-ready Foundry agent with grounding, safety, and evaluation.</p>
+    <p>Which actions should you perform, in sequence?</p>`,
     note: '',
     render: 'sequence_generic',
     solution: `<strong>Correct order:</strong><br>
-    1. <span class="correct-badge">Upload the sample forms to a blob container in sa1.</span><br>
-    2. <span class="correct-badge">Create a custom extraction project in Document Intelligence Studio and connect it to the container.</span><br>
-    3. <span class="correct-badge">Label the fields on the sample documents.</span><br>
-    4. <span class="correct-badge">Train the model and copy its model ID.</span><br><br>
-    <em>You stage documents in Blob storage, point a Studio project at them, label the fields to extract, then train and retrieve the model ID for use in your app.</em>`,
+    1. <span class="correct-badge">Create an Azure AI Foundry hub and project, and configure a Key Vault connection for secrets.</span><br>
+    2. <span class="correct-badge">Create and configure a Foundry agent with BingGroundingTool and a Memory Store.</span><br>
+    3. <span class="correct-badge">Run azure-ai-evaluation red team and groundedness-with-tool-context evaluators against the agent.</span><br>
+    4. <span class="correct-badge">Deploy to Hosted Agents and publish to Microsoft Teams.</span><br><br>
+    <em>The correct sequence: first establish the infrastructure (hub/project/secrets), then build the agent with grounding and memory, then evaluate for quality and safety, then deploy and publish. Skipping evaluation before deployment is a common anti-pattern in production agentic solutions.</em>`,
     correctOrder: [
-      'Upload the sample forms to a blob container in sa1.',
-      'Create a custom extraction project in Document Intelligence Studio and connect it to the container.',
-      'Label the fields on the sample documents.',
-      'Train the model and copy its model ID.'
+      'Create an Azure AI Foundry hub and project, and configure a Key Vault connection for secrets.',
+      'Create and configure a Foundry agent with BingGroundingTool and a Memory Store.',
+      'Run azure-ai-evaluation red team and groundedness-with-tool-context evaluators against the agent.',
+      'Deploy to Hosted Agents and publish to Microsoft Teams.'
     ],
     actions: [
-      'Upload the sample forms to a blob container in sa1.',
-      'Create a custom extraction project in Document Intelligence Studio and connect it to the container.',
-      'Label the fields on the sample documents.',
-      'Train the model and copy its model ID.',
-      'Create an Azure AI Search index.',
-      'Deploy a prebuilt receipt model.'
+      'Deploy to Hosted Agents and publish to Microsoft Teams.',
+      'Create and configure a Foundry agent with BingGroundingTool and a Memory Store.',
+      'Run azure-ai-evaluation red team and groundedness-with-tool-context evaluators against the agent.',
+      'Create an Azure AI Foundry hub and project, and configure a Key Vault connection for secrets.',
+      'Migrate from Prompt Flow by rewriting in Azure Durable Functions.',
+      'Install azure-ai-agents as a separate package before creating agents.'
     ],
     userSequence: [null, null, null, null]
-  },
-  {
-    id: 418, topic: 4, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Knowledge Mining: Word Cloud from Reviews',
-    text: `<p>You generate a word cloud from product reviews and must extract the most relevant terms/phrases from the text.</p>
-    <p>Which Azure AI Language (Text Analytics) capability/endpoint should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: ['A. key phrase extraction (keyPhrases)', 'B. sentiment', 'C. language detection', 'D. entity recognition'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — key phrase extraction</strong><br><br>
-    A word cloud needs the salient terms/phrases in the text, which is exactly what <strong>key phrase extraction</strong> returns. Sentiment scores tone, language detection identifies the language, and entity recognition returns typed entities rather than general key phrases.`,
-    userChoice: null
-  },
-  {
-    id: 419, topic: 4, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'AI Search: Index a Sample DB for People/Orgs/Locations',
-    text: `<p>You must create an Azure AI Search resource that indexes a sample real-estate database and lets users search (in English) for people, organizations, and locations.</p>
-    <p>Which enrichment skill must the skillset include?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Entity Recognition skill (Persons, Organizations, Locations)',
-      'B. OCR skill',
-      'C. Sentiment skill',
-      'D. Image Analysis skill'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Entity Recognition skill</strong><br><br>
-    Searching for people, organizations, and locations means the skillset must run the <strong>Entity Recognition</strong> skill with those categories and map the outputs into index fields. OCR is for images, sentiment for tone, image analysis for visuals.`,
-    userChoice: null
-  },
-
-  // ---- CONVERSATIONAL AI / NLP (topic 3) ----
-  {
-    id: 430, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Bot: Required Values to Deploy a Registered Bot',
-    text: `<p>You build a bot with the Bot Framework SDK and register it with Azure Bot Service. You plan to deploy the bot to Azure.</p>
-    <p>Which two values are required to complete the deployment? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: ['A. botId', 'B. tenantId', 'C. appId (Microsoft App ID)', 'D. objectId', 'E. appSecret (Microsoft App password)'],
-    correctOptions: ['C', 'E'],
-    solution: `<strong>Correct Answer: C and E</strong><br><br>
-    A bot authenticates to the Bot Framework using its Microsoft Entra app registration: the <strong>appId</strong> (Microsoft App ID) and the <strong>appSecret</strong> (App password). Those are the values the deployment needs. botId/tenantId/objectId aren't the auth pair the runtime requires.`,
-    userChoices: []
-  },
-  {
-    id: 431, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Bot: Dialog Type to Collect a Fixed Set of Inputs',
-    text: `<p>You design a conversational interface to make vacation requests. It must gather a start date, an end date, and the amount of paid time off. The solution must minimize dialog complexity.</p>
-    <p>Which dialog type should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: ['A. waterfall dialog', 'B. adaptive dialog', 'C. skill dialog', 'D. component dialog'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — waterfall dialog</strong><br><br>
-    Collecting a known, fixed sequence of inputs is the classic use of a <strong>waterfall</strong> dialog — each step prompts for one value, in order, with minimal complexity. Adaptive dialogs handle dynamic/interruptible flows, skill dialogs call other bots, and component dialogs package reusable dialog sets.`,
-    userChoice: null
-  },
-  {
-    id: 432, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Bot Composer: Property Scope Disposed When Dialog Ends',
-    text: `<p>In Bot Framework Composer, a dialog stores a user's name in a property. You want the property disposed of when the last active dialog ends.</p>
-    <p>Which memory scope should you assign?</p>`,
-    note: '',
-    render: 'mcq',
-    options: ['A. dialog', 'B. user', 'C. turn', 'D. conversation'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — dialog</strong><br><br>
-    The <strong>dialog</strong> scope lives for the life of its dialog (and child dialogs) and is released when the dialog ends. <em>user</em> persists across conversations, <em>conversation</em> persists for the whole conversation, and <em>turn</em> lasts only the current turn.`,
-    userChoice: null
-  },
-  {
-    id: 433, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Bot: Allow Users to Cancel In-Progress Transactions',
-    text: `<p>A purchasing bot built in Bot Framework Composer must let users cancel an in-progress transaction at any time, with minimal development effort.</p>
-    <p>What should you add?</p>`,
-    note: '',
-    render: 'mcq',
-    options: ['A. a dialog trigger (e.g., an intent/cancel trigger)', 'B. a language generator', 'C. a custom event only', 'D. a conversation activity'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — a dialog trigger</strong><br><br>
-    A <strong>trigger</strong> (recognized intent such as "cancel") can interrupt the active dialog and route to cancellation logic with little code. Language generators format responses, and the other options don't provide interruption handling.`,
-    userChoice: null
-  },
-  {
-    id: 434, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Bot: Enable Speech Capabilities',
-    text: `<p>You must enable voice (speech) for a chatbot. Which three actions are required? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. Enable WebSockets for the bot app.',
-      'B. Create an Azure AI Speech (now Azure Speech in Foundry Tools) resource.',
-      'C. Register a Direct Line Speech channel.',
-      'D. Register a Cortana channel.',
-      'E. Create a Language Understanding service.'
-    ],
-    correctOptions: ['A', 'B', 'C'],
-    solution: `<strong>Correct Answer: A, B and C</strong><br><br>
-    Voice uses the <strong>Direct Line Speech</strong> channel (C) backed by a <strong>Speech</strong> resource (B), and the bot app must have <strong>WebSockets</strong> enabled (A) for the streaming connection. Cortana is retired (D), and LUIS (E) is unrelated to enabling speech transport.`,
-    userChoices: []
-  },
-  {
-    id: 435, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Bot: Connect to a Custom Question Answering / QnA Project',
-    text: `<p>A bot must connect to a question-answering knowledge base. From the Azure portal, where do you find the endpoint and key the bot needs?</p>`,
-    note: '',
-    render: 'mcq',
-    options: ['A. Keys and Endpoint blade of the resource', 'B. Access control (IAM)', 'C. Properties', 'D. Identity'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Keys and Endpoint</strong><br><br>
-    The connection key and endpoint a bot needs are on the resource's <strong>Keys and Endpoint</strong> blade. IAM manages role assignments, Properties shows metadata, and Identity configures managed identity.`,
-    userChoice: null
-  },
-  {
-    id: 436, topic: 3, discussions: 0, isExtra: true,
-    type: 'DRAG DROP',
-    title: 'Custom Question Answering: Integrate Active-Learning Suggestions',
-    text: `<p>You enabled active learning on a question-answering knowledge base. You need to integrate the user-suggested alternate questions into the model. Arrange the four actions in order.</p>`,
-    note: '',
-    render: 'sequence_generic',
-    solution: `<strong>Correct order:</strong><br>
-    1. <span class="correct-badge">Show active learning suggestions for the knowledge base.</span><br>
-    2. <span class="correct-badge">Accept or reject the suggested questions.</span><br>
-    3. <span class="correct-badge">Save and train the knowledge base.</span><br>
-    4. <span class="correct-badge">Publish the knowledge base.</span><br><br>
-    <em>Clustered user queries surface as suggestions; you review them, then save & train, then publish so the changes are served by the runtime.</em>`,
-    correctOrder: [
-      'Show active learning suggestions for the knowledge base.',
-      'Accept or reject the suggested questions.',
-      'Save and train the knowledge base.',
-      'Publish the knowledge base.'
-    ],
-    actions: [
-      'Show active learning suggestions for the knowledge base.',
-      'Accept or reject the suggested questions.',
-      'Save and train the knowledge base.',
-      'Publish the knowledge base.',
-      'Delete the knowledge base.',
-      'Export the knowledge base as a .lu file.'
-    ],
-    userSequence: [null, null, null, null]
-  },
-  {
-    id: 437, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'NLP: Different Replies for Positive vs Negative Messages',
-    text: `<p>You build a multilingual chatbot that must reply differently to positive and negative messages. Which two Azure AI Language capabilities should you combine? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. Entity linking',
-      'B. Sentiment analysis',
-      'C. Key phrase extraction',
-      'D. Language detection',
-      'E. Named entity recognition'
-    ],
-    correctOptions: ['B', 'D'],
-    solution: `<strong>Correct Answer: B and D</strong><br><br>
-    To branch on tone you need <strong>sentiment analysis</strong> (B); to handle a multilingual audience correctly you first run <strong>language detection</strong> (D) so sentiment is evaluated in the right language. The other features don't determine positive/negative routing.`,
-    userChoices: []
-  },
-  {
-    id: 438, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Bot: Export a Language Model for Local CLI Use',
-    text: `<p>You build a bot locally with the Bot Framework and reuse an existing language-understanding model. You must work with the model locally using the Bot Framework CLI. What should you do first?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Export the model as an .lu file.',
-      'B. Clone the model in the portal.',
-      'C. Create a new Speech service.',
-      'D. Create a new language-understanding service.'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — export as .lu</strong><br><br>
-    The Bot Framework CLI works on the <strong>.lu</strong> (LUDown) representation of the model, so you first export the model to an <code>.lu</code> file, then manipulate/translate it locally. Cloning or creating new services isn't the first required step.`,
-    userChoice: null
-  },
-  {
-    id: 439, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Bot: Improve "I don\u2019t understand" Responses',
-    text: `<p>Users of a language-understanding-powered agent often get the generic fallback "Sorry, I don't understand that." You must improve recognition. Which three actions, in a typical iteration loop, improve the model? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. Add more example utterances to the relevant intents.',
-      'B. Train the app.',
-      'C. Publish the app.',
-      'D. Delete the None intent.',
-      'E. Disable spell checking.'
-    ],
-    correctOptions: ['A', 'B', 'C'],
-    solution: `<strong>Correct Answer: A, B and C</strong><br><br>
-    The improvement loop is: <strong>add example utterances</strong> (A) to better cover real phrasings, <strong>train</strong> (B), then <strong>publish</strong> (C) so the endpoint serves the improved model. Deleting the None intent (D) hurts fallback handling, and disabling spell check (E) generally reduces robustness.`,
-    userChoices: []
-  },
-  {
-    id: 440, topic: 3, discussions: 0, isExtra: true,
-    type: 'DRAG DROP',
-    title: 'Conversational Language Understanding: Build & Publish a Model',
-    text: `<p>You build a task-tracking chatbot and create a language understanding (CLU) project. You must build and deploy the model with minimal effort. Arrange the four actions in order.</p>`,
-    note: '',
-    render: 'sequence_generic',
-    solution: `<strong>Correct order:</strong><br>
-    1. <span class="correct-badge">Create a new CLU project (application).</span><br>
-    2. <span class="correct-badge">Add intents and example utterances.</span><br>
-    3. <span class="correct-badge">Train the model.</span><br>
-    4. <span class="correct-badge">Deploy/publish the model to the prediction endpoint.</span>`,
-    correctOrder: [
-      'Create a new CLU project (application).',
-      'Add intents and example utterances.',
-      'Train the model.',
-      'Deploy/publish the model to the prediction endpoint.'
-    ],
-    actions: [
-      'Create a new CLU project (application).',
-      'Add intents and example utterances.',
-      'Train the model.',
-      'Deploy/publish the model to the prediction endpoint.',
-      'Create a knowledge store.',
-      'Export the project as a .pdf.'
-    ],
-    userSequence: [null, null, null, null]
-  },
-  {
-    id: 441, topic: 3, discussions: 0, isExtra: true,
-    type: 'HOTSPOT',
-    title: 'Bot: Language Generation Behavior (coalesce)',
-    text: `<p>A language-generation template contains: <code># Greet(user)\u2192 \${Greeting()}, \${user.name}</code>, and elsewhere uses <code>coalesce()</code>. For each statement, select Yes or No.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'casestudy_hotspot',
-    solution: `• <strong><code>user.name</code> is a template:</strong> <span class="correct-badge">No</span> (it's a property, not a template)<br>
-    • <strong><code>Greet(user)</code> calls another template <code>Greeting()</code>:</strong> <span class="correct-badge">Yes</span><br>
-    • <strong><code>coalesce()</code> returns the first non-null/non-empty value:</strong> <span class="correct-badge">Yes</span>`,
-    dropdowns: {
-      'prop': { label: 'user.name is a template:', options: ['Yes', 'No'], correct: 'No' },
-      'call': { label: 'Greet(user) calls template Greeting():', options: ['Yes', 'No'], correct: 'Yes' },
-      'coal': { label: 'coalesce() returns first non-null value:', options: ['Yes', 'No'], correct: 'Yes' }
-    },
-    userSelections: {}
-  },
-  {
-    id: 442, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Bot: Test Interactively on a Local Machine',
-    text: `<p>You build a bot with the Bot Framework SDK and must test it interactively on your local machine. Which tool should you use to connect to the locally running bot?</p>`,
-    note: '',
-    render: 'mcq',
-    options: ['A. Bot Framework Emulator', 'B. Azure Cloud Shell', 'C. Document Intelligence Studio', 'D. Language Studio'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Bot Framework Emulator</strong><br><br>
-    The <strong>Bot Framework Emulator</strong> is the desktop tool that connects to a bot running locally (e.g. at <code>http://localhost:3978/api/messages</code>) for interactive testing and inspection of activities. The others don't test bots.`,
-    userChoice: null
-  },
-  {
-    id: 443, topic: 3, discussions: 0, isExtra: true,
-    type: 'HOTSPOT',
-    title: 'Bot State: Accessors and SaveChanges',
-    text: `<p>A bot uses UserProfile and ConversationData state with property accessors created via <code>CreateProperty&lt;T&gt;()</code>, with Memory Storage. For each statement, select Yes or No.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'casestudy_hotspot',
-    solution: `• <strong>CreateProperty returns an accessor to get/set the state value:</strong> <span class="correct-badge">Yes</span><br>
-    • <strong>Memory Storage persists state across app restarts:</strong> <span class="correct-badge">No</span> (it's in-memory/volatile)<br>
-    • <strong>You must call SaveChangesAsync() to write state back:</strong> <span class="correct-badge">Yes</span>`,
-    dropdowns: {
-      'acc': { label: 'CreateProperty returns a get/set accessor:', options: ['Yes', 'No'], correct: 'Yes' },
-      'mem': { label: 'Memory Storage persists across restarts:', options: ['Yes', 'No'], correct: 'No' },
-      'save': { label: 'Must call SaveChangesAsync() to persist:', options: ['Yes', 'No'], correct: 'Yes' }
-    },
-    userSelections: {}
-  },
-  // ══ 2026 difficulty-shift set: coding/JSON fill-in, RAG/prompt flow, multi-service scenarios, retirements ══
-
-  // ---- CODE / JSON FILL-IN (RAG "On Your Data") ----
-  {
-    id: 500, topic: 7, discussions: 0, isExtra: true, hard: true,
-    type: 'HOTSPOT',
-    title: 'Code: Azure OpenAI On Your Data (RAG) Request Body',
-    text: `<p>You call <code>POST {endpoint}/openai/deployments/{deployment}/chat/completions?api-version=2024-02-01</code> to ground a model on an Azure AI Search index (RAG). Complete the JSON request body.</p>
-    <div class="code-block">{<br>
-&nbsp;&nbsp;"messages": [ { "role": "system", "content": "You answer only from the docs." }, { "role": "user", "content": "..." } ],<br>
-&nbsp;&nbsp;"<strong>[ Dropdown 1 ]</strong>": [<br>
-&nbsp;&nbsp;&nbsp;&nbsp;{<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type": "<strong>[ Dropdown 2 ]</strong>",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"parameters": {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"endpoint": "https://search1.search.windows.net",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<strong>[ Dropdown 3 ]</strong>": "products-index",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"authentication": { "type": "system_assigned_managed_identity" }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-&nbsp;&nbsp;]<br>
-}</div>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'casestudy_hotspot',
-    solution: `• <strong>Dropdown 1:</strong> <span class="correct-badge">data_sources</span><br>
-    • <strong>Dropdown 2:</strong> <span class="correct-badge">azure_search</span><br>
-    • <strong>Dropdown 3:</strong> <span class="correct-badge">index_name</span><br><br>
-    <em>In the current On Your Data API the grounding config lives in the top-level <code>data_sources</code> array (exactly one element). The Azure AI Search source type is <code>azure_search</code> (renamed from the old <code>AzureCognitiveSearch</code>), and the index is given by <code>index_name</code>. Note the snake_case convention introduced in 2024-02-15-preview and later.</em>`,
-    dropdowns: {
-      'd1': { label: 'Dropdown 1 (grounding array):', options: ['data_sources', 'dataSources', 'extensions', 'tools'], correct: 'data_sources' },
-      'd2': { label: 'Dropdown 2 (source type):', options: ['azure_search', 'AzureCognitiveSearch', 'azure_blob', 'cognitive_search'], correct: 'azure_search' },
-      'd3': { label: 'Dropdown 3 (index key):', options: ['index_name', 'indexName', 'index', 'indexId'], correct: 'index_name' }
-    },
-    userSelections: {}
-  },
-  {
-    id: 501, topic: 7, discussions: 0, isExtra: true, hard: true,
-    type: 'HOTSPOT',
-    title: 'Code (Python): Azure OpenAI Chat Completion with Entra Auth',
-    text: `<p>Complete the Python so the app calls a deployed Azure OpenAI (now Azure OpenAI in Foundry Models) chat model using keyless Microsoft Entra authentication.</p>
-    <div class="code-block">from azure.identity import DefaultAzureCredential, get_bearer_token_provider<br>
-from openai import AzureOpenAI<br><br>
-token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")<br>
-client = AzureOpenAI(<br>
-&nbsp;&nbsp;azure_endpoint = endpoint,<br>
-&nbsp;&nbsp;api_version = "2024-10-21",<br>
-&nbsp;&nbsp;<strong>[ Dropdown 1 ]</strong> = token_provider<br>
-)<br>
-resp = client.chat.completions.create(<br>
-&nbsp;&nbsp;model = "<strong>[ Dropdown 2 ]</strong>",&nbsp;&nbsp;# the value you pass here<br>
-&nbsp;&nbsp;messages = [ {"role": "system", "content": "..."}, {"role": "user", "content": "..."} ]<br>
-)</div>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'casestudy_hotspot',
-    solution: `• <strong>Dropdown 1:</strong> <span class="correct-badge">azure_ad_token_provider</span><br>
-    • <strong>Dropdown 2:</strong> <span class="correct-badge">the deployment name</span><br><br>
-    <em>Keyless auth passes a token provider via <code>azure_ad_token_provider</code> (not <code>api_key</code>). For Azure OpenAI, the <code>model</code> argument must be the <strong>deployment name</strong> you created in the resource, not the base model family name.</em>`,
-    dropdowns: {
-      'd1': { label: 'Dropdown 1 (auth argument):', options: ['azure_ad_token_provider', 'api_key', 'credential', 'bearer_token'], correct: 'azure_ad_token_provider' },
-      'd2': { label: 'Dropdown 2 (model argument value):', options: ['the deployment name', 'the base model name (e.g. gpt-4)', 'the resource name', 'the endpoint URL'], correct: 'the deployment name' }
-    },
-    userSelections: {}
-  },
-  {
-    id: 502, topic: 7, discussions: 0, isExtra: true, hard: true,
-    type: 'HOTSPOT',
-    title: 'Code (C#): Control Determinism and Length',
-    text: `<p>Complete the C# options so the chat completion is highly deterministic and capped at 800 output tokens.</p>
-    <div class="code-block">var options = new ChatCompletionsOptions()<br>
-{<br>
-&nbsp;&nbsp;DeploymentName = "gpt-4o-deploy",<br>
-&nbsp;&nbsp;<strong>[ Dropdown 1 ]</strong> = 0.0f,<br>
-&nbsp;&nbsp;<strong>[ Dropdown 2 ]</strong> = 800<br>
-};</div>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'casestudy_hotspot',
-    solution: `• <strong>Dropdown 1:</strong> <span class="correct-badge">Temperature</span><br>
-    • <strong>Dropdown 2:</strong> <span class="correct-badge">MaxTokens</span><br><br>
-    <em><code>Temperature = 0</code> gives the most deterministic output; <code>MaxTokens</code> caps the length of the generated completion. (Top_p also affects randomness, but the determinism lever asked for is temperature.)</em>`,
-    dropdowns: {
-      'd1': { label: 'Dropdown 1 (determinism):', options: ['Temperature', 'FrequencyPenalty', 'PresencePenalty', 'N'], correct: 'Temperature' },
-      'd2': { label: 'Dropdown 2 (length cap):', options: ['MaxTokens', 'StopSequences', 'N', 'Seed'], correct: 'MaxTokens' }
-    },
-    userSelections: {}
-  },
-
-  // ---- RAG / PROMPT FLOW / SYSTEM MESSAGE ----
-  {
-    id: 510, topic: 7, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'RAG: Reduce Ungrounded Answers',
-    text: `<p>Your RAG chatbot (Azure OpenAI (now in Microsoft Foundry Models) On Your Data + Azure AI Search) sometimes answers from the model's own knowledge instead of the retrieved documents, and occasionally fabricates citations. You must make answers stay grounded in the indexed content.</p>
-    <p>Which two actions best address this? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. Enable the "limit responses to your data content" (inScope / strictness) setting.',
-      'B. Add a system message instructing the model to answer only from the retrieved sources and to say it doesn\u2019t know otherwise.',
-      'C. Increase temperature to add variety.',
-      'D. Remove the data source and fine-tune instead.',
-      'E. Raise max tokens to 4000.'
-    ],
-    correctOptions: ['A', 'B'],
-    solution: `<strong>Correct Answer: A and B</strong><br><br>
-    Grounding is enforced by the <strong>limit-to-your-data / strictness (inScope)</strong> setting (A) plus a <strong>system message</strong> that tells the model to answer only from retrieved sources and to admit uncertainty (B). Higher temperature increases hallucination risk (C), fine-tuning doesn't ground on changing data (D), and more tokens don't improve grounding (E).`,
-    userChoices: []
-  },
-  {
-    id: 511, topic: 7, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Prompt Flow: Node to Retrieve Context for RAG',
-    text: `<p>You build a RAG application as a prompt flow. The flow must take the user question, retrieve the most relevant chunks from an Azure AI Search vector index, and pass them into the LLM prompt.</p>
-    <p>Which prompt flow node/tool performs the retrieval step?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Index Lookup (vector index lookup) tool',
-      'B. Python tool that calls DALL-E',
-      'C. Content Safety node',
-      'D. Embedding deployment node only'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Index Lookup tool</strong><br><br>
-    In prompt flow the <strong>Index Lookup</strong> (vector index lookup) tool queries the Azure AI Search index and returns matching chunks, which the downstream LLM node uses as grounding context. Embedding is part of preparing the query, but the retrieval step is the Index Lookup tool.`,
-    userChoice: null
-  },
-  {
-    id: 512, topic: 7, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Prompt Flow: Quantitative Quality Before Release',
-    text: `<p>Before deploying a prompt flow, you must compare two prompt variants on a test dataset and score them for groundedness and relevance.</p>
-    <p>What should you run?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. A batch run with an evaluation flow (groundedness/relevance metrics)',
-      'B. A single manual chat in the playground',
-      'C. A content filter policy',
-      'D. A load test'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Prompt flow supports <strong>batch runs</strong> over a dataset paired with an <strong>evaluation flow</strong> that computes metrics like groundedness, relevance, coherence, and fluency, letting you compare variants objectively. Manual chats aren't quantitative; filters and load tests measure different things.`,
-    userChoice: null
-  },
-  {
-    id: 513, topic: 7, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'System Message: Enforce Format and Safety',
-    text: `<p>You must make a chat model always respond in JSON with keys <code>answer</code> and <code>citations</code>, refuse off-topic requests, and never reveal its instructions. You must not retrain the model.</p>
-    <p>Where do you put these rules?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. In the system message (and request JSON response format)',
-      'B. In a fine-tuning dataset',
-      'C. In the Azure AI Search scoring profile',
-      'D. In the indexer schedule'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Behavioral rules (format, scope, not revealing instructions) belong in the <strong>system message</strong>, optionally combined with the JSON <em>response_format</em> setting to force structured output — all without retraining. Fine-tuning is heavier and unnecessary; search/indexer settings are unrelated.`,
-    userChoice: null
-  },
-
-  // ---- MULTI-SERVICE SCENARIOS WITH CONSTRAINTS ----
-  {
-    id: 520, topic: 1, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Private, Keyless, Multi-Service Architecture',
-    text: `<p>A RAG solution uses Azure OpenAI (now in Microsoft Foundry Models) and Azure AI Search. Security requires: no keys in code, no traffic over the public internet, and least-privilege access between services.</p>
-    <p>Which combination meets all three constraints?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Managed identity + Azure RBAC roles + private endpoints for both services',
-      'B. Shared keys stored in app settings + service endpoints',
-      'C. A single Owner role for the app on the subscription',
-      'D. Public endpoints secured only by IP allowlist with keys in code'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Keyless = <strong>managed identity</strong>; least privilege = scoped <strong>RBAC roles</strong> (e.g. Search Index Data Reader, Cognitive Services OpenAI User); no public traffic = <strong>private endpoints</strong> with Private Link. The other options keep keys, over-grant (Owner), or still traverse the public internet.`,
-    userChoice: null
-  },
-  {
-    id: 521, topic: 4, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Cost-Constrained Document Pipeline',
-    text: `<p>You must extract text and tables from thousands of standard invoices per day, then make them searchable. Constraints: minimize development effort AND per-document cost, and avoid training.</p>
-    <p>Which design fits best?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Document Intelligence prebuilt invoice model \u2192 push results into an Azure AI Search index',
-      'B. Train a custom neural model per vendor \u2192 index results',
-      'C. Use Azure OpenAI to read each invoice image with a long prompt',
-      'D. Custom Vision object detection \u2192 index bounding boxes'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    The <strong>prebuilt invoice</strong> model needs no training (low effort/cost) and returns structured fields + tables, which you index in <strong>Azure AI Search</strong> for search. Per-vendor neural models add training cost/effort; per-image LLM calls are expensive at scale; Custom Vision doesn't extract invoice fields.`,
-    userChoice: null
-  },
-  {
-    id: 522, topic: 8, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Agent That Must Cite Live Web + Internal Docs',
-    text: `<p>A Microsoft Foundry agent must answer using BOTH current public web results AND a private corpus of internal PDFs, with citations, under a managed-identity security model.</p>
-    <p>Which two tools should you attach to the agent? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. Grounding with Bing Search',
-      'B. Azure AI Search (file/index) tool',
-      'C. Code interpreter',
-      'D. DALL-E image generation',
-      'E. Translator'
-    ],
-    correctOptions: ['A', 'B'],
-    solution: `<strong>Correct Answer: A and B</strong><br><br>
-    Live public web = <strong>Grounding with Bing Search</strong> (A); private internal PDFs = the <strong>Azure AI Search</strong> tool over an index of those documents (B). Both surface citations. Code interpreter, image generation, and translation don't provide grounded retrieval.`,
-    userChoices: []
-  },
-  {
-    id: 523, topic: 1, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Data Residency Forces an Architecture Choice',
-    text: `<p>A regulated customer requires that documents never leave their on-premises network, yet they want to extract key-value fields from forms. Cloud calls are prohibited for the document content.</p>
-    <p>What should you deploy?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. The Document Intelligence container running on-premises (disconnected/connected container)',
-      'B. The cloud Document Intelligence endpoint with a private endpoint',
-      'C. Azure OpenAI On Your Data',
-      'D. Azure AI Search with a knowledge store'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    When document <em>content</em> may not leave the premises, deploy the <strong>Document Intelligence container</strong> on-premises so processing happens locally (billing meters to Azure). A cloud endpoint — even behind a private endpoint (B) — still sends content to Azure, violating the constraint.`,
-    userChoice: null
-  },
-
-  // ---- RESOURCE RETIREMENT / MIGRATION ----
-  {
-    id: 530, topic: 2, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Migration: Replace Custom Vision Classification',
-    text: `<p>An older app uses Azure Custom Vision for image classification. Custom Vision is being phased out and you must rebuild the classifier on the current Foundry-era stack with full MLOps (training pipelines, registries).</p>
-    <p>Which platform should you target?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Azure Machine Learning (and/or Foundry) custom vision/image classification',
-      'B. QnA Maker',
-      'C. LUIS',
-      'D. Bing Image Search'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    As Custom Vision is de-emphasized, classification workloads move to <strong>Azure Machine Learning</strong> (with Foundry integration) for training pipelines, model registries, and managed endpoints. QnA Maker/LUIS are retired language tools; Bing Image Search isn't a classifier.`,
-    userChoice: null
-  },
-  {
-    id: 531, topic: 3, discussions: 0, isExtra: true, hard: true,
-    type: 'HOTSPOT',
-    title: 'Migration: Map Retired Service to Current Replacement',
-    text: `<p>Select the current replacement for each retired/legacy service.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'casestudy_hotspot',
-    solution: `• <strong>LUIS \u2192</strong> <span class="correct-badge">Conversational Language Understanding (CLU)</span><br>
-    • <strong>QnA Maker \u2192</strong> <span class="correct-badge">Custom question answering</span><br>
-    • <strong>Azure AI Studio \u2192</strong> <span class="correct-badge">Microsoft Foundry</span>`,
-    dropdowns: {
-      'luis': { label: 'LUIS is replaced by:', options: ['Conversational Language Understanding (CLU)', 'Custom question answering', 'Translator'], correct: 'Conversational Language Understanding (CLU)' },
-      'qna': { label: 'QnA Maker is replaced by:', options: ['Custom question answering', 'CLU', 'Speech Studio'], correct: 'Custom question answering' },
-      'studio': { label: 'Azure AI Studio is now:', options: ['Microsoft Foundry', 'Azure ML Studio', 'Power Virtual Agents'], correct: 'Microsoft Foundry' }
-    },
-    userSelections: {}
-  },
-  {
-    id: 532, topic: 7, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Migration: Assistants API Sunset',
-    text: `<p>You prototyped on the Azure OpenAI (now in Microsoft Foundry Models) Assistants API, which is being retired. You need a supported, stateful, multi-turn API that unifies chat completions and Assistants-style capabilities.</p>
-    <p>Which API should you move to?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. The Azure OpenAI Responses API',
-      'B. The legacy completions endpoint',
-      'C. QnA Maker GenerateAnswer',
-      'D. The Translator API'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Responses API</strong><br><br>
-    The <strong>Responses API</strong> generates stateful, multi-turn responses and brings together chat completions and Assistants capabilities in one unified experience — the recommended path as Assistants is retired. The others are legacy or unrelated.`,
-    userChoice: null
-  },
-  {
-    id: 533, topic: 7, discussions: 0, isExtra: true, hard: true,
-    type: 'HOTSPOT',
-    title: 'Code (JSON): Fix the On Your Data Source Type (Versioned)',
-    text: `<p>An app written against an older API version fails after upgrading to api-version 2024-02-01. Select the corrected value for each property to match the current snake_case schema.</p>
-    <div class="code-block">"data_sources": [{<br>
-&nbsp;&nbsp;"type": "<strong>[ Dropdown 1 ]</strong>",<br>
-&nbsp;&nbsp;"parameters": { "<strong>[ Dropdown 2 ]</strong>": "my-deploy", "endpoint": "...", "index_name": "..." }<br>
-}]</div>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'casestudy_hotspot',
-    solution: `• <strong>Dropdown 1:</strong> <span class="correct-badge">azure_search</span> (was AzureCognitiveSearch)<br>
-    • <strong>Dropdown 2:</strong> <span class="correct-badge">deployment_name</span> (was deploymentName)<br><br>
-    <em>From 2024-02-15-preview onward, property keys/enum values switched to snake_case and the source type <code>AzureCognitiveSearch</code> became <code>azure_search</code>; <code>deploymentName</code> became <code>deployment_name</code>. Upgrading the API version without updating these breaks the request.</em>`,
-    dropdowns: {
-      'd1': { label: 'Dropdown 1 (type):', options: ['azure_search', 'AzureCognitiveSearch', 'azureSearch'], correct: 'azure_search' },
-      'd2': { label: 'Dropdown 2 (deployment key):', options: ['deployment_name', 'deploymentName', 'model_name'], correct: 'deployment_name' }
-    },
-    userSelections: {}
-  },
-  {
-    id: 534, topic: 7, discussions: 0, isExtra: true, hard: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'RAG: Hybrid + Semantic Ranking for Best Relevance',
-    text: `<p>Your RAG retrieval misses relevant chunks when users phrase questions differently from the source text. You want the strongest relevance combining keyword, vector, and re-ranking.</p>
-    <p>Which Azure AI Search retrieval configuration should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Hybrid search (keyword + vector) with semantic ranking enabled',
-      'B. Keyword search only',
-      'C. Vector search with a tiny embedding dimension',
-      'D. Wildcard queries'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    <strong>Hybrid search</strong> runs keyword and vector retrieval together (fused with RRF), and <strong>semantic ranking</strong> re-orders the top results by meaning — the recommended high-relevance setup for RAG. Keyword-only or wildcards miss paraphrases; shrinking embedding dimensions hurts vector quality.`,
-    userChoice: null
-  },
-  // ══ Multi-service scenario set (all six domains, MS Learn-grounded, Dec 2025 objectives) ══
-
-  // ---- Plan & Manage / Responsible AI / security ----
-  {
-    id: 600, topic: 1, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: CI/CD for a Foundry Solution',
-    text: `<p>Your team must deploy a Microsoft Foundry solution (models, prompt flow, connections) through an automated pipeline so that promotion from dev to prod is repeatable and reviewable. No manual portal clicks in prod.</p>
-    <p>Which approach best meets this?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Define resources/flows as code (Bicep/ARM + flow YAML) and deploy via an Azure DevOps/GitHub Actions CI/CD pipeline',
-      'B. Click through the Foundry portal in each environment',
-      'C. Export a PDF of the configuration and email it to ops',
-      'D. Use a single shared resource for dev and prod'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    The objective "integrate Microsoft Foundry Services into a CI/CD pipeline" means infrastructure-as-code (Bicep/ARM) plus prompt-flow definitions in source control, deployed by an automated pipeline with approvals — repeatable and reviewable. Manual portal work and shared dev/prod resources break governance.`,
-    userChoice: null
-  },
-  {
-    id: 601, topic: 1, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Cost Monitoring + Throttling Across Services',
-    text: `<p>A multi-service AI app (Azure OpenAI (now in Microsoft Foundry Models) + AI Search + Document Intelligence) is exceeding budget. You must attribute spend per service and prevent any single client from exhausting Azure OpenAI capacity.</p>
-    <p>Which two actions help? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. Use Azure Cost Management with per-resource tags to attribute spend.',
-      'B. Apply quotas / rate limits (TPM) on the Azure OpenAI deployment, optionally via APIM.',
-      'C. Disable logging to save money.',
-      'D. Give every client the resource key.',
-      'E. Move everything to one resource to simplify billing.'
-    ],
-    correctOptions: ['A', 'B'],
-    solution: `<strong>Correct Answer: A and B</strong><br><br>
-    Per-service attribution comes from <strong>Cost Management + resource tags</strong> (A); preventing one client from exhausting capacity comes from <strong>TPM quotas/rate limits</strong> on the deployment, often enforced with API Management (B). Disabling logs harms observability, sharing keys is insecure, and collapsing to one resource loses attribution.`,
-    userChoices: []
-  },
-  {
-    id: 602, topic: 1, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Responsible AI for a Public Chatbot',
-    text: `<p>A public-facing generative chatbot must block hateful/sexual/violent content in both prompts and responses, block jailbreak attempts, and detect when answers aren't grounded in provided sources.</p>
-    <p>Which combination should you configure?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Azure AI Content Safety (text moderation) + Prompt Shields + groundedness detection',
-      'B. A scoring profile in Azure AI Search',
-      'C. SSML on the responses',
-      'D. A synonym map'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Harm categories = <strong>Content Safety</strong> moderation; jailbreak/prompt-injection = <strong>Prompt Shields</strong>; ungrounded-answer detection = <strong>groundedness detection</strong>. These are the Responsible AI controls for generative apps; search/SSML/synonym features don't moderate content.`,
-    userChoice: null
-  },
-
-  // ---- Generative AI / Azure OpenAI / RAG ----
-  {
-    id: 610, topic: 7, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Grounded Q&A Over Mixed Content (PDF + images)',
-    text: `<p>You must build grounded Q&A over a corpus of PDFs that contain text, tables, and scanned images. Answers must cite sources, stay current as documents change, and require no model retraining.</p>
-    <p>Which end-to-end design fits best?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Crack documents with Document Intelligence/Content Understanding \u2192 chunk + embed into an Azure AI Search vector index \u2192 RAG with Azure OpenAI On Your Data',
-      'B. Fine-tune GPT on the PDFs once and serve directly',
-      'C. Paste all PDFs into the system message',
-      'D. Use Custom Vision to classify the PDFs'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    The standard grounded-Q&A pipeline: extract text/tables/OCR with <strong>Document Intelligence / Content Understanding</strong>, chunk and embed into an <strong>Azure AI Search</strong> vector index, then answer via <strong>RAG (On Your Data)</strong> with citations — re-indexing keeps it current, no retraining. Fine-tuning doesn't track changing facts, system-message stuffing won't scale, and Custom Vision doesn't do grounded Q&A.`,
-    userChoice: null
-  },
-  {
-    id: 611, topic: 7, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Latency + Cost vs Quality Trade-off',
-    text: `<p>A high-traffic summarization feature is too slow and costly on a large model, but quality on a small model is borderline. You must cut cost/latency while keeping acceptable quality, and prove it before rollout.</p>
-    <p>Which approach is best?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Try a smaller/cheaper model, validate with a prompt flow evaluation run against your dataset, and roll out only if metrics pass',
-      'B. Always use the largest model regardless of cost',
-      'C. Set temperature to 2.0',
-      'D. Remove the system message'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    The disciplined path: switch to a smaller model, then <strong>quantitatively evaluate</strong> it with a prompt flow evaluation run (relevance/groundedness/etc.) on your dataset, and promote only if it clears your bar. The other options ignore cost, harm quality, or remove guardrails.`,
-    userChoice: null
-  },
-  {
-    id: 612, topic: 7, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Structured Extraction From Free Text',
-    text: `<p>An app must turn free-text support emails into a strict JSON record (category, urgency, summary) for a downstream system that rejects malformed input.</p>
-    <p>Which technique most reliably produces valid structured output?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Use the model\u2019s structured output / JSON response_format with a defined schema in the prompt',
-      'B. Increase max tokens only',
-      'C. Use Document Intelligence prebuilt invoice',
-      'D. Use Translator'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Forcing valid JSON is done with the model's <strong>structured output / JSON response format</strong> plus a schema described in the prompt, so the downstream system gets parseable records. More tokens don't guarantee validity; invoice models and Translator solve different problems.`,
-    userChoice: null
-  },
-
-  // ---- Agents (Foundry Agent Service / Semantic Kernel) ----
-  {
-    id: 620, topic: 8, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Agent That Calls a CRM API + Retrieves Context',
-    text: `<p>You build a support agent that must (1) retrieve product context from an Azure AI Search index and (2) create tickets by calling an existing CRM REST API, coordinating both within one conversation.</p>
-    <p>Which design on Microsoft Foundry fits best?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. A Foundry Agent Service agent with an Azure AI Search tool plus a custom/OpenAPI tool for the CRM API, orchestrated with Semantic Kernel',
-      'B. A static FAQ page',
-      'C. A Translator pipeline',
-      'D. A Custom Vision model'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    The agent uses the <strong>Azure AI Search tool</strong> for retrieval and an <strong>OpenAPI/custom tool</strong> to call the CRM, with <strong>Semantic Kernel</strong> orchestrating the steps and tool calls. That matches the objective "design multi-step agents that call external APIs/databases." The other options can't coordinate retrieval + action.`,
-    userChoice: null
-  },
-  {
-    id: 621, topic: 8, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Multi-Agent Orchestration with Autonomy',
-    text: `<p>A workflow needs a planner agent that delegates subtasks to specialized agents (a researcher, a writer, a reviewer) and coordinates their results autonomously.</p>
-    <p>Which Microsoft approach is intended for this multi-agent orchestration?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Microsoft Agent Framework / Semantic Kernel multi-agent orchestration over Foundry Agent Service agents',
-      'B. A single waterfall dialog in Bot Framework',
-      'C. QnA Maker chit-chat',
-      'D. A scheduled indexer'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    "Implement complex workflows including orchestration for a multi-agent solution... and autonomous capabilities" maps to the <strong>Microsoft Agent Framework / Semantic Kernel</strong> coordinating multiple Foundry agents. A single dialog, QnA chit-chat, or an indexer can't orchestrate autonomous multi-agent work.`,
-    userChoice: null
-  },
-  {
-    id: 622, topic: 8, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Persist Agent Conversation State',
-    text: `<p>Your Foundry agent must remember the running context of a multi-turn conversation across many tool calls within a session, without you building custom storage.</p>
-    <p>Which Foundry Agent Service concept provides this?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Threads (managed conversation state)',
-      'B. A scoring profile',
-      'C. A knowledge store',
-      'D. A synonym map'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Threads</strong><br><br>
-    The Foundry Agent Service manages conversation state via <strong>threads</strong>, so the running context and message history persist across tool calls in a session without custom storage. The other options belong to search/indexing, not agent state.`,
-    userChoice: null
-  },
-
-  // ---- Computer Vision ----
-  {
-    id: 630, topic: 2, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: People Presence/Movement in Video',
-    text: `<p>A retailer must detect the presence and movement of people in store camera feeds (e.g., entrance counts, queue dwell) for analytics.</p>
-    <p>Which capability should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Azure Vision in Foundry Tools \u2014 Spatial Analysis',
-      'B. The Read (OCR) API',
-      'C. Document Intelligence invoice model',
-      'D. Translator'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Spatial Analysis</strong><br><br>
-    Detecting presence and movement of people in video is the <strong>Spatial Analysis</strong> capability of Azure Vision (in Foundry Tools), per the objective. OCR reads text, Document Intelligence extracts document fields, Translator does language translation.`,
-    userChoice: null
-  },
-  {
-    id: 631, topic: 2, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Multimodal Ingestion of Docs, Images, Video, Audio',
-    text: `<p>You must build one pipeline that ingests and extracts structured insights from documents, images, video, AND audio, with minimal custom glue code.</p>
-    <p>Which service should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Azure Content Understanding in Foundry Tools',
-      'B. Custom Vision only',
-      'C. The Read API only',
-      'D. QnA Maker'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    "Process and ingest documents, images, videos, and audio with <strong>Azure Content Understanding in Foundry Tools</strong>" is the objective wording — it's the multimodal extraction service. Single-modality tools (Custom Vision, Read) or retired QnA Maker don't cover all four.`,
-    userChoice: null
-  },
-  {
-    id: 632, topic: 2, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Detect + Locate Custom Objects with Evaluation',
-    text: `<p>A manufacturer must detect specific custom parts in photos AND know where each part is, then evaluate model precision/recall before deployment.</p>
-    <p>Which approach fits?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Train a custom object detection model and evaluate with precision/recall/mAP before publishing',
-      'B. Use prebuilt image tagging only',
-      'C. Use the Read API',
-      'D. Use sentiment analysis'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Detecting <em>and locating</em> custom objects requires a trained <strong>object detection</strong> model (bounding boxes), and the objective expects you to <strong>evaluate</strong> it (precision, recall, mAP) before publishing. Tagging gives labels without location; Read/sentiment are unrelated.`,
-    userChoice: null
-  },
-
-  // ---- Knowledge Mining / AI Search / Doc Intelligence ----
-  {
-    id: 640, topic: 4, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Searchable Enrichment + Reusable Projections',
-    text: `<p>You enrich support tickets (language detection, key phrases, PII redaction) for search, and a separate analytics team needs the enriched output as tables in storage.</p>
-    <p>Which two pipeline components do you need? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. A skillset with the enrichment skills attached to an indexer.',
-      'B. A knowledge store with table projections.',
-      'C. A scoring profile.',
-      'D. A synonym map.',
-      'E. A Custom Vision model.'
-    ],
-    correctOptions: ['A', 'B'],
-    solution: `<strong>Correct Answer: A and B</strong><br><br>
-    Enrichment for search = a <strong>skillset</strong> (language detection, key phrase, PII) run by an <strong>indexer</strong> (A). Reusable tabular output for analytics = a <strong>knowledge store</strong> with <strong>table projections</strong> (B). Scoring profiles tune ranking, synonym maps expand queries, and Custom Vision is unrelated.`,
-    userChoices: []
-  },
-  {
-    id: 641, topic: 4, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Mixed Document Stream Routing',
-    text: `<p>An intake app receives invoices, receipts, and a few company-specific forms in one stream. You want each document analyzed by the most appropriate model under a single call/model ID, minimizing effort.</p>
-    <p>What should you build?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. A composed model that groups the prebuilt invoice, prebuilt receipt, and a custom model for the company forms',
-      'B. One custom neural model trained on all three mixed together',
-      'C. The Read model for everything',
-      'D. A synonym map'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    A <strong>composed model</strong> classifies the incoming document and routes it to the right sub-model (prebuilt invoice, prebuilt receipt, or your custom form model) behind one model ID — least effort for a mixed stream. Cramming everything into one neural model hurts accuracy; Read only does OCR.`,
-    userChoice: null
-  },
-  {
-    id: 642, topic: 4, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Semantic Search Over Multilingual Docs',
-    text: `<p>An index holds documents in English, French, and Portuguese. Users query in any of the three languages and expect meaning-based matches, not just exact keywords.</p>
-    <p>Which two features should you combine? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. Vector search using multilingual embeddings.',
-      'B. Semantic ranking on the results.',
-      'C. A single en.lucene analyzer for all languages.',
-      'D. Wildcard queries.',
-      'E. A scoring profile that boosts recency only.'
-    ],
-    correctOptions: ['A', 'B'],
-    solution: `<strong>Correct Answer: A and B</strong><br><br>
-    Meaning-based, cross-language matching uses <strong>vector search with multilingual embeddings</strong> (A), and <strong>semantic ranking</strong> (B) re-orders the top hits by relevance. A single English analyzer mis-tokenizes other languages, wildcards are lexical, and a recency-only profile ignores meaning.`,
-    userChoices: []
-  },
-
-  // ---- NLP / Speech / Translator ----
-  {
-    id: 650, topic: 3, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Multilingual Voice Assistant Pipeline',
-    text: `<p>A voice assistant must accept spoken input in several languages, understand the user's intent, and reply with spoken output in the user's language.</p>
-    <p>Which pipeline of services should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Speech-to-text \u2192 (translate if needed) \u2192 Conversational Language Understanding for intent \u2192 text-to-speech',
-      'B. Document Intelligence \u2192 Azure AI Search',
-      'C. Custom Vision \u2192 Translator',
-      'D. QnA Maker \u2192 SSML only'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Voice in = <strong>speech-to-text</strong>; multilingual handling = <strong>Translator</strong> where needed; intent = <strong>CLU</strong>; voice out = <strong>text-to-speech</strong>. That's the canonical speech+language pipeline. The other chains mix in unrelated vision/document services.`,
-    userChoice: null
-  },
-  {
-    id: 651, topic: 3, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Route Tickets by Topic with Custom Categories',
-    text: `<p>You must automatically classify incoming support tickets into your own domain-specific categories (e.g., "Billing-Dispute", "Outage", "Feature-Request") that no prebuilt model knows.</p>
-    <p>Which Azure AI Language capability should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Custom text classification',
-      'B. Prebuilt sentiment analysis',
-      'C. Key phrase extraction',
-      'D. Language detection'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Custom text classification</strong><br><br>
-    Your own labeled categories require <strong>custom text classification</strong> (single- or multi-label), which you train on examples. Sentiment, key phrases, and language detection are prebuilt and can't learn your bespoke categories.`,
-    userChoice: null
-  },
-  {
-    id: 652, topic: 3, discussions: 0, isExtra: true, scenario: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Scenario: Summarize Long Call Transcripts + Redact PII',
-    text: `<p>From long customer-call transcripts you must produce short summaries and remove personal data before storage, with minimal custom code.</p>
-    <p>Which two Azure AI Language features should you use? Each correct answer presents part of the solution.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'mcq', multiSelect: true,
-    options: [
-      'A. Text/conversation summarization.',
-      'B. PII detection and redaction.',
-      'C. SSML.',
-      'D. A scoring profile.',
-      'E. Object detection.'
-    ],
-    correctOptions: ['A', 'B'],
-    solution: `<strong>Correct Answer: A and B</strong><br><br>
-    Short summaries = <strong>summarization</strong> (A); removing personal data = <strong>PII detection/redaction</strong> (B). SSML is for speech synthesis, scoring profiles tune search ranking, and object detection is vision.`,
-    userChoices: []
-  },
-  // ══ Renamed-technology coverage: Video Indexer, Azure OpenAI (Foundry Models), Vision, Speech ══
-  // Naming verified against Microsoft Learn (2026): OpenAI SKU keeps its name (now "in Microsoft
-  // Foundry Models"); Vision/Speech are now "in Foundry Tools"; Video Indexer keeps its name.
-
-  {
-    id: 700, topic: 2, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Video Indexer: Extract Multimodal Insights',
-    text: `<p>You must extract a transcript, detected faces, on-screen (OCR) text, topics, and keyframes from recorded videos with minimal custom code.</p>
-    <p>Which service should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Azure AI Video Indexer (offered in Foundry Tools)',
-      'B. Azure AI Vision Read (OCR) API only',
-      'C. Azure AI Document Intelligence',
-      'D. Azure OpenAI DALL-E'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Azure AI Video Indexer</strong><br><br>
-    <strong>Azure AI Video Indexer</strong> extracts multimodal insights from video/audio — transcript, faces, OCR text, topics, keyframes, sentiment — in one pass. It keeps its name and is now offered within Foundry Tools. The single-purpose options can't produce the full video insight set.<br>
-    <em>Naming: Video Indexer was NOT renamed; it's surfaced under Foundry Tools.</em>`,
-    userChoice: null
-  },
-  {
-    id: 701, topic: 2, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Video Indexer: Recognize Company-Specific People/Brands',
-    text: `<p>Your Video Indexer account must recognize your executives by name and your product brand names in videos, beyond the built-in celebrity/brand models.</p>
-    <p>What should you configure?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Custom Person models and a custom Brands list in Video Indexer',
-      'B. A custom neural Document Intelligence model',
-      'C. A synonym map in Azure AI Search',
-      'D. SSML'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    Video Indexer supports <strong>custom Person models</strong> (train it on your people) and <strong>custom Brands</strong> (include/exclude specific brand terms), extending the built-in recognition. Document Intelligence, synonym maps, and SSML are unrelated to video face/brand recognition.`,
-    userChoice: null
-  },
-  {
-    id: 702, topic: 7, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Azure OpenAI: Resource vs Foundry Naming',
-    text: `<p>A colleague says "Azure OpenAI (now in Microsoft Foundry Models) is gone — it's all Microsoft Foundry now." You must deploy a GPT model and call it from existing code with minimal change.</p>
-    <p>Which statement is correct?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. The Azure OpenAI Service SKU still exists (now "Azure OpenAI in Microsoft Foundry Models"); you can keep using it standalone.',
-      'B. Azure OpenAI was deprecated and you must rewrite everything for a new API.',
-      'C. Azure OpenAI became Foundry Tools and lost the /openai endpoint.',
-      'D. You must migrate to Custom Vision.'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    The <strong>Azure OpenAI Service SKU was not deprecated</strong>. It remains creatable standalone and is now branded <em>Azure OpenAI in Microsoft Foundry Models</em>, keeping its name, endpoint, and keys. Upgrading to the unified Foundry resource is opt-in and reversible — your existing code keeps working.<br>
-    <em>Naming: "Azure OpenAI" still valid; it's a SKU rename/branding, not a deprecation.</em>`,
-    userChoice: null
-  },
-  {
-    id: 703, topic: 7, discussions: 0, isExtra: true,
-    type: 'HOTSPOT',
-    title: 'Code: Azure OpenAI (Foundry Models) Endpoint Path',
-    text: `<p>You call an Azure OpenAI (now in Microsoft Foundry Models) chat deployment via REST. Complete the request line.</p>
-    <div class="code-block">POST https://{resource}.openai.azure.com/openai/deployments/<strong>[ Dropdown 1 ]</strong>/chat/completions?api-version=2024-10-21<br>
-Header: <strong>[ Dropdown 2 ]</strong></div>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'casestudy_hotspot',
-    solution: `• <strong>Dropdown 1:</strong> <span class="correct-badge">{deployment-name}</span><br>
-    • <strong>Dropdown 2:</strong> <span class="correct-badge">Authorization: Bearer {Entra token} (or api-key: {key})</span><br><br>
-    <em>The path segment is the <strong>deployment name</strong> you created, not the base model. Auth is either a Microsoft Entra bearer token (recommended) or the <code>api-key</code> header. The endpoint host stays <code>*.openai.azure.com</code> even under Foundry Models branding.</em>`,
-    dropdowns: {
-      'd1': { label: 'Dropdown 1 (path segment):', options: ['{deployment-name}', '{model-family}', '{resource-name}', '{api-version}'], correct: '{deployment-name}' },
-      'd2': { label: 'Dropdown 2 (auth header):', options: ['Authorization: Bearer {Entra token} (or api-key: {key})', 'X-Functions-Key: {key}', 'Cookie: session', 'No header needed'], correct: 'Authorization: Bearer {Entra token} (or api-key: {key})' }
-    },
-    userSelections: {}
-  },
-  {
-    id: 704, topic: 2, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Azure Vision (in Foundry Tools): Read Printed + Handwritten Text',
-    text: `<p>You must extract printed and handwritten text from scanned images and multi-page documents using the vision service.</p>
-    <p>Which capability should you call?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. The Read (OCR) operation of Azure Vision (in Foundry Tools)',
-      'B. Image tagging',
-      'C. Spatial Analysis',
-      'D. Background removal'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Read (OCR)</strong><br><br>
-    The <strong>Read</strong> operation extracts printed and handwritten text across images and documents. It's part of <strong>Azure Vision</strong>, now offered <em>in Foundry Tools</em> (formerly Azure AI Vision / Computer Vision). Tagging describes content, Spatial Analysis tracks people in video, background removal edits images.<br>
-    <em>Naming: Azure AI Vision → Azure Vision in Foundry Tools.</em>`,
-    userChoice: null
-  },
-  {
-    id: 705, topic: 2, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Azure Vision (in Foundry Tools): Caption + Tag Images',
-    text: `<p>A media app must auto-generate a descriptive caption and content tags for uploaded photos, with no model training.</p>
-    <p>Which feature should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Image Analysis (caption + tags) in Azure Vision (Foundry Tools)',
-      'B. A custom-trained classification model',
-      'C. Document Intelligence layout',
-      'D. Translator'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A</strong><br><br>
-    The prebuilt <strong>Image Analysis</strong> capability returns captions and tags out of the box — no training needed. A custom classification model adds effort; Document Intelligence and Translator solve different problems.`,
-    userChoice: null
-  },
-  {
-    id: 706, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Azure Speech (in Foundry Tools): Improve Domain Recognition',
-    text: `<p>Speech-to-text accuracy is poor for industry jargon and noisy audio. You have audio samples with transcripts available.</p>
-    <p>What should you implement?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Custom Speech (a custom speech-to-text model) in Azure Speech (Foundry Tools)',
-      'B. SSML',
-      'C. A prebuilt neural voice',
-      'D. Language detection'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Custom Speech</strong><br><br>
-    <strong>Custom Speech</strong> lets you train a speech-to-text model on your audio + transcripts to handle jargon and difficult acoustics. It's part of <strong>Azure Speech</strong>, now in Foundry Tools (formerly Azure AI Speech). SSML and neural voices are text-to-speech; language detection identifies language.<br>
-    <em>Naming: Azure AI Speech → Azure Speech in Foundry Tools.</em>`,
-    userChoice: null
-  },
-  {
-    id: 707, topic: 3, discussions: 0, isExtra: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Azure Speech (in Foundry Tools): Brand Voice',
-    text: `<p>A company wants a unique, recognizable synthetic "brand voice" for its app's text-to-speech, trained from recordings of a chosen voice talent (with consent).</p>
-    <p>Which capability should you use?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. Custom Neural Voice',
-      'B. A prebuilt neural voice',
-      'C. Custom Speech (speech-to-text)',
-      'D. Speaker recognition'
-    ],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Custom Neural Voice</strong><br><br>
-    <strong>Custom Neural Voice</strong> trains a unique synthetic voice from approved recordings (a gated, consent-required feature) for branded text-to-speech. Prebuilt voices aren't unique to you, Custom Speech is recognition (STT), and speaker recognition verifies/identifies speakers.`,
-    userChoice: null
-  },
-  {
-    id: 708, topic: 3, discussions: 0, isExtra: true,
-    type: 'HOTSPOT',
-    title: 'Naming: Match Old Name to Current Name',
-    text: `<p>Select the current name/branding for each service (2026).</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'casestudy_hotspot',
-    solution: `• <strong>Azure AI Vision →</strong> <span class="correct-badge">Azure Vision in Foundry Tools</span><br>
-    • <strong>Azure AI Speech →</strong> <span class="correct-badge">Azure Speech in Foundry Tools</span><br>
-    • <strong>Azure OpenAI Service →</strong> <span class="correct-badge">Azure OpenAI in Microsoft Foundry Models (SKU still valid)</span><br>
-    • <strong>Azure AI Video Indexer →</strong> <span class="correct-badge">Azure AI Video Indexer (unchanged; offered in Foundry Tools)</span>`,
-    dropdowns: {
-      'vision': { label: 'Azure AI Vision is now:', options: ['Azure Vision in Foundry Tools', 'Foundry Agent Service', 'Azure Machine Learning'], correct: 'Azure Vision in Foundry Tools' },
-      'speech': { label: 'Azure AI Speech is now:', options: ['Azure Speech in Foundry Tools', 'Speech Studio Classic', 'Cortana Speech'], correct: 'Azure Speech in Foundry Tools' },
-      'openai': { label: 'Azure OpenAI Service is now:', options: ['Azure OpenAI in Microsoft Foundry Models (SKU still valid)', 'Foundry Tools (deprecated OpenAI)', 'Renamed to DALL-E Service'], correct: 'Azure OpenAI in Microsoft Foundry Models (SKU still valid)' },
-      'vi': { label: 'Azure AI Video Indexer is now:', options: ['Azure AI Video Indexer (unchanged; offered in Foundry Tools)', 'Foundry Video Service', 'Stream Analytics'], correct: 'Azure AI Video Indexer (unchanged; offered in Foundry Tools)' }
-    },
-    userSelections: {}
   }
-
-
-
-
 ];
 
 // ============================================================
@@ -6169,8 +5219,8 @@ function coachWhy(q) {
     vision:  'image/video analysis — Computer Vision features vs Custom Vision training, domains, exporting compact models, and OCR',
     nlp:     'speech and language — speech-to-text/translation, LUIS/CLU, Translator, and the right recognizer/synthesizer object',
     mining:  'enrichment pipelines, skillsets, knowledge store projections, and Document Intelligence extraction',
-    genai:   'Azure OpenAI in Foundry Models — chat completions, grounding on your data (RAG), prompt flow evaluation, content filters, and deployment/role choices',
-    agentic: 'building agents on the Microsoft Foundry Agent Service — creating agents, attaching built-in tools (Azure AI Search, code interpreter, Grounding with Bing), persisting state with threads, and orchestrating multi-agent workflows with Semantic Kernel / the Microsoft Agent Framework'
+    genai:   'Azure OpenAI — chat completions, grounding on your data (RAG), and deployment/role choices',
+    agentic: 'Content Safety — moderation categories, blocklists, jailbreak detection, and safe deployment of generative apps'
   }[domainOf(q)];
   return `This tests the <strong>${d.name}</strong> domain (${d.weight} of the exam). The skill being checked is <strong>${concept}</strong>. On exam day, questions in this area reward knowing which service/feature is purpose-built for the stated goal — the distractors are usually real services that don't quite fit.`;
 }
@@ -6201,137 +5251,6 @@ function coachAction(kind) {
   else if (kind === 'check') html = `<div class="coach-msg"><span class="coach-tag check">Progress</span>${coachCheck()}</div>`;
   const body = document.getElementById('coachBody');
   body.innerHTML = html;
-}
-
-// ============================================================
-// STUDY PLAN AGENT — a small, transparent agent loop.
-// It plans, calls "tools" over the user's real attempt data,
-// then synthesizes a prioritized study plan. Steps are shown
-// as they "run" so the behavior is visibly agentic.
-// ============================================================
-
-// --- Agent tools (each returns structured data the agent reasons over) ---
-const MS_LEARN = 'https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-102';
-const DOMAIN_RESOURCE = {
-  plan:    { label: 'Plan & manage / Responsible AI', link: 'https://learn.microsoft.com/training/paths/azure-ai-fundamentals/' },
-  genai:   { label: 'Generative AI & RAG', link: 'https://learn.microsoft.com/training/paths/create-custom-copilots-ai-studio/' },
-  agentic: { label: 'Agents (Foundry Agent Service)', link: 'https://learn.microsoft.com/training/paths/develop-ai-agents-azure/' },
-  vision:  { label: 'Computer Vision', link: 'https://learn.microsoft.com/training/paths/explore-computer-vision-microsoft-azure/' },
-  nlp:     { label: 'NLP, Speech & Translator', link: 'https://learn.microsoft.com/training/paths/develop-language-solutions-azure-ai/' },
-  mining:  { label: 'Knowledge mining & Doc Intelligence', link: 'https://learn.microsoft.com/training/paths/implement-knowledge-mining-azure-cognitive-search/' }
-};
-
-function agentToolAssess() {
-  // Tool 1: read the user's attempt state in the current section.
-  const total = activeQuestions.length;
-  const answered = activeQuestions.filter(qi => isAnswered(qi)).length;
-  const flaggedN = [...flagged].filter(i => activeQuestions.includes(i)).length;
-  return { total, answered, flaggedN, pct: total ? Math.round(answered/total*100) : 0 };
-}
-
-function agentToolDomainGaps() {
-  // Tool 2: rank domains by how much is still unanswered/flagged in this section,
-  // weighted by official exam weight so heavier domains surface first.
-  const stat = {};
-  activeQuestions.forEach(qi => {
-    const d = domainOf(questions[qi]);
-    if (!stat[d]) stat[d] = { total: 0, open: 0 };
-    stat[d].total++;
-    if (!isAnswered(qi) || flagged.has(qi)) stat[d].open++;
-  });
-  const rows = Object.entries(stat).map(([d, s]) => {
-    const w = (DOMAIN_DEFS[d] && DOMAIN_DEFS[d].weightPct) || 10;
-    return { domain: d, open: s.open, total: s.total, priority: s.open * (w / 10) };
-  }).filter(r => r.open > 0).sort((a, b) => b.priority - a.priority);
-  return rows;
-}
-
-function agentToolResource(domain) {
-  // Tool 3: map a domain to a Microsoft Learn study resource.
-  return DOMAIN_RESOURCE[domain] || { label: DOMAIN_DEFS[domain] ? DOMAIN_DEFS[domain].name : domain, link: MS_LEARN };
-}
-
-// Render one "step" line in the agent transcript.
-function agentStepLine(label, detail) {
-  return `<div class="agent-step"><span class="agent-step-dot"></span><div><div class="agent-step-label">${label}</div>${detail ? `<div class="agent-step-detail">${detail}</div>` : ''}</div></div>`;
-}
-
-function runStudyAgent() {
-  const body = document.getElementById('coachBody');
-  // Agent's stated goal + plan (transparent reasoning).
-  const plan = [
-    'Assess attempt state in this section',
-    'Find weak/heavy domains (weighted by exam %)',
-    'Match each gap to a Microsoft Learn resource',
-    'Synthesize a prioritized study plan'
-  ];
-  body.innerHTML = `
-    <div class="coach-msg">
-      <span class="coach-tag agent">Agent</span>
-      <strong>Goal:</strong> build a focused next-study plan from your actual attempt data.
-      <div class="agent-plan"><div class="agent-plan-title">Plan</div>${plan.map((p,i)=>`<div class="agent-plan-item">${i+1}. ${p}</div>`).join('')}</div>
-      <div id="agentTranscript" class="agent-transcript"></div>
-    </div>`;
-  const tx = document.getElementById('agentTranscript');
-
-  // Run the loop with small delays so each tool call is visibly sequential.
-  const steps = [];
-  steps.push(() => {
-    const a = agentToolAssess();
-    tx.insertAdjacentHTML('beforeend', agentStepLine(
-      '🔧 assess_state()',
-      `Answered <strong>${a.answered}/${a.total}</strong> (${a.pct}%) here${a.flaggedN?`, <strong>${a.flaggedN}</strong> flagged`:''}.`
-    ));
-    return a;
-  });
-  steps.push(() => {
-    const gaps = agentToolDomainGaps();
-    if (!gaps.length) {
-      tx.insertAdjacentHTML('beforeend', agentStepLine('🔧 find_gaps()', 'No open items in this section — nothing to prioritize here.'));
-    } else {
-      const top = gaps.slice(0, 3).map(g => `${DOMAIN_DEFS[g.domain].short} (${g.open} open)`).join(', ');
-      tx.insertAdjacentHTML('beforeend', agentStepLine('🔧 find_gaps()', `Top gaps by weighted priority: <strong>${top}</strong>.`));
-    }
-    return gaps;
-  });
-
-  let collectedGaps = [];
-  let timeline = 350;
-  // step 1
-  setTimeout(() => { steps[0](); }, timeline);
-  // step 2
-  setTimeout(() => { collectedGaps = steps[1](); }, timeline + 600);
-  // step 3: resource lookups for top gaps
-  setTimeout(() => {
-    const top = collectedGaps.slice(0, 3);
-    if (top.length) {
-      top.forEach(g => {
-        const r = agentToolResource(g.domain);
-        tx.insertAdjacentHTML('beforeend', agentStepLine('🔧 lookup_resource()', `${DOMAIN_DEFS[g.domain].short} → <a href="${r.link}" target="_blank" rel="noopener">${r.label}</a>`));
-      });
-    }
-  }, timeline + 1200);
-  // step 4: synthesize plan
-  setTimeout(() => {
-    const a = agentToolAssess();
-    const gaps = collectedGaps;
-    let planHtml;
-    if (!gaps.length) {
-      planHtml = a.pct >= 100
-        ? 'You\u2019ve cleared this section. Switch to <strong>Today\u2019s Exam</strong> for a full weighted run, or pick a weaker domain tile from the start screen.'
-        : 'Nothing open in this section right now — try another section or the full Today\u2019s Exam.';
-    } else {
-      const ordered = gaps.slice(0, 3).map((g, i) => {
-        const r = agentToolResource(g.domain);
-        return `<li><strong>${DOMAIN_DEFS[g.domain].name}</strong> — clear the ${g.open} open item(s); review <a href="${r.link}" target="_blank" rel="noopener">${r.label}</a> on Microsoft Learn.</li>`;
-      }).join('');
-      const closer = a.pct >= 80
-        ? 'You\u2019re nearly through this section — finish the open items, then revisit flagged ones before submitting.'
-        : 'Work top-to-bottom; the order above puts the highest exam-weight gaps first.';
-      planHtml = `Here\u2019s your prioritized plan:<ol class="agent-plan-list">${ordered}</ol>${closer}`;
-    }
-    tx.insertAdjacentHTML('beforeend', `<div class="agent-final"><span class="coach-tag agent">Plan</span>${planHtml}</div>`);
-  }, timeline + 1900);
 }
 
 function toggleFlag() {
@@ -6380,7 +5299,7 @@ function renderQuestion() {
 
   const body = document.getElementById('qBody');
   body.innerHTML = `
-    <div class="q-type-badge">${q.type}${q.hard ? ' <span class="hard-badge">HARD · 2026</span>' : ''}</div>
+    <div class="q-type-badge">${q.type}</div>
     ${q.isCaseStudy ? '' : `<div class="q-text">${q.text}</div>${q.note ? `<div class="q-note">${q.note}</div>` : ''}`}
     <div id="questionContent"></div>
     <div class="solution-panel" id="solutionPanel" style="display:none">
@@ -6415,6 +5334,17 @@ function renderQuestion() {
     casestudy_sequence: () => renderSequence(currentQ)
   };
   if (renderers[q.render]) renderers[q.render]();
+
+  // Touch devices can't fire native HTML5 drag events, so surface the
+  // tap-to-place fallback (see the delegated click handler below).
+  const qc = document.getElementById('questionContent');
+  const dndArea = qc && qc.querySelector('.drag-drop-area, .sequence-area, .skillset-pipeline');
+  if (dndArea && !qc.querySelector('.dnd-tap-hint')) {
+    const hint = document.createElement('div');
+    hint.className = 'dnd-tap-hint mobile-only';
+    hint.textContent = '💡 On a touchscreen: tap an item to select it, then tap the target slot to place it.';
+    dndArea.parentElement.insertBefore(hint, dndArea);
+  }
 
   updateNav();
   if (reviewMode) showSolution();
@@ -6961,6 +5891,67 @@ function seqRemove(qi, slot) {
   renderQuestion();
 }
 
+// ============================================================
+// TAP-TO-PLACE (touch fallback)
+// Native HTML5 drag-and-drop (dragstart/dragover/drop) does not fire on
+// touchscreens in iOS/Android browsers, so drag & drop / sequence questions
+// would be unanswerable on a phone without this. Tapping an item selects
+// it, then tapping a target slot places it — using the same underlying
+// state (q.userAnswers / q.userSequence) as the desktop drag handlers.
+// ============================================================
+let tapSelectedValue = null;
+let tapSelectedKind = null; // 'drag' | 'seq'
+
+function clearTapSelection() {
+  tapSelectedValue = null;
+  tapSelectedKind = null;
+  document.querySelectorAll('.tap-selected').forEach(el => el.classList.remove('tap-selected'));
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.remove-btn')) return; // handled by its own onclick
+
+  const item = e.target.closest('.drag-item, .seq-item');
+  if (item) {
+    if (item.classList.contains('placed')) return; // already used elsewhere
+    const value = item.getAttribute('data-value');
+    const kind = item.classList.contains('seq-item') ? 'seq' : 'drag';
+    if (tapSelectedValue === value && tapSelectedKind === kind) {
+      clearTapSelection();
+    } else {
+      clearTapSelection();
+      tapSelectedValue = value;
+      tapSelectedKind = kind;
+      item.classList.add('tap-selected');
+    }
+    return;
+  }
+
+  const zone = e.target.closest('.drop-zone, .seq-slot');
+  if (zone) {
+    if (zone.querySelector('.placed-item')) return; // occupied — remove via × first
+    if (!tapSelectedValue) return; // nothing selected to place yet
+
+    if (zone.classList.contains('seq-slot')) {
+      if (tapSelectedKind !== 'seq') return;
+      const m = zone.id.match(/^seq-slot-(\d+)-(\d+)$/);
+      if (!m) return;
+      const qi = parseInt(m[1], 10), slot = parseInt(m[2], 10);
+      const q = questions[qi];
+      q.userSequence = q.userSequence.map(v => v === tapSelectedValue ? null : v);
+      q.userSequence[slot] = tapSelectedValue;
+    } else {
+      if (tapSelectedKind !== 'drag') return;
+      const zoneId = zone.id.replace(/^drop-/, '');
+      const q = questions[currentQ];
+      Object.keys(q.userAnswers).forEach(k => { if (q.userAnswers[k] === tapSelectedValue) delete q.userAnswers[k]; });
+      q.userAnswers[zoneId] = tapSelectedValue;
+    }
+    clearTapSelection();
+    renderQuestion();
+  }
+});
+
 // Hotspot
 function setSelection(key, value) {
   const q = questions[currentQ];
@@ -7148,6 +6139,32 @@ function reviewExam() {
   buildNav();
   renderQuestion();
 }
+
+// ============================================================
+// MOBILE NAV DRAWER
+// ============================================================
+function toggleNavDrawer() {
+  const nav = document.querySelector('.left-nav');
+  const overlay = document.getElementById('navOverlay');
+  const isOpen = nav.classList.contains('open');
+  if (isOpen) {
+    nav.classList.remove('open');
+    overlay.classList.remove('open');
+  } else {
+    nav.classList.add('open');
+    overlay.classList.add('open');
+  }
+}
+function closeNavDrawer() {
+  document.querySelector('.left-nav').classList.remove('open');
+  document.getElementById('navOverlay').classList.remove('open');
+}
+// Close drawer when a nav item is tapped on mobile
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.nav-item') && window.innerWidth <= 700) {
+    closeNavDrawer();
+  }
+});
 </script>
 </body>
 </html>
