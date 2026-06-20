@@ -101,6 +101,7 @@
   /* ── Agentic AI: domain badges ── */
   .domain-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; padding: 2px 9px; border-radius: 10px; color: #fff; background: var(--dchip, #0067b8); box-shadow: 0 0 0 1px rgba(255,255,255,.15), 0 1px 4px color-mix(in srgb, var(--dchip, #0067b8) 45%, transparent); }
   .topic-tag { font-size: 11px; color: var(--ms-text-3); margin-left: 6px; }
+  .source-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .2px; padding: 2px 8px; border-radius: 10px; margin-left: 6px; color: var(--schip, #0067b8); background: color-mix(in srgb, var(--schip, #0067b8) 12%, #fff); border: 1px solid color-mix(in srgb, var(--schip, #0067b8) 45%, transparent); vertical-align: middle; }
 
   /* ── Agentic AI: coach button (glowing orb) ── */
   .coach-btn { position: relative; background: linear-gradient(135deg, #0067b8, #8661c5); color: #fff; border: none; padding: 6px 14px 6px 11px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 16px; display: inline-flex; align-items: center; gap: 7px; font-family: inherit; box-shadow: 0 2px 10px rgba(134,97,197,.35); transition: transform .15s, box-shadow .15s; }
@@ -124,6 +125,13 @@
   .coach-msg { font-size: 13px; line-height: 1.6; color: #2a2540; }
   .coach-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; padding: 2px 8px; border-radius: 8px; margin-right: 8px; color: #fff; }
   .coach-tag.hint { background: #0067b8; } .coach-tag.why { background: #8661c5; } .coach-tag.check { background: #107c10; }
+  .coach-tag.elim { background: #c1440e; } .coach-tag.concept { background: #0a7e8c; }
+  .agent-subname { font-weight: 700; color: #4a2f8f; font-size: 11px; text-transform: uppercase; letter-spacing: .3px; }
+  .agent-conf { display: inline-block; margin-top: 8px; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 10px; color: #fff; }
+  .elim-row { display: flex; gap: 8px; align-items: flex-start; padding: 5px 0; font-size: 12.5px; line-height: 1.5; border-bottom: 1px solid #efe6f7; }
+  .elim-row:last-child { border-bottom: none; }
+  .elim-mark { font-weight: 800; flex-shrink: 0; width: 18px; }
+  .elim-keep { color: #107c10; } .elim-drop { color: #c1440e; }
   .coach-tag.agent { background: linear-gradient(90deg,#d83b01,#e3008c); }
   .coach-act.agent { background: linear-gradient(90deg,#d83b01,#e3008c); color: #fff; border-color: transparent; }
   .coach-act.agent:hover { filter: brightness(1.08); }
@@ -154,6 +162,23 @@
   .domain-legend-go { margin-left: auto; color: var(--ms-blue); font-weight: 700; font-size: 16px; }
   .domain-legend-hint { font-size: 11px; color: var(--ms-text-3); margin-top: 10px; font-style: italic; }
   .domain-legend-meta { font-size: 11px; color: var(--ms-text-2); }
+  /* ── AI-102 by-domain × source browser ── */
+  .ai102-browser { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--ms-border-lt); }
+  .ai102-title { font-size: 12px; font-weight: 700; color: var(--ms-text-2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; display: flex; align-items: center; gap: 7px; }
+  .ai102-sub { font-size: 11px; color: var(--ms-text-3); margin-bottom: 12px; }
+  .ai102-srcfilter { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .ai102-srcpill { font-size: 11px; font-weight: 700; padding: 4px 11px; border-radius: 14px; cursor: pointer; border: 1px solid var(--schip, #0067b8); color: var(--schip, #0067b8); background: color-mix(in srgb, var(--schip, #0067b8) 8%, #fff); transition: all .15s; }
+  .ai102-srcpill.all { --schip:#444; }
+  .ai102-srcpill.active { color: #fff; background: var(--schip, #0067b8); }
+  .ai102-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ai102-card { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--ms-border); border-radius: var(--radius); cursor: pointer; transition: all .15s; background: var(--ms-panel); }
+  .ai102-card:hover { border-color: var(--ms-blue); background: var(--ms-panel-2); }
+  .ai102-card.disabled { opacity: .4; pointer-events: none; }
+  .ai102-card-name { font-size: 13px; font-weight: 600; color: var(--ms-text); }
+  .ai102-card-meta { font-size: 11px; color: var(--ms-text-2); margin-top: 2px; }
+  .ai102-card-count { margin-left: auto; font-size: 18px; font-weight: 700; color: var(--ms-blue); }
+  .ai102-card-count span { display: block; font-size: 9px; font-weight: 600; color: var(--ms-text-3); text-transform: uppercase; letter-spacing: .3px; }
+  @media (max-width: 560px) { .ai102-grid { grid-template-columns: 1fr; } }
 
   /* QUESTION BODY */
   .q-body { flex: 1; overflow-y: auto; padding: 24px 28px; background: var(--ms-bg); }
@@ -173,6 +198,8 @@
   .drag-item:hover { background: #deecf9; border-color: var(--ms-blue); }
   .drag-item.dragging { opacity: 0.4; cursor: grabbing; }
   .drag-item.placed { opacity: 0.45; cursor: default; background: var(--ms-panel); border-color: var(--ms-border-lt); }
+  .drag-item.tap-selected, .seq-item.tap-selected { background: var(--ms-blue); color: #fff; border-color: var(--ms-blue-dk); box-shadow: 0 0 0 2px rgba(0,120,212,0.35); }
+  .drop-zone.tap-target, .seq-slot.tap-target { border-style: solid; border-color: var(--ms-blue-dk); background: #deecf9; }
   .drop-zone { border: 1px dashed var(--ms-blue); min-height: 38px; padding: 4px; margin-bottom: 8px; border-radius: var(--radius); background: var(--ms-panel-2); display: flex; align-items: center; transition: all 0.12s; }
   .drop-zone.over { background: #deecf9; border-color: var(--ms-blue-dk); border-style: solid; }
   .drop-zone .placed-item { background: var(--ms-blue); color: white; padding: 6px 10px; border-radius: var(--radius); font-size: 13px; display: flex; align-items: center; gap: 8px; width: 100%; }
@@ -1008,6 +1035,7 @@
       </div>
       <div id="sectionCards"></div>
       <div id="domainLegend" class="domain-legend"></div>
+      <div id="ai102Browser" class="ai102-browser"></div>
     </div>
   </div>
 </div>
@@ -1080,6 +1108,7 @@
         <div class="coach-actions">
           <button class="coach-act" onclick="coachAction('hint')">💡 Give me a hint</button>
           <button class="coach-act" onclick="coachAction('why')">🧠 Why this matters</button>
+          <button class="coach-act" onclick="coachAction('eliminate')">✂️ Rule out distractors</button>
           <button class="coach-act" onclick="coachAction('check')">✅ How am I doing?</button>
           <button class="coach-act agent" onclick="runStudyAgent()">🤖 Plan my study (Agent)</button>
         </div>
@@ -6212,10 +6241,1445 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
       'vi': { label: 'Azure AI Video Indexer is now:', options: ['Azure AI Video Indexer (unchanged; offered in Foundry Tools)', 'Foundry Video Service', 'Stream Analytics'], correct: 'Azure AI Video Indexer (unchanged; offered in Foundry Tools)' }
     },
     userSelections: {}
+  },
+
+  // ============================================================
+  // NEW QUESTIONS FROM CERTIFICATION PRACTICE
+  // Three 3-question case studies captured from certification
+  // practice sessions. Original explanations authored here.
+  // ============================================================
+
+  // ── Case Study: Implement generative AI solutions (Verdant Growth Systems) ──
+  {
+    id: 800, topic: 7, discussions: 0, isCertPractice: true,
+    isCaseStudy: true,
+    caseTitle: 'Verdant Growth Systems',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Implement Generative AI Solutions',
+    caseStudy: `<p><strong>Verdant Growth Systems</strong>, an agricultural technology firm based in the Netherlands, possesses decades of proprietary data. This includes research papers, soil analysis reports, and real-time IoT sensor data stored across <strong>Azure Blob Storage</strong> and <strong>Azure SQL Database</strong>. Their agronomists and field technicians cannot efficiently query this vast, unstructured dataset to get timely, actionable advice for crop management. Complex queries require manual searches across multiple systems, delaying critical decisions. Additionally, they lack a way to quickly generate visual aids, such as illustrations of pest damage, for farmer consultations.</p>
+    <p>The objective is to develop a centralized <strong>"Agronomist Assistant"</strong> application using Azure AI Studio. This generative AI solution must use a <strong>Retrieval-Augmented Generation (RAG)</strong> pattern to provide accurate, grounded responses to natural language queries using the company's internal data. The system must also generate images from text descriptions. The final solution needs to be integrated into a web application, monitored for performance and cost, and include a deployment strategy for ruggedized field tablets that may have intermittent network access.</p>`,
+    text: `<p>Verdant Growth Systems stores its proprietary soil analysis data in an Azure SQL Database configured to deny all public network access. What is the most effective way to connect the Azure AI Project to this database so the Agronomist Assistant can securely query the data for the RAG pattern?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Store the SQL connection string in a notebook and use it to connect directly from a prompt flow',
+      'B. Add the public IP addresses of the Azure AI Project\'s compute resources to the Azure SQL Database firewall rules',
+      'C. Configure a VNet service endpoint for Azure AI Services on the subnet where the Azure SQL Database resides',
+      'D. Create a private endpoint for the Azure SQL Database within the virtual network associated with the Azure AI Project'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Create a private endpoint for the Azure SQL Database within the virtual network associated with the Azure AI Project</strong><br><br>
+    Because the database denies all public network access, traffic must stay on the private network. A <strong>private endpoint</strong> projects the Azure SQL Database into the AI Project's virtual network with a private IP, so the project reaches it over the Microsoft backbone without any public exposure — the recommended pattern for a network-isolated RAG data source.<br><br>
+    A leaks a secret and still needs network reachability. B re-introduces public access, which the requirement forbids. C is the wrong direction: a service endpoint extends the VNet identity outward to a PaaS service but does not give a "deny public access" database a private inbound path the way a private endpoint does.`,
+    userChoice: null
+  },
+  {
+    id: 801, topic: 7, discussions: 0, isCertPractice: true,
+    isCaseStudy: true,
+    caseTitle: 'Verdant Growth Systems',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Centralized Governance for the AI Workspace',
+    caseStudy: `<p><strong>Verdant Growth Systems</strong>, an agricultural technology firm based in the Netherlands, possesses decades of proprietary data. This includes research papers, soil analysis reports, and real-time IoT sensor data stored across <strong>Azure Blob Storage</strong> and <strong>Azure SQL Database</strong>. Their agronomists and field technicians cannot efficiently query this vast, unstructured dataset to get timely, actionable advice for crop management. Complex queries require manual searches across multiple systems, delaying critical decisions. Additionally, they lack a way to quickly generate visual aids, such as illustrations of pest damage, for farmer consultations.</p>
+    <p>The objective is to develop a centralized <strong>"Agronomist Assistant"</strong> application using Azure AI Studio. This generative AI solution must use a <strong>Retrieval-Augmented Generation (RAG)</strong> pattern to provide accurate, grounded responses to natural language queries using the company's internal data. The system must also generate images from text descriptions. The final solution needs to be integrated into a web application, monitored for performance and cost, and include a deployment strategy for ruggedized field tablets that may have intermittent network access.</p>`,
+    text: `<p>To establish the foundational environment for Verdant Growth Systems' "Agronomist Assistant" and future AI initiatives, the lead AI engineer must deploy resources using Azure AI Studio. The goal is to centralize governance and billing while providing a dedicated, isolated workspace for the agronomist project. Which two actions should the engineer take to meet these requirements? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. Deploy a separate Azure Machine Learning workspace for each development team',
+      'B. Configure a single Azure AI project and use Git branches to isolate the "Agronomist Assistant" work',
+      'C. Provision an Azure AI Search service directly within the subscription and link it to the storage accounts',
+      'D. Create an Azure AI project that inherits configurations from the AI hub for the dedicated "Agronomist Assistant" development',
+      'E. Create an Azure AI hub to provide centralized governance, track costs, and share connections across multiple projects'
+    ],
+    correctOptions: ['D', 'E'],
+    solution: `<strong>Correct Answer: D and E</strong><br><br>
+    In Azure AI Studio the <strong>hub</strong> is the top-level, shared resource: it centralizes governance, security, cost tracking, and connections (storage, key vault, AI Services) so they can be reused. The <strong>project</strong> is the isolated workspace that inherits those hub settings for a specific effort. So the engineer creates the <strong>hub</strong> for centralized governance (E) and a <strong>project</strong> that inherits from it for the dedicated Agronomist Assistant work (D).<br><br>
+    A fragments governance and billing — the opposite of centralizing. B mis-uses Git branches as a workspace-isolation mechanism. C provisions a supporting service but does nothing for the governance/isolation structure being asked about.`,
+    userChoices: []
+  },
+  {
+    id: 802, topic: 7, discussions: 0, isCertPractice: true,
+    isCaseStudy: true,
+    caseTitle: 'Verdant Growth Systems',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Selecting Models for RAG and Image Generation',
+    caseStudy: `<p><strong>Verdant Growth Systems</strong>, an agricultural technology firm based in the Netherlands, possesses decades of proprietary data. This includes research papers, soil analysis reports, and real-time IoT sensor data stored across <strong>Azure Blob Storage</strong> and <strong>Azure SQL Database</strong>. Their agronomists and field technicians cannot efficiently query this vast, unstructured dataset to get timely, actionable advice for crop management. Complex queries require manual searches across multiple systems, delaying critical decisions. Additionally, they lack a way to quickly generate visual aids, such as illustrations of pest damage, for farmer consultations.</p>
+    <p>The objective is to develop a centralized <strong>"Agronomist Assistant"</strong> application using Azure AI Studio. This generative AI solution must use a <strong>Retrieval-Augmented Generation (RAG)</strong> pattern to provide accurate, grounded responses to natural language queries using the company's internal data. The system must also generate images from text descriptions. The final solution needs to be integrated into a web application, monitored for performance and cost, and include a deployment strategy for ruggedized field tablets that may have intermittent network access.</p>`,
+    text: `<p>The Verdant Growth Systems development team is provisioning models from the Azure AI Studio model catalog for their 'Agronomist Assistant' application. The solution requires a highly capable model to generate grounded responses from proprietary documents for the RAG pattern, and a separate model to create illustrations of pest damage based on text descriptions. Which models should the team select and deploy to meet these distinct requirements?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Phi-3 for the RAG system; Stable Diffusion for image generation',
+      'B. BERT for the RAG system; ResNet for image generation',
+      'C. Llama 2 for the RAG system; CLIP for image generation',
+      'D. GPT-4 for the RAG system; DALL-E 3 for image generation'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — GPT-4 for the RAG system; DALL-E 3 for image generation</strong><br><br>
+    The RAG requirement calls for a <strong>highly capable</strong> generative chat model to synthesize grounded answers from retrieved documents — <strong>GPT-4</strong> fits. The visual-aid requirement is <strong>text-to-image</strong> generation — <strong>DALL-E 3</strong> is the catalog's image-generation model.<br><br>
+    A's Phi-3 is a small language model (less capable for this demanding RAG task). B is wrong on both: BERT is an encoder for understanding tasks, not generation, and ResNet is an image <em>classifier</em>, not a generator. C's CLIP matches images to text but does not <em>create</em> images from text.`,
+    userChoice: null
+  },
+
+  // ── Case Study: Plan and manage an Azure AI solution (Cascadia University Archives) ──
+  {
+    id: 803, topic: 1, discussions: 0, isCertPractice: true,
+    isCaseStudy: true,
+    caseTitle: 'Cascadia University Archives',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Foundation Model Service with Built-in Content Filtering',
+    caseStudy: `<p>With a mandate to increase public access to its historical collections, the <strong>Cascadia University Archives</strong> is digitizing millions of assets, including handwritten documents, photographs, and oral history audio recordings. The current digital repository relies on manual metadata, making it difficult for researchers to discover relevant content. The university's small IT team, which manages an existing Azure subscription, lacks deep AI expertise and needs a manageable, scalable solution. The project requires a unified search portal that allows natural language queries across all media types.</p>
+    <p>The core challenge is to build an intelligent search solution that can process and understand this diverse, unstructured data. The university is concerned about uncontrolled operational costs, the secure management of service access, and the potential for generating inappropriate or biased search results from sensitive historical content. The solution must be deployed efficiently and updated reliably through an automated process.</p>
+    <p>The goal is to implement a comprehensive Azure AI solution. This system must use cognitive skills to perform OCR on documents, transcribe audio, and extract entities from all content. A generative AI model will power the natural language search interface. The entire solution must be deployed using a CI/CD pipeline, potentially leveraging containers for custom components. Key requirements include strict cost monitoring, the use of managed identities for authentication, and the implementation of a robust Responsible AI framework, including content safety filters and a formal governance plan to prevent misuse and ensure ethical standards are met.</p>`,
+    text: `<p>To power the natural language search portal for the Cascadia University Archives, the development team must select a service that provides access to foundation models while minimizing the management overhead for their small IT staff. The chosen service must also directly support the university's strict Responsible AI requirements by offering integrated content filtering for both prompts and completions. Which service is the most appropriate choice?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Azure OpenAI Service',
+      'B. Azure AI Language for conversational language understanding (CLU)',
+      'C. Azure AI Search with semantic ranker',
+      'D. Azure Machine Learning prompt flow'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Azure OpenAI Service</strong><br><br>
+    Azure OpenAI is a <strong>managed (PaaS)</strong> service that delivers foundation models with no infrastructure to run, which suits a small IT team. Critically, it includes built-in <strong>content filtering</strong> that evaluates both prompts and completions across harm categories — exactly the integrated Responsible AI control the requirement names.<br><br>
+    B (CLU) does intent/entity classification, not generative natural-language answers. C is a retrieval/ranking service, not a foundation-model generator with prompt-and-completion filtering. D is an orchestration framework that adds management overhead and is not itself the model-hosting service with built-in filtering.`,
+    userChoice: null
+  },
+  {
+    id: 804, topic: 1, discussions: 0, isCertPractice: true,
+    isCaseStudy: true,
+    caseTitle: 'Cascadia University Archives',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Pre-built OCR for Photos and Handwriting',
+    caseStudy: `<p>With a mandate to increase public access to its historical collections, the <strong>Cascadia University Archives</strong> is digitizing millions of assets, including handwritten documents, photographs, and oral history audio recordings. The current digital repository relies on manual metadata, making it difficult for researchers to discover relevant content. The university's small IT team, which manages an existing Azure subscription, lacks deep AI expertise and needs a manageable, scalable solution. The project requires a unified search portal that allows natural language queries across all media types.</p>
+    <p>The core challenge is to build an intelligent search solution that can process and understand this diverse, unstructured data. The university is concerned about uncontrolled operational costs, the secure management of service access, and the potential for generating inappropriate or biased search results from sensitive historical content. The solution must be deployed efficiently and updated reliably through an automated process.</p>
+    <p>The goal is to implement a comprehensive Azure AI solution. This system must use cognitive skills to perform OCR on documents, transcribe audio, and extract entities from all content. A generative AI model will power the natural language search interface. The entire solution must be deployed using a CI/CD pipeline, potentially leveraging containers for custom components. Key requirements include strict cost monitoring, the use of managed identities for authentication, and the implementation of a robust Responsible AI framework, including content safety filters and a formal governance plan to prevent misuse and ensure ethical standards are met.</p>`,
+    text: `<p>The Cascadia University Archives needs to process its extensive collection of digitized historical photographs and handwritten documents. The IT team must select Azure AI services that use pre-built models to minimize development complexity and that provide advanced OCR capabilities for varied handwriting styles. Which two services or features should be implemented to meet these requirements? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. Azure AI Vision\'s Image Analysis with the Read API',
+      'B. Azure AI Custom Vision',
+      'C. Azure AI Document Intelligence',
+      'D. Azure Machine Learning',
+      'E. Azure AI Vision\'s Image Analysis with the Dense Captions feature'
+    ],
+    correctOptions: ['A', 'C'],
+    solution: `<strong>Correct Answer: A and C</strong><br><br>
+    The <strong>Read API</strong> in Azure AI Vision is the pre-built OCR engine for extracting printed and <strong>handwritten</strong> text from images/photos. <strong>Document Intelligence</strong> adds pre-built models for OCR over documents (including handwriting) with structure/layout understanding. Both are pre-built, so they minimize development effort.<br><br>
+    B (Custom Vision) requires training your own image classifier/detector — the opposite of "pre-built." D (Azure ML) is a full build-your-own platform, adding complexity. E's Dense Captions describes <em>what is in</em> an image; it does not perform OCR text extraction.`,
+    userChoices: []
+  },
+  {
+    id: 805, topic: 1, discussions: 0, isCertPractice: true,
+    isCaseStudy: true,
+    caseTitle: 'Cascadia University Archives',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Automated Moderation of Images',
+    caseStudy: `<p>With a mandate to increase public access to its historical collections, the <strong>Cascadia University Archives</strong> is digitizing millions of assets, including handwritten documents, photographs, and oral history audio recordings. The current digital repository relies on manual metadata, making it difficult for researchers to discover relevant content. The university's small IT team, which manages an existing Azure subscription, lacks deep AI expertise and needs a manageable, scalable solution. The project requires a unified search portal that allows natural language queries across all media types.</p>
+    <p>The core challenge is to build an intelligent search solution that can process and understand this diverse, unstructured data. The university is concerned about uncontrolled operational costs, the secure management of service access, and the potential for generating inappropriate or biased search results from sensitive historical content. The solution must be deployed efficiently and updated reliably through an automated process.</p>
+    <p>The goal is to implement a comprehensive Azure AI solution. This system must use cognitive skills to perform OCR on documents, transcribe audio, and extract entities from all content. A generative AI model will power the natural language search interface. The entire solution must be deployed using a CI/CD pipeline, potentially leveraging containers for custom components. Key requirements include strict cost monitoring, the use of managed identities for authentication, and the implementation of a robust Responsible AI framework, including content safety filters and a formal governance plan to prevent misuse and ensure ethical standards are met.</p>`,
+    text: `<p>The university needs to moderate its large collection of digitized photographs for potentially sensitive content as part of its Responsible AI mandate. Which Azure AI service should the IT team integrate into their image ingestion workflow to automate the detection of adult or racy material with minimal development effort?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Azure AI Language',
+      'B. Azure AI Anomaly Detector',
+      'C. Azure AI Content Safety',
+      'D. Azure AI Custom Vision'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — Azure AI Content Safety</strong><br><br>
+    <strong>Azure AI Content Safety</strong> provides pre-built detection of harmful material — including adult/racy categories — for <strong>images</strong> and text, with severity levels, so it drops into an ingestion pipeline with minimal development.<br><br>
+    A (Language) handles text, not image moderation. B (Anomaly Detector) finds outliers in time-series data. D (Custom Vision) would require you to label and train a moderation model yourself — more effort and less reliable than the purpose-built service.`,
+    userChoice: null
+  },
+
+  // ── Case Study: Implement an agentic solution (Veridian Logistics) ──
+  {
+    id: 806, topic: 8, discussions: 0, isCertPractice: true,
+    isCaseStudy: true,
+    caseTitle: 'Veridian Logistics',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Framework for a Multi-Agent Orchestration',
+    caseStudy: `<p><strong>Veridian Logistics</strong>, a specialized cold-chain logistics provider for the pharmaceutical industry, manages a complex network of temperature-controlled shipments. Their current infrastructure includes a proprietary <strong>Transportation Management System (TMS)</strong> with a REST API, an <strong>Azure SQL Database</strong> for warehouse inventory, and a fleet of vehicles equipped with real-time IoT temperature sensors streaming data to an <strong>Azure IoT Hub</strong>. Logistics coordinators manually monitor these disparate systems to track shipments, respond to customer inquiries, and handle exceptions like temperature deviations or transit delays. This manual process is inefficient, prone to human error, and cannot provide the proactive, 24/7 monitoring required for high-value medical shipments.</p>
+    <p>The lack of system integration prevents automated issue resolution. The company aims to implement a <strong>multi-agent solution</strong> to automate logistics coordination. The system must proactively monitor shipment data, use tools to query the TMS and inventory databases, and autonomously initiate corrective actions, such as dispatching a repair team or re-routing a shipment. A primary agent must orchestrate specialized agents for monitoring, problem diagnosis, and customer communication, providing a unified interface for both internal operators and external clients.</p>`,
+    text: `<p>A developer at Veridian Logistics needs to implement the complex orchestration logic for the multi-agent system. The implementation must support dynamic planning, integrate custom tools for the TMS and inventory database, and leverage the Azure AI ecosystem. Which framework should be selected to build this agentic solution?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Semantic Kernel',
+      'B. LangChain',
+      'C. Microsoft Bot Framework SDK',
+      'D. Azure Durable Functions'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Semantic Kernel</strong><br><br>
+    <strong>Semantic Kernel</strong> is Microsoft's open-source orchestration SDK purpose-built for agentic solutions on the Azure AI ecosystem. It supports planners for <strong>dynamic planning</strong>, plugins/functions for integrating <strong>custom tools</strong> (TMS REST API, SQL inventory), and multi-agent orchestration — matching every stated requirement.<br><br>
+    B (LangChain) is a capable framework but is not the Azure-native choice the requirement emphasizes. C (Bot Framework SDK) builds conversational bots, not multi-agent planning/orchestration. D (Durable Functions) orchestrates stateful workflows but has no built-in LLM planning or tool-calling for agents.`,
+    userChoice: null
+  },
+  {
+    id: 807, topic: 8, discussions: 0, isCertPractice: true,
+    isCaseStudy: true,
+    caseTitle: 'Veridian Logistics',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Secure, Managed Access for Agent Tools',
+    caseStudy: `<p><strong>Veridian Logistics</strong>, a specialized cold-chain logistics provider for the pharmaceutical industry, manages a complex network of temperature-controlled shipments. Their current infrastructure includes a proprietary <strong>Transportation Management System (TMS)</strong> with a REST API, an <strong>Azure SQL Database</strong> for warehouse inventory, and a fleet of vehicles equipped with real-time IoT temperature sensors streaming data to an <strong>Azure IoT Hub</strong>. Logistics coordinators manually monitor these disparate systems to track shipments, respond to customer inquiries, and handle exceptions like temperature deviations or transit delays. This manual process is inefficient, prone to human error, and cannot provide the proactive, 24/7 monitoring required for high-value medical shipments.</p>
+    <p>The lack of system integration prevents automated issue resolution. The company aims to implement a <strong>multi-agent solution</strong> to automate logistics coordination. The system must proactively monitor shipment data, use tools to query the TMS and inventory databases, and autonomously initiate corrective actions, such as dispatching a repair team or re-routing a shipment. A primary agent must orchestrate specialized agents for monitoring, problem diagnosis, and customer communication, providing a unified interface for both internal operators and external clients.</p>`,
+    text: `<p>Veridian Logistics is configuring a specialized agent to query both the on-premises TMS via its REST API and the Azure SQL Database for inventory. To ensure secure and managed access for the agent's tools, which two Azure resources should be configured? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. Azure Logic Apps',
+      'B. Azure Virtual Network',
+      'C. Azure API Management',
+      'D. Azure IoT Hub',
+      'E. Azure Key Vault'
+    ],
+    correctOptions: ['C', 'E'],
+    solution: `<strong>Correct Answer: C and E</strong><br><br>
+    <strong>API Management</strong> fronts the proprietary TMS REST API, giving the agent a secured, governed, throttled gateway (auth, policies, keys) instead of calling the raw backend directly. <strong>Key Vault</strong> stores the secrets/connection strings/certificates the agent's tools need (SQL credentials, API keys) so nothing sensitive is hard-coded — the core of "secure and managed access."<br><br>
+    A (Logic Apps) is workflow automation, not tool access security. B (VNet) provides network isolation but, by itself, isn't the managed-access control for the tools being asked about here. D (IoT Hub) already exists for sensor ingestion and is unrelated to querying the TMS/SQL tools.`,
+    userChoices: []
+  },
+  {
+    id: 808, topic: 8, discussions: 0, isCertPractice: true,
+    isCaseStudy: true,
+    caseTitle: 'Veridian Logistics',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Persistent Conversational Memory for the Orchestrator',
+    caseStudy: `<p><strong>Veridian Logistics</strong>, a specialized cold-chain logistics provider for the pharmaceutical industry, manages a complex network of temperature-controlled shipments. Their current infrastructure includes a proprietary <strong>Transportation Management System (TMS)</strong> with a REST API, an <strong>Azure SQL Database</strong> for warehouse inventory, and a fleet of vehicles equipped with real-time IoT temperature sensors streaming data to an <strong>Azure IoT Hub</strong>. Logistics coordinators manually monitor these disparate systems to track shipments, respond to customer inquiries, and handle exceptions like temperature deviations or transit delays. This manual process is inefficient, prone to human error, and cannot provide the proactive, 24/7 monitoring required for high-value medical shipments.</p>
+    <p>The lack of system integration prevents automated issue resolution. The company aims to implement a <strong>multi-agent solution</strong> to automate logistics coordination. The system must proactively monitor shipment data, use tools to query the TMS and inventory databases, and autonomously initiate corrective actions, such as dispatching a repair team or re-routing a shipment. A primary agent must orchestrate specialized agents for monitoring, problem diagnosis, and customer communication, providing a unified interface for both internal operators and external clients.</p>`,
+    text: `<p>The primary orchestrator agent at Veridian Logistics must maintain persistent context for each shipment issue across multiple interactions so it can manage complex, multi-step logistics exceptions, such as correlating an IoT temperature alert with TMS data and then initiating a re-route. Which feature of the Azure AI Foundry Agent Service should be used to achieve this stateful, long-term conversational memory?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. A custom Azure Function with a durable entity trigger to store the state of each interaction',
+      'B. A dedicated Retrieval-Augmented Generation (RAG) pipeline using Azure AI Search for every incoming alert',
+      'C. An external Azure Cache for Redis instance configured for each active agent session',
+      'D. The built-in thread-based state management to persist conversation history and context'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — The built-in thread-based state management to persist conversation history and context</strong><br><br>
+    The Azure AI Foundry Agent Service provides <strong>threads</strong> as a first-class, built-in primitive: each thread persists the full conversation history and context for a session, giving the orchestrator stateful, long-term memory per shipment issue without building custom storage. The question explicitly asks for a <em>feature of the Agent Service</em>, which threads are.<br><br>
+    A, B, and C are all external state stores you would build and manage yourself — extra complexity that duplicates the service's native thread state. RAG (B) is for grounding answers in documents, not for maintaining per-session conversational state.`,
+    userChoice: null
+  },
+
+  // ── Standalone certification-practice questions (no case study) ──
+  {
+    id: 810, topic: 2, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Custom Object Detection — Data Preparation for PPE',
+    text: `<p>You are training a custom object detection model to identify various types of personal protective equipment (PPE) on a construction site. Which two data preparation practices are essential for building a robust model? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. Use images with varied lighting conditions, backgrounds, and object angles',
+      'B. Ensure all training images are captured from the exact same angle and distance',
+      'C. Tag only one instance of an object per image, even if multiple are present',
+      'D. Provide at least 15 labeled instances for each object tag across the entire image set',
+      'E. Resize all images to a small, uniform resolution like 64x64 pixels before uploading'
+    ],
+    correctOptions: ['A', 'D'],
+    solution: `<strong>Correct Answer: A and D</strong><br><br>
+    A robust detector generalizes to real-world variation, so training images should include <strong>varied lighting, backgrounds, and angles</strong> (A). Custom Vision also needs enough labeled examples to learn each class — Microsoft's guidance is a minimum of about <strong>15 tagged instances per tag</strong> (D).<br><br>
+    B (identical angle/distance) destroys variety and causes overfitting. C (tag only one instance) leaves real objects unlabeled, which the model learns as "background." E (downscale to 64×64) discards detail needed to detect small PPE items.`,
+    userChoices: []
+  },
+  {
+    id: 811, topic: 1, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Single Key & Endpoint for Multiple AI Capabilities',
+    text: `<p>A startup is building a mobile application that requires text translation, image analysis, and speech-to-text capabilities. To streamline development and operations, the team wants to use a single API key and endpoint for all three functionalities. Which approach for creating Azure AI resources is most efficient for this requirement?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Create an Azure Machine Learning workspace and integrate the required services',
+      'B. Provision a separate Azure AI Language resource, an Azure AI Vision resource, and an Azure AI Speech resource',
+      'C. Deploy the required services into a single Azure Container Apps environment',
+      'D. Create a single multi-service Azure AI services resource'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Create a single multi-service Azure AI services resource</strong><br><br>
+    A <strong>multi-service Azure AI services resource</strong> exposes Translation, Vision, Speech, Language, and more behind <strong>one key and one endpoint</strong>, with unified billing — exactly the "single key/endpoint" goal.<br><br>
+    B does the opposite: three resources means three keys/endpoints. A (Azure ML) adds an unnecessary platform and doesn't unify the keys. C (Container Apps) is a hosting platform, not a way to consolidate the cognitive-service credentials.`,
+    userChoice: null
+  },
+  {
+    id: 812, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'CLU Evaluation Metric — Balancing FP and FN',
+    text: `<p>You are evaluating a Conversational Language Understanding (CLU) model designed for a customer support bot. The business requirement is to minimize both the number of misrouted customer queries (false positives) and the number of missed service requests (false negatives). Which single evaluation metric provides the most balanced measure of the model's performance against this specific requirement?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Recall',
+      'B. Accuracy',
+      'C. F1-score',
+      'D. Precision'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — F1-score</strong><br><br>
+    The <strong>F1-score</strong> is the harmonic mean of precision and recall, so it balances <strong>both</strong> false positives and false negatives in one number — exactly what the requirement asks for.<br><br>
+    A (Recall) only tracks false negatives. D (Precision) only tracks false positives. B (Accuracy) can be misleading with imbalanced intents and doesn't focus on the FP/FN trade-off the way F1 does.`,
+    userChoice: null
+  },
+  {
+    id: 813, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Effective Prompt Structure for Code Generation',
+    text: `<p>A developer is tasked with using an Azure OpenAI <code>gpt-4</code> model to generate a Python function that calculates the factorial of a number. To ensure the generated code is accurate, efficient, and includes documentation, which prompt structure is most effective?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Generate a Python function named `calculate_factorial` that takes an integer `n` as input. The function should compute the factorial recursively. Include a docstring explaining its purpose, parameters, and return value. Also, add comments to the code.',
+      'B. Python code for factorial calculation using recursion',
+      'C. Write a Python function for factorial',
+      'D. I need a function. The language is Python. The task is factorial. Use recursion.'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A</strong><br><br>
+    The most effective prompt is <strong>specific and complete</strong>: it names the function, defines the input, specifies the algorithm (recursion), and explicitly requests a docstring and comments. Clear, detailed instructions with the exact requirements steer the model toward accurate, documented output.<br><br>
+    B, C, and D are progressively vaguer — they omit the documentation requirement and leave naming, signature, and structure to chance, producing less predictable results.`,
+    userChoice: null
+  },
+  {
+    id: 814, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'CLU Entity Type for a Fixed Set of Values',
+    text: `<p>A conversational bot built with Conversational Language Understanding (CLU) needs to extract pizza size from user requests. The possible sizes are a fixed, predefined set: 'Small', 'Medium', 'Large', or 'Family'. For capturing this <code>size</code> information, which entity type is the most efficient and accurate choice?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. A prebuilt entity',
+      'B. A learned entity',
+      'C. A list entity',
+      'D. A regex entity'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — A list entity</strong><br><br>
+    A <strong>list entity</strong> matches a closed, predefined set of values (with synonyms) — ideal for a fixed enumeration like Small/Medium/Large/Family. It's deterministic and needs no training data to be accurate.<br><br>
+    A (prebuilt) covers common types like numbers/dates, not custom pizza sizes. B (learned) requires labeled training and is overkill for a fixed list. D (regex) suits structured patterns (e.g., order IDs), not a small word list.`,
+    userChoice: null
+  },
+  {
+    id: 815, topic: 2, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Choosing Vision Model Types — Classification vs Detection',
+    text: `<p>An application you are developing requires two distinct image analysis capabilities. The first capability must determine whether an image primarily features a landscape or a cityscape. The second capability must identify and draw bounding boxes around all individual vehicles and pedestrians within an image. Which model types should you select to meet these requirements? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. Object detection',
+      'B. Azure AI Face service',
+      'C. Azure AI Vision OCR',
+      'D. Azure AI Vision Spatial Analysis',
+      'E. Image classification'
+    ],
+    correctOptions: ['A', 'E'],
+    solution: `<strong>Correct Answer: A and E</strong><br><br>
+    Determining whether an image is "landscape vs cityscape" assigns one label to the whole image — that's <strong>image classification</strong> (E). Identifying and drawing <strong>bounding boxes</strong> around each vehicle and pedestrian is <strong>object detection</strong> (A).<br><br>
+    B (Face) detects faces, not vehicles. C (OCR) reads text. D (Spatial Analysis) tracks people movement in video streams — not the per-object bounding boxes on a still image being asked for.`,
+    userChoices: []
+  },
+  {
+    id: 816, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Aspect-Based Sentiment in Reviews',
+    text: `<p>A system analyzing customer reviews must determine sentiment for specific product features like 'screen quality' or 'battery life'. For a review stating, 'The screen quality is amazing, but the battery life is disappointing,' which Azure AI Language feature can perform this granular analysis?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Key phrase extraction',
+      'B. Standard sentiment analysis',
+      'C. Sentiment analysis with opinion mining',
+      'D. Named entity recognition'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — Sentiment analysis with opinion mining</strong><br><br>
+    <strong>Opinion mining</strong> (aspect-based sentiment) links sentiment to specific <strong>targets/aspects</strong> — so it can report positive for "screen quality" and negative for "battery life" in the same sentence.<br><br>
+    A (key phrases) extracts terms without sentiment. B (standard sentiment) returns one overall sentiment for the document, not per-feature. D (NER) finds entities but doesn't assess sentiment.`,
+    userChoice: null
+  },
+  {
+    id: 817, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Model Family for Creative Text Generation',
+    text: `<p>A retail company is developing a generative AI application to produce creative marketing copy. The primary requirement is to use a model optimized for high-quality, fluent, and versatile natural language generation. Which model from the Azure AI model catalog would be the most suitable choice?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. A model from the BERT family',
+      'B. A model from the Whisper family',
+      'C. A model from the T5 family',
+      'D. A model from the GPT-4 family'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — A model from the GPT-4 family</strong><br><br>
+    <strong>GPT-4</strong>-family models are large autoregressive LLMs optimized for high-quality, fluent, open-ended <strong>text generation</strong> — the best fit for creative marketing copy.<br><br>
+    A (BERT) is an encoder for understanding tasks (classification, NER), not generation. B (Whisper) is speech-to-text. C (T5) is a capable text-to-text model but less suited to versatile creative generation than GPT-4.`,
+    userChoice: null
+  },
+  {
+    id: 818, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Tagging Tickets with Predefined Product Names',
+    text: `<p>A software development company is building an automated system to route customer support tickets. The system must analyze the text of each ticket to identify mentions of specific, predefined product names, such as 'ContosoApp Suite' and 'FabrikamDB'. The goal is to tag each ticket with the products discussed for efficient routing to the correct support team. Which Azure AI Language feature should you use to accomplish this task?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Sentiment Analysis',
+      'B. Key Phrase Extraction',
+      'C. Named Entity Recognition',
+      'D. Personally Identifiable Information (PII) Detection'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — Named Entity Recognition</strong><br><br>
+    To reliably detect specific, predefined product names, <strong>NER</strong> (in particular a <strong>custom NER</strong> model trained on those product entities) is the right tool — it identifies and labels the named products so tickets can be tagged and routed.<br><br>
+    A (sentiment) measures tone. B (key phrases) surfaces salient terms but doesn't guarantee detection of your specific product list. D (PII) finds personal data like names/emails, not product names.`,
+    userChoice: null
+  },
+  {
+    id: 819, topic: 1, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Production Deployment for Real-Time Inferencing',
+    text: `<p>Ensuring a fraud detection model remains highly available and scales automatically for real-time inferencing is a key requirement. For a custom-trained model in Azure AI Studio, which deployment option best meets these production needs?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. A local Docker container',
+      'B. An Azure Container Instance (ACI)',
+      'C. A managed online endpoint',
+      'D. A batch endpoint'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — A managed online endpoint</strong><br><br>
+    A <strong>managed online endpoint</strong> is built for real-time inferencing with <strong>autoscaling, high availability,</strong> and managed infrastructure — the production-grade choice for low-latency scoring.<br><br>
+    A (local Docker) is for dev/test only. B (ACI) suits low-scale test deployments, not autoscaling production. D (batch endpoint) processes large datasets asynchronously, not real-time requests.`,
+    userChoice: null
+  },
+  {
+    id: 820, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Language Detection on Mixed-Language Documents',
+    text: `<p>You are developing a text analytics pipeline that must identify the language of incoming documents before performing further processing. Some documents contain a mix of languages. For example, a document might have primary text in German with a quoted section in French. When you submit such a document to the Azure AI Language service's language detection feature, you receive a single language result.</p><p>Which statement explains this behavior?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. The service requires a `countryHint` parameter to identify multiple languages',
+      'B. You must train a custom language detection model to recognize mixed-language content',
+      'C. The service only analyzes the first 1024 characters of the input text by default',
+      'D. The API is designed to return only the single most predominantly used language in the text'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — The API is designed to return only the single most predominantly used language in the text</strong><br><br>
+    Language detection returns the <strong>single predominant language</strong> for the submitted text (with a confidence score). A mixed German/French document is reported as whichever language dominates — by design.<br><br>
+    A (countryHint) only nudges ambiguous cases; it doesn't return multiple languages. B is false — no custom model exists for this. C (1024-char limit) is not the reason for the single-language result.`,
+    userChoice: null
+  },
+  {
+    id: 821, topic: 2, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Vision Image Analysis Features — Caption + Tags',
+    text: `<p>A developer is building a solution for a museum to make its exhibits more accessible. The solution must analyze images of artwork and provide a detailed, human-readable description in a complete sentence, while also identifying key artistic styles and subjects present. To achieve this with the Azure AI Vision Image Analysis API, which two features should be specified in the analysis request? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. Objects',
+      'B. Tags',
+      'C. Caption',
+      'D. SmartCrops',
+      'E. Read'
+    ],
+    correctOptions: ['B', 'C'],
+    solution: `<strong>Correct Answer: B and C</strong><br><br>
+    <strong>Caption</strong> generates a single, human-readable sentence describing the image (the accessible description). <strong>Tags</strong> return keywords identifying subjects, styles, and content present in the artwork.<br><br>
+    A (Objects) returns bounding boxes, not a sentence or style tags. D (SmartCrops) suggests cropping regions. E (Read) extracts text via OCR — useful for placards, but not the description/styles being requested.`,
+    userChoices: []
+  },
+  {
+    id: 822, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Summarizing Lengthy Legal Documents',
+    text: `<p>A legal firm is implementing a solution to process lengthy contracts and depositions. The primary requirement is to generate a concise, human-readable summary for each document to allow paralegals to quickly grasp the main points without reading the entire text. Which Azure AI Language feature should be used to meet this requirement?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Key Phrase Extraction',
+      'B. Custom Text Classification',
+      'C. Named Entity Recognition',
+      'D. Document Summarization'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Document Summarization</strong><br><br>
+    <strong>Document summarization</strong> (extractive or abstractive) is purpose-built to produce a concise summary of long text — exactly the requirement.<br><br>
+    A (key phrases) lists terms, not a readable summary. B (classification) assigns categories. C (NER) extracts entities. None of these condense the document into a summary.`,
+    userChoice: null
+  },
+  {
+    id: 823, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Reusing a Node Sequence Across Prompt Flows',
+    text: `<p>You are building a complex prompt flow in Azure AI Studio that contains a series of nodes for data preprocessing. You plan to reuse this exact sequence of preprocessing nodes in several other prompt flows. You need a solution that simplifies the graph view and promotes reusability. Which feature should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Export the nodes as a JSON template for manual import',
+      'B. Group the nodes into a flow-as-a-node',
+      'C. Create a custom Python tool that combines the logic of all nodes',
+      'D. Configure a variant for the first node in the sequence'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Group the nodes into a flow-as-a-node</strong><br><br>
+    <strong>Flow-as-a-node</strong> lets you encapsulate an entire sub-flow (the preprocessing sequence) and reference it as a single node inside other flows — it simplifies the graph and promotes reuse without duplicating nodes.<br><br>
+    A (manual JSON export/import) is brittle and not reusable in-place. C (one custom Python tool) collapses the logic but loses the modular flow structure and is harder to maintain. D (variants) are for A/B-testing a node's prompt, not reuse.`,
+    userChoice: null
+  },
+  {
+    id: 824, topic: 4, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'AI Search Indexer — Recurring Schedule',
+    text: `<p>An Azure AI Search indexer must be configured to automatically process new or updated documents from Azure Blob Storage every 30 minutes. To implement this recurring execution, which property must be set within the indexer's definition?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. A `trigger` property set to `{"interval": 30}`',
+      'B. A `schedule` property with an interval defined in ISO 8601 duration format, such as `PT30M`',
+      'C. An `executionPolicy` property that specifies a `highWaterMarkChangeDetectionPolicy` with a 30-minute refresh',
+      'D. A `parameters` configuration that links to an Azure Logic App scheduled to run every 30 minutes'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — A <code>schedule</code> property with an interval defined in ISO 8601 duration format, such as <code>PT30M</code></strong><br><br>
+    An indexer runs on a recurring basis when its definition includes a <strong>schedule</strong> object with an <code>interval</code> expressed as an <strong>ISO 8601 duration</strong> (e.g., <code>PT30M</code> for 30 minutes).<br><br>
+    A invents a non-existent <code>trigger</code> shape. C's high-water-mark policy governs <em>which</em> documents are detected as changed, not <em>when</em> the indexer runs. D adds an external orchestrator that isn't needed — the indexer schedules itself.`,
+    userChoice: null
+  },
+  {
+    id: 825, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Content Safety — Custom Profanity Blocklist',
+    text: `<p>A global gaming company is implementing Azure AI Content Safety to moderate in-game chat. The company needs to block a list of custom, game-specific profane terms that are not covered by the default hate or profanity categories. The solution must be easily updatable by community managers without requiring code changes. Which Azure AI Content Safety feature should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Configure a custom classification model in Azure AI Language',
+      'B. Create a custom blocklist in Content Safety Studio',
+      'C. Deploy a separate Content Safety resource for each game',
+      'D. Increase the severity threshold for the default \'Hate\' category'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Create a custom blocklist in Content Safety Studio</strong><br><br>
+    A <strong>custom blocklist</strong> lets you add game-specific terms beyond the built-in categories, and it can be managed in Content Safety Studio — so community managers update it <strong>without code changes</strong>.<br><br>
+    A builds a separate Language model (more effort, not the Content Safety feature). C just duplicates resources. D adjusting the Hate threshold won't catch custom terms that the default categories don't recognize.`,
+    userChoice: null
+  },
+  {
+    id: 826, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Custom Speech — Dataset for Specialized Vocabulary',
+    text: `<p>You need to train a custom speech model to improve transcription accuracy for specialized financial acronyms and proprietary product names. Audio quality is high, and accents are not a concern. Which dataset type should you prioritize to train the model on this specific vocabulary?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Audio-only data for acoustic adaptation',
+      'B. Audio + human-labeled transcripts',
+      'C. A custom pronunciation file',
+      'D. Related text data'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Related text data</strong><br><br>
+    When the challenge is <strong>vocabulary</strong> (acronyms, product names) and audio quality/accents are not issues, <strong>related text data</strong> (sentences/plain text) most efficiently adapts the <em>language</em> model so it recognizes those terms — no audio collection required.<br><br>
+    A and B target <em>acoustic</em> adaptation (audio quality/accents), which isn't the problem here. C (pronunciation file) fixes how specific words sound but is narrower and more effortful than supplying related text for vocabulary coverage.`,
+    userChoice: null
+  },
+  {
+    id: 827, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Real-Time Transcript with Speaker Attribution',
+    text: `<p>A global consulting firm is developing a tool to transcribe and analyze client meetings conducted via conference calls. A key requirement is to produce a real-time transcript that attributes spoken text to each individual participant. Which Azure AI Speech feature should be selected for this solution?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Batch Transcription',
+      'B. Conversation Transcription with speaker diarization',
+      'C. Custom Neural Voice',
+      'D. Pronunciation Assessment'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Conversation Transcription with speaker diarization</strong><br><br>
+    <strong>Conversation transcription</strong> provides real-time transcription with <strong>speaker diarization</strong> — attributing each spoken segment to a specific participant — which is exactly the requirement.<br><br>
+    A (batch) is asynchronous, not real-time. C (Custom Neural Voice) is text-to-speech, the opposite direction. D (Pronunciation Assessment) scores pronunciation for language learning, not multi-speaker transcription.`,
+    userChoice: null
+  },
+
+  // ── Additional standalone certification-practice questions ──
+  {
+    id: 828, topic: 2, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Spatial Analysis Container — IoT Edge Host Prerequisites',
+    text: `<p>You are deploying the Azure AI Vision Spatial Analysis container to an Azure IoT Edge device. The solution must process video streams from on-premises cameras to monitor social distancing in a factory. Which two components are mandatory prerequisites for the host machine running the IoT Edge runtime? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. An NVIDIA GPU that supports CUDA',
+      'B. At least 128 GB of RAM',
+      'C. An Intel CPU with integrated graphics',
+      'D. The NVIDIA container runtime',
+      'E. An Azure Arc-enabled server registration'
+    ],
+    correctOptions: ['A', 'D'],
+    solution: `<strong>Correct Answer: A and D</strong><br><br>
+    Spatial Analysis runs computer-vision inference on the edge and requires GPU acceleration: an <strong>NVIDIA GPU with CUDA support</strong> (A) plus the <strong>NVIDIA container runtime</strong> (D) so the container can access the GPU.<br><br>
+    B (128 GB RAM) far exceeds the documented requirement. C (Intel integrated graphics) is not supported for this workload. E (Azure Arc registration) isn't required to run an IoT Edge module.`,
+    userChoices: []
+  },
+  {
+    id: 829, topic: 1, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Responsible AI — Fairness Assessment',
+    text: `<p>A financial services company is developing an AI solution to automate loan application approvals. To align with the company's ethical guidelines, you must ensure the model does not exhibit demographic bias. Which action is most critical during the planning phase to address the Responsible AI principle of Fairness?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Deploy the solution on a globally distributed infrastructure to minimize latency',
+      'B. Select the model with the highest overall prediction accuracy on the initial dataset',
+      'C. Implement end-to-end data encryption using customer-managed keys',
+      'D. Conduct a thorough fairness assessment by analyzing model performance across different demographic subgroups'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Conduct a thorough fairness assessment by analyzing model performance across different demographic subgroups</strong><br><br>
+    The Responsible AI principle of <strong>Fairness</strong> is addressed by measuring how the model performs across <strong>demographic subgroups</strong> (disparity analysis) and mitigating gaps — exactly what a fairness assessment does.<br><br>
+    A is about performance/latency. B (highest overall accuracy) can hide bias because aggregate accuracy masks subgroup disparities. C (encryption) serves privacy/security, a different principle.`,
+    userChoice: null
+  },
+  {
+    id: 830, topic: 2, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Video Indexer — Searchable Topics',
+    text: `<p>A media company is using Azure AI Video Indexer to process its large archive of news footage. The goal is to make the archive searchable by identifying the main topics and subjects discussed in each video. Which specific insight should be used to achieve this?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Named entities',
+      'B. Keywords',
+      'C. Topics',
+      'D. Labels'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — Topics</strong><br><br>
+    Video Indexer's <strong>Topics</strong> insight infers the higher-level subjects discussed across a video (mapped to taxonomies like Wikipedia/IPTC), which is what "main topics and subjects" calls for.<br><br>
+    A (named entities) extracts specific people/places/orgs, not overall topics. B (keywords) lists salient terms but not the inferred subject. D (labels) tags visual objects seen on-screen, not what is discussed.`,
+    userChoice: null
+  },
+  {
+    id: 831, topic: 1, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Azure Monitor — Latency and Failed Requests Dashboard',
+    text: `<p>A company has deployed a critical application that relies on an Azure AI Language service for sentiment analysis. You need to create a dashboard that visualizes the average API call latency and the total number of failed requests over the past 24 hours. Which Azure Monitor feature should you use to source this data for the dashboard?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Activity Log',
+      'B. Metrics',
+      'C. Service Health',
+      'D. Logs'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Metrics</strong><br><br>
+    Platform <strong>Metrics</strong> are the numeric time-series (latency, call counts, error counts) emitted automatically by the resource — ideal for charting average latency and failed-request totals on a dashboard.<br><br>
+    A (Activity Log) records control-plane operations, not data-plane latency. C (Service Health) reports Azure-wide outages, not your call metrics. D (Logs) can compute this via KQL but requires diagnostic settings and is heavier than the built-in metrics for a simple dashboard.`,
+    userChoice: null
+  },
+  {
+    id: 832, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Diagnosing a content_filter finish_reason',
+    text: `<p>An application designed for a medical supply company is using the DALL-E 3 model in Azure OpenAI to generate images of surgical instruments. Legitimate prompts are intermittently failing, and the API response consistently indicates a <code>finish_reason</code> of <code>content_filter</code>. What should be the developer's initial diagnostic step to understand the specific reason for the rejection?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Modify the prompts to include phrases like \'for educational purposes\' or \'illustration only\'',
+      'B. Inspect the `prompt_filter_results` object within the API response',
+      'C. Check the Azure Monitor logs for the Azure OpenAI resource for policy violation events',
+      'D. Open a support ticket with Microsoft to request an exception for the medical imagery use case'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Inspect the <code>prompt_filter_results</code> object within the API response</strong><br><br>
+    The response includes <strong><code>prompt_filter_results</code></strong> (and <code>content_filter_results</code>) showing which harm category triggered and at what severity. Inspecting it is the correct <strong>first diagnostic step</strong> to learn the specific reason.<br><br>
+    A is a workaround attempted before understanding the cause. C (Monitor logs) is slower and less precise than the inline filter results. D (support ticket) is premature before diagnosing.`,
+    userChoice: null
+  },
+  {
+    id: 833, topic: 2, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Vision 4.0 — Keywords + Items in a Single Call',
+    text: `<p>To build a content moderation system for a photo-sharing platform, you need to analyze uploaded images. The system must generate a list of descriptive keywords for search indexing and simultaneously identify the specific items within each image for review. To optimize performance and reduce latency, both analyses must be performed in a single API request. Which two visual features must be specified in a single call to the Azure AI Vision Image Analysis 4.0 API? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. Tags',
+      'B. Caption',
+      'C. Objects',
+      'D. Read',
+      'E. SmartCrops'
+    ],
+    correctOptions: ['A', 'C'],
+    solution: `<strong>Correct Answer: A and C</strong><br><br>
+    <strong>Tags</strong> produces the descriptive keywords for search indexing, and <strong>Objects</strong> detects and locates the specific items in the image for review. Image Analysis 4.0 lets you request multiple visual features in one call to reduce latency.<br><br>
+    B (Caption) is a single sentence, not a keyword list. D (Read) is OCR for text. E (SmartCrops) suggests crop regions — none of these match "keywords + items."`,
+    userChoices: []
+  },
+  {
+    id: 834, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Content Safety — Blocking Confidential Codenames',
+    text: `<p>To prevent a generative AI assistant from including confidential project codenames in its output, a company needs to enforce a content restriction. Which Azure AI Content Safety feature offers the most direct and efficient method for this task?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Create and apply a custom text blocklist',
+      'B. Use the Protected Material feature to detect copyrighted text',
+      'C. Enable prompt shielding to detect jailbreak attacks',
+      'D. Configure the severity level for the Self-Harm category to high'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Create and apply a custom text blocklist</strong><br><br>
+    A <strong>custom blocklist</strong> lets you specify exact terms (the confidential codenames) to block in prompts and completions — the most direct, efficient control for organization-specific words.<br><br>
+    B (Protected Material) detects known copyrighted/code content, not your private codenames. C (prompt shielding) defends against jailbreak/injection. D (Self-Harm severity) is an unrelated harm category.`,
+    userChoice: null
+  },
+  {
+    id: 835, topic: 1, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Revoking a Compromised Subscription Key',
+    text: `<p>An application that utilizes an Azure AI Vision service has potentially exposed one of its subscription keys in a public code repository. You must immediately revoke the compromised key and restore secure access for the application with minimal service interruption. What is the most effective sequence of actions?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Disable all key-based access and configure Microsoft Entra ID authentication for the application',
+      'B. Delete the Azure AI Vision resource and provision a new one, then update the application with the new endpoint and key',
+      'C. Regenerate both Key 1 and Key 2 simultaneously, then update the application with one of the new keys',
+      'D. Update the application\'s configuration to use the non-compromised key, and then regenerate the compromised key'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Update the application to use the non-compromised key, then regenerate the compromised key</strong><br><br>
+    Each resource has <strong>two keys</strong> precisely to allow rotation with no downtime: switch the app to the still-valid second key, then regenerate the exposed key to revoke it. This restores security with <strong>minimal interruption</strong>.<br><br>
+    A (Entra ID) is more secure long-term but is a larger change, not the immediate minimal-disruption fix. B (delete/recreate) causes maximum downtime and a new endpoint. C (regenerate both at once) breaks the app because the key it's currently using is invalidated.`,
+    userChoice: null
+  },
+  {
+    id: 836, topic: 4, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Calling a Custom Azure Function from a Skillset',
+    text: `<p>You have deployed a custom Azure Function that accepts text as input and identifies proprietary codes. You need to call this function from within an Azure AI Search enrichment pipeline. What is the most effective method to accomplish this?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Modify the data source to include a call to the Azure Function before the data is ingested by the indexer',
+      'B. Create a custom indexer that calls the Azure Function and then passes the enriched data to the skillset',
+      'C. Define a `Microsoft.Skills.Util.ShaperSkill` in the skillset to invoke the Azure Function\'s endpoint',
+      'D. Define a `Microsoft.Skills.Custom.WebApiSkill` in the skillset and configure its `uri` property to the Azure Function\'s endpoint'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Define a <code>Microsoft.Skills.Custom.WebApiSkill</code> and point its <code>uri</code> to the Azure Function</strong><br><br>
+    The <strong>WebApiSkill</strong> is the built-in custom skill for calling an external web endpoint (such as an Azure Function) during enrichment — set its <code>uri</code> to the function's URL and it's invoked inline in the skillset.<br><br>
+    A and B mis-place the call (data sources don't run functions; indexers don't pre-call functions). C's ShaperSkill only reshapes/consolidates data into a complex object; it doesn't call an external endpoint.`,
+    userChoice: null
+  },
+  {
+    id: 837, topic: 1, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Document Intelligence — Enforcing Data Residency',
+    text: `<p>A financial institution is deploying an Azure AI Document Intelligence solution to process loan applications. Due to strict regulatory compliance, all data processing, including model training, must occur exclusively within the <code>Canada Central</code> region. When provisioning the Document Intelligence resource, which action is critical to enforce this data residency requirement?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Enable customer-managed keys using a Key Vault located in Canada Central',
+      'B. Select `Canada Central` as the region and ensure no global resource is used',
+      'C. Configure a private endpoint within a virtual network in the Canada Central region',
+      'D. Assign a custom policy that restricts resource locations to Canada Central'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Select <code>Canada Central</code> as the region and ensure no global resource is used</strong><br><br>
+    Data residency is enforced primarily by <strong>provisioning the resource in the required region</strong> so processing and training stay there — and avoiding any "global" SKU that could route data elsewhere.<br><br>
+    A (CMK) governs encryption key control, not where processing occurs. C (private endpoint) controls network reachability, not residency. D (Azure Policy) can prevent creating resources outside the region but doesn't itself place this resource's processing; selecting the region is the direct, critical action.`,
+    userChoice: null
+  },
+  {
+    id: 838, topic: 8, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'AutoGen — Human-in-the-Loop Configuration',
+    text: `<p>To implement a human-in-the-loop debugging process, you are building a multi-agent system using AutoGen. The system includes an <code>AssistantAgent</code> to suggest code fixes and a <code>UserProxyAgent</code> to represent the developer who can provide feedback. You need to ensure the developer is prompted for input before any code is executed and that the conversation terminates once the developer types 'exit'. Which two configurations are required? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. Define a custom termination message function and pass it to the group chat manager',
+      'B. Set the `human_input_mode` property of the `UserProxyAgent` to `ALWAYS`',
+      'C. Use `AssistantAgent` exclusively for all interactions',
+      'D. Set the `max_consecutive_auto_reply` property to a high value',
+      'E. Configure a vector database as the primary memory for all agents'
+    ],
+    correctOptions: ['A', 'B'],
+    solution: `<strong>Correct Answer: A and B</strong><br><br>
+    Setting <strong><code>human_input_mode = ALWAYS</code></strong> on the UserProxyAgent forces a developer prompt before each action (including code execution). Terminating when the developer types 'exit' is achieved with a <strong>custom termination condition/message function</strong>.<br><br>
+    C contradicts the human-in-the-loop design (you need the UserProxyAgent). D (high max_consecutive_auto_reply) increases automatic replies — the opposite of prompting the human. E (vector DB memory) is unrelated to prompting and termination.`,
+    userChoices: []
+  },
+  {
+    id: 839, topic: 1, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Per-User Azure OpenAI Token Tracking',
+    text: `<p>For auditing and cost management purposes, an organization must track Azure OpenAI token consumption for each individual user. User identity is available in a custom header on every API request. What method should be used to collect and analyze this per-user consumption data?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Use Azure Cost Management and create a budget for the resource group, then review the daily consumption reports',
+      'B. Analyze the Activity Log for the Azure OpenAI resource, filtering for \'Write\' operations to identify token consumption events',
+      'C. Create a metric alert in Azure Monitor for the \'TotalTokens\' metric and configure the dimensions to split by user identity',
+      'D. Enable diagnostic settings on the Azure OpenAI resource to send logs to a Log Analytics workspace, then query the logs using KQL to correlate user identity with token usage'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Enable diagnostic settings to Log Analytics, then query with KQL to correlate user identity with token usage</strong><br><br>
+    Per-user attribution requires the <strong>request-level detail</strong> in diagnostic logs. Sending logs to <strong>Log Analytics</strong> and using <strong>KQL</strong> lets you join the custom identity header with token counts for true per-user analysis.<br><br>
+    A (Cost Management) reports resource/subscription cost, not per-user tokens. B (Activity Log) records management operations, not data-plane token usage. C (metric split by dimension) can't split on a custom request header — that dimension isn't available on the platform metric.`,
+    userChoice: null
+  },
+  {
+    id: 840, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Guaranteed Capacity for Low-Latency SLAs',
+    text: `<p>A real-time system uses an Azure OpenAI GPT-4 model and must meet strict SLAs that require guaranteed model processing capacity and predictable low latency. Which deployment option fulfills these requirements?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Containerized deployment on Azure Kubernetes Service (AKS)',
+      'B. Provisioned Throughput Unit (PTU) deployment',
+      'C. Standard deployment',
+      'D. Deployment with a content filter enabled'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Provisioned Throughput Unit (PTU) deployment</strong><br><br>
+    <strong>PTU</strong> reserves dedicated model capacity, delivering <strong>guaranteed throughput and predictable, low latency</strong> — the right fit for strict real-time SLAs.<br><br>
+    A (AKS) doesn't host the Azure OpenAI model itself. C (Standard/pay-as-you-go) is shared capacity with variable latency. D (content filter) is a safety setting unrelated to capacity or latency.`,
+    userChoice: null
+  },
+  {
+    id: 841, topic: 4, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Document Intelligence — Prebuilt W-2 Model',
+    text: `<p>A tax advisory firm needs to automate the extraction of data from thousands of scanned W-2 forms provided by clients. The solution must accurately identify and extract fields such as Employer Identification Number (EIN), employee's social security number, and wages. Which Azure AI Document Intelligence prebuilt model should be implemented to achieve this with the least amount of custom development?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. The prebuilt ID document model',
+      'B. The prebuilt W-2 model',
+      'C. The prebuilt invoice model',
+      'D. The general document model'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — The prebuilt W-2 model</strong><br><br>
+    Document Intelligence ships a dedicated <strong>prebuilt W-2 model</strong> that already understands W-2 fields (EIN, SSN, wages, boxes) — zero custom training, least development.<br><br>
+    A (ID document) reads passports/driver's licenses. C (invoice) targets invoice fields. D (general document) extracts generic key-value pairs but isn't tuned to W-2 semantics like the dedicated model.`,
+    userChoice: null
+  },
+  {
+    id: 842, topic: 4, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Custom Model Type for Variable Form Layouts',
+    text: `<p>An insurance company processes claim forms submitted by various hospitals. While the core information is consistent, the layout, formatting, and structure of these forms vary significantly between institutions. You need to build a solution using Azure AI Document Intelligence to extract key-value pairs, tables, and selection marks. Which custom model type should you choose to accommodate the high structural variability of the source documents?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Custom template model',
+      'B. Custom neural model',
+      'C. Composed model',
+      'D. Read model'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Custom neural model</strong><br><br>
+    The <strong>custom neural</strong> model handles <strong>structurally variable</strong> documents (different layouts conveying the same information) and extracts fields, tables, and selection marks — ideal when forms differ between institutions.<br><br>
+    A (custom template) assumes a consistent, fixed layout. C (composed) just groups multiple models behind one endpoint; it doesn't solve variability. D (Read) is OCR only — no key-value/table extraction.`,
+    userChoice: null
+  },
+  {
+    id: 843, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Network Isolation for an Azure OpenAI Resource',
+    text: `<p>An Azure OpenAI resource needs to be completely isolated from the public internet, with access limited exclusively to applications within a specific Azure virtual network. During the provisioning of this resource, which network configuration must be chosen to enforce this strict security policy?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Selected networks, configured with the virtual network\'s service endpoint',
+      'B. All networks, with access restricted by using managed identities',
+      'C. All networks, with a network security group (NSG) rule to deny internet traffic',
+      'D. Disabled, and a private endpoint connection must be created to establish access'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Disabled, and a private endpoint connection must be created to establish access</strong><br><br>
+    Complete isolation means setting public network access to <strong>Disabled</strong> and reaching the resource only through a <strong>private endpoint</strong> in the VNet — no public path exists.<br><br>
+    A (Selected networks + service endpoint) still leaves a public endpoint reachable from allowed networks. B and C keep "All networks" enabled, which contradicts "completely isolated from the public internet."`,
+    userChoice: null
+  },
+  {
+    id: 844, topic: 8, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'AutoGen — Orchestrating Multiple Specialist Agents',
+    text: `<p>A financial services firm is developing a multi-agent solution using Microsoft AutoGen to automate the generation of quarterly earnings reports. The solution requires a data retrieval agent, a financial analysis agent, and a report writing agent to collaborate on the task. You need to implement an orchestration layer that manages the conversation flow and ensures the agents contribute in a logical sequence. Which approach should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. An AssistantAgent that uses a series of nested function calls to invoke the other agents\' capabilities',
+      'B. A GroupChatManager agent to orchestrate the interactions between the specialist agents within a GroupChat',
+      'C. A UserProxyAgent that sequentially calls each specialist agent and passes the context',
+      'D. A single ConversableAgent configured with a complex system message detailing the entire workflow'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — A GroupChatManager agent to orchestrate interactions within a GroupChat</strong><br><br>
+    AutoGen's <strong>GroupChat</strong> with a <strong>GroupChatManager</strong> is the purpose-built orchestration pattern for coordinating multiple specialist agents, managing turn-taking and conversation flow in a logical sequence.<br><br>
+    A (nested function calls) is brittle and not the multi-agent orchestration pattern. C (UserProxyAgent manual sequencing) bypasses the manager's coordination. D (single agent) collapses the specialists into one, losing the collaborative multi-agent design.`,
+    userChoice: null
+  },
+  {
+    id: 845, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Why a Pinned Model Version Upgraded',
+    text: `<p>You have deployed a generative AI solution using Azure OpenAI Service. Your application is pinned to a specific version of the <code>gpt-4</code> model, and you have set the update policy to 'Upgrade when expired'. Several months later, you observe that your deployment is now using a newer version of the model. What is the most likely reason for this model upgrade?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. A new Azure Policy was applied to the subscription, forcing model updates',
+      'B. The pay-as-you-go pricing tier automatically updates models to optimize costs',
+      'C. An Azure support engineer performed a mandatory platform-wide update for security reasons',
+      'D. The pinned model version reached its official retirement date'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — The pinned model version reached its official retirement date</strong><br><br>
+    With the update policy set to <strong>"Upgrade when expired,"</strong> the deployment auto-migrates to the next default version once the pinned version hits its <strong>retirement/expiry date</strong> — which is exactly what happened.<br><br>
+    A (Azure Policy) doesn't change model versions. B (pricing tier) doesn't auto-upgrade models for cost. C (support engineer) isn't how version upgrades occur — the configured policy drove it.`,
+    userChoice: null
+  },
+  {
+    id: 846, topic: 4, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Form Processing to a Predefined Schema',
+    text: `<p>An automated pipeline needs to process scanned, multi-page loan applications that contain printed text, handwritten entries, and checkboxes. The goal is to extract this information and map it to a structured, predefined schema. Which Azure AI service is best suited for this form-processing task?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Azure AI Vision\'s Read API',
+      'B. Azure AI Custom Vision with an object detection model',
+      'C. Azure AI Language service for key phrase extraction',
+      'D. Azure AI Document Intelligence with a custom template model'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Azure AI Document Intelligence with a custom template model</strong><br><br>
+    <strong>Document Intelligence</strong> is the form-processing service: it reads printed and handwritten text plus <strong>checkboxes (selection marks)</strong> and maps them to a <strong>predefined schema</strong>. A <strong>custom template</strong> model fits when the loan application layout is consistent.<br><br>
+    A (Read API) only extracts raw text, no schema mapping or selection marks. B (Custom Vision) classifies/detects objects, not form fields. C (key phrase extraction) surfaces terms, not structured field-to-schema mapping.`,
+    userChoice: null
+  },
+
+  // ── Additional standalone certification-practice questions (batch 3) ──
+  {
+    id: 847, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Speech SDK — Single-Utterance Recognition',
+    text: `<p>A developer is creating a kiosk application that must transcribe short, spoken user commands one at a time. The application needs to process each command completely before listening for the next one, and the solution must optimize for latency on single utterances. Which method from the Azure AI Speech SDK is the most appropriate for this requirement?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. synthesize_text_async()',
+      'B. recognize_once_async()',
+      'C. start_keyword_recognition_async()',
+      'D. start_continuous_recognition_async()'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — recognize_once_async()</strong><br><br>
+    <strong><code>recognize_once_async()</code></strong> recognizes a <strong>single utterance</strong> and stops after detecting end-of-speech (or ~15s) — ideal for one-command-at-a-time kiosk input with low latency.<br><br>
+    A (synthesize) is text-to-speech, the wrong direction. C (keyword recognition) waits for a wake word. D (continuous recognition) streams indefinitely until stopped — more than needed for single commands.`,
+    userChoice: null
+  },
+  {
+    id: 848, topic: 2, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Vision — Landmarks/Items and People in One Call',
+    text: `<p>An application is being designed to automatically catalog a large archive of historical photographs for a museum. The system must identify any prominent landmarks or culturally significant items within an image and also determine if any people are present. To meet these requirements with a single API request, which two features should you specify in the call to the Azure AI Vision service? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. objects',
+      'B. tags',
+      'C. caption',
+      'D. read',
+      'E. people'
+    ],
+    correctOptions: ['B', 'E'],
+    solution: `<strong>Correct Answer: B and E</strong><br><br>
+    <strong>Tags</strong> identifies content including landmarks and culturally significant items/subjects, and the <strong>People</strong> feature detects whether people are present (with bounding boxes). Both can be requested in one Image Analysis call.<br><br>
+    A (objects) returns generic object boxes but isn't the best fit for "landmarks/culturally significant items," which tags surfaces. C (caption) is one sentence. D (read) is OCR text.`,
+    userChoices: []
+  },
+  {
+    id: 849, topic: 4, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'AI Search Tier — SLA and Private Endpoints',
+    text: `<p>You are designing a knowledge mining solution that has stringent security and availability requirements. The solution must be backed by a Service Level Agreement (SLA) and use private endpoints for all network connectivity. Additionally, the solution's indexers will use skillsets to call other secured Azure services, requiring private endpoint support for these outbound connections. Which pricing tier should you select?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Free',
+      'B. Storage Optimized',
+      'C. Standard',
+      'D. Basic'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — Standard</strong><br><br>
+    A <strong>Standard</strong> tier provides the SLA-backed capacity plus the features needed for <strong>private endpoints</strong> and, importantly, the <strong>shared private link</strong> support that lets indexers/skillsets make secured <strong>outbound</strong> connections to other Azure services.<br><br>
+    A (Free) has no SLA and no private networking. D (Basic) is SLA-backed but lacks the outbound shared-private-link capability for skillset connections. B (Storage Optimized) targets very large indexes, not the networking requirement that Standard satisfies for this scenario.`,
+    userChoice: null
+  },
+  {
+    id: 850, topic: 1, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Pricing Tier for a Low-Usage Proof of Concept',
+    text: `<p>A small startup is developing a new mobile application that will use Azure AI Language services for sentiment analysis. The development team needs to build and test a proof-of-concept with minimal initial investment. The expected usage during this phase is low and will not exceed the service limits for free usage. Which pricing tier should the team choose?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. A Standard S0 pricing tier',
+      'B. A Standard S pricing tier',
+      'C. A Free F0 pricing tier',
+      'D. A Commitment tier plan'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — A Free F0 pricing tier</strong><br><br>
+    The <strong>Free (F0)</strong> tier is purpose-built for low-volume proof-of-concept work at <strong>no cost</strong>, as long as usage stays within its limits — exactly the startup's scenario.<br><br>
+    A/B (Standard) bill per transaction and aren't "minimal investment" for a PoC. D (Commitment tier) is a prepaid high-volume plan — the opposite of low usage.`,
+    userChoice: null
+  },
+  {
+    id: 851, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Tuning Generation — Variety Without Drift',
+    text: `<p>To ensure that a customer service chatbot provides varied but relevant responses without repeating the same phrases or introducing entirely new, unrelated topics in a single turn, you need to adjust its generative behavior. Which two parameters should you configure? (Select Two)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq', multiSelect: true,
+    options: [
+      'A. max_tokens',
+      'B. stop',
+      'C. frequency_penalty',
+      'D. presence_penalty',
+      'E. temperature'
+    ],
+    correctOptions: ['C', 'D'],
+    solution: `<strong>Correct Answer: C and D</strong><br><br>
+    <strong>frequency_penalty</strong> reduces verbatim repetition of the same tokens/phrases, and <strong>presence_penalty</strong> controls how much the model introduces new topics — together they deliver "varied but on-topic." Tuning both addresses repetition and topic-drift directly.<br><br>
+    A (max_tokens) caps length. B (stop) defines stop sequences. E (temperature) adjusts overall randomness but is a blunt instrument that doesn't specifically target repetition vs. new-topic behavior the way the two penalties do.`,
+    userChoices: []
+  },
+  {
+    id: 852, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Custom NER for Specialized Legal Entities',
+    text: `<p>You need to extract specialized legal entities, such as 'Governing Law' and 'Liability Cap', from the unstructured text of partnership agreements. A custom model is required for this extraction. Which Azure AI service should you use to build this model?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Azure AI Search with a built-in skillset',
+      'B. Azure AI Document Intelligence prebuilt-invoice model',
+      'C. Azure AI Vision Read model',
+      'D. Azure AI Language custom Named Entity Recognition (NER)'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Azure AI Language custom Named Entity Recognition (NER)</strong><br><br>
+    <strong>Custom NER</strong> lets you define and train your own entity types (e.g., "Governing Law," "Liability Cap") to extract from unstructured text — precisely what the requirement asks for.<br><br>
+    A's built-in skills use predefined entity types, not your custom ones. B (prebuilt invoice) extracts invoice fields. C (Read) only performs OCR — no entity extraction.`,
+    userChoice: null
+  },
+  {
+    id: 853, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'PII Detection — Returning Only Specific Categories',
+    text: `<p>You are tasked with building a feature that redacts specific types of Personally Identifiable Information (PII) from user-generated content before it is stored for analysis. The solution must only identify and return IP addresses and phone numbers. Which parameter should you configure in the body of your request to the Azure AI Language service PII detection endpoint?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. stringIndexType',
+      'B. domain',
+      'C. piiCategories',
+      'D. modelVersion'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — piiCategories</strong><br><br>
+    The <strong><code>piiCategories</code></strong> parameter lets you restrict detection to a specific list of entity types (e.g., <code>IPAddress</code>, <code>PhoneNumber</code>), so only those are identified and returned.<br><br>
+    A (stringIndexType) controls offset encoding. B (domain) toggles domains like PHI for healthcare, not an arbitrary category subset. D (modelVersion) selects the model build, not which categories are returned.`,
+    userChoice: null
+  },
+  {
+    id: 854, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'CLU Lifecycle Management via CI/CD',
+    text: `<p>A team managing a Conversational Language Understanding (CLU) application has found inconsistencies across their development, staging, and production models caused by error-prone manual export and import processes. They want to establish a reliable backup and recovery mechanism that integrates with their existing CI/CD pipeline. What is the most effective method for managing the model's lifecycle?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Store the CLU project\'s JSON definition file in a Git repository and use CI/CD pipelines to programmatically import and deploy new versions via the Authoring API',
+      'B. Configure continuous export of the model\'s training and testing utterances to Azure Blob Storage as the primary backup mechanism',
+      'C. Implement an Azure Policy to automatically snapshot the CLU resource at regular intervals for point-in-time recovery',
+      'D. Regularly use the Language Studio UI to export the project as a JSON file and store these backups in a versioned folder on a shared file server'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Store the CLU project JSON in Git and use CI/CD to import/deploy via the Authoring API</strong><br><br>
+    Treating the project's <strong>JSON definition as code in Git</strong> and automating import/deploy through the <strong>Authoring API</strong> in the CI/CD pipeline gives reliable versioning, backup, and consistent promotion across environments — eliminating the manual export/import errors.<br><br>
+    B backs up utterances but not the full project/deployment lifecycle. C (Azure Policy snapshots) isn't a capability for CLU resources. D still relies on error-prone manual UI exports — the very problem they're solving.`,
+    userChoice: null
+  },
+  {
+    id: 855, topic: 4, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'AI Search Data Source — Filtering Cosmos DB by Tenant',
+    text: `<p>You are configuring an Azure AI Search indexer to pull data from an Azure Cosmos DB for NoSQL container. The container stores documents for multiple tenants, identified by a <code>tenantId</code> property. You must ensure that the indexer only processes documents where the <code>tenantId</code> is 'Contoso'. Which property should you configure in the data source definition to achieve this?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. container',
+      'B. query',
+      'C. dataChangeDetectionPolicy',
+      'D. parameters'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — query</strong><br><br>
+    For a Cosmos DB data source, the <strong><code>query</code></strong> property holds a SQL query that filters which documents the indexer reads — e.g., <code>SELECT * FROM c WHERE c.tenantId = 'Contoso'</code>.<br><br>
+    A (container) names the source collection but can't filter rows. C (dataChangeDetectionPolicy) governs incremental change tracking, not filtering. D (parameters) configures indexer execution options, not a row filter.`,
+    userChoice: null
+  },
+  {
+    id: 856, topic: 7, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Content Safety — Self-Harm Category',
+    text: `<p>A company is deploying a public-facing chatbot using Azure OpenAI. To align with responsible AI principles, they must prevent the generation of content related to self-harm. Which specific harm category in Azure AI Content Safety should be configured to address this requirement?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Self-Harm',
+      'B. Sexual',
+      'C. Hate',
+      'D. Violence'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Self-Harm</strong><br><br>
+    Azure AI Content Safety defines four harm categories: Hate, Sexual, Violence, and <strong>Self-Harm</strong>. To block self-harm content, configure the <strong>Self-Harm</strong> category's severity threshold.<br><br>
+    B, C, and D are the other distinct categories and don't cover self-harm content.`,
+    userChoice: null
+  },
+  {
+    id: 857, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Speech SDK — Selecting a Prebuilt Neural Voice',
+    text: `<p>When using the Speech SDK to generate speech with a specific prebuilt neural voice, such as <code>en-US-JennyNeural</code>, which property of the <code>SpeechConfig</code> object must be configured?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. SpeechRecognitionLanguage',
+      'B. SpeechSynthesisVoiceName',
+      'C. SpeechSynthesisOutputFormat',
+      'D. EndpointId'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — SpeechSynthesisVoiceName</strong><br><br>
+    To select a specific prebuilt neural voice for text-to-speech, set <strong><code>SpeechSynthesisVoiceName</code></strong> (e.g., to <code>en-US-JennyNeural</code>).<br><br>
+    A (SpeechRecognitionLanguage) is for speech-to-text input. C (SpeechSynthesisOutputFormat) sets the audio format, not the voice. D (EndpointId) is used for a custom voice/model endpoint, not a prebuilt voice.`,
+    userChoice: null
+  },
+  {
+    id: 858, topic: 3, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'SSML — Precise Silent Pause',
+    text: `<p>You are developing an audiobook application using Azure AI Speech. To enhance the listening experience, you need to insert a silent pause of exactly 750 milliseconds between specific paragraphs. Which SSML element should you use to achieve this precise timing?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. <p></p>',
+      'B. <break strength="strong"/>',
+      'C. <break time="750ms"/>',
+      'D. <prosody rate="-50%"></prosody>'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — &lt;break time="750ms"/&gt;</strong><br><br>
+    The SSML <strong><code>&lt;break&gt;</code></strong> element with a <strong><code>time</code></strong> attribute inserts a pause of an <strong>exact duration</strong> (e.g., <code>750ms</code>).<br><br>
+    A (&lt;p&gt;) adds paragraph structure with an implicit, non-precise pause. B (strength="strong") gives a relative, not exact, pause. D (prosody rate) changes speaking speed, not silence.`,
+    userChoice: null
+  },
+  {
+    id: 859, topic: 4, discussions: 0, isCertPractice: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Improving a Custom Neural Model on a Variant Layout',
+    text: `<p>A custom neural model in Azure AI Document Intelligence is consistently failing to extract a specific field from a subset of documents that have a slightly different layout. The overall accuracy score for the model is otherwise acceptable. What is the most effective action to improve the model's performance for this specific field?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Create a new composed model that includes the current model and a prebuilt model',
+      'B. Add at least five new documents representing the problematic layout to the training dataset, label them, and retrain the model',
+      'C. Switch the project from a custom neural model to a custom template model',
+      'D. Increase the `confidence` threshold parameter in the API call when analyzing the problematic documents'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Add at least five new documents of the problematic layout, label them, and retrain</strong><br><br>
+    A neural model improves on an under-performing layout by <strong>adding labeled examples</strong> of that layout (the documented minimum is about five per variation) and <strong>retraining</strong> — directly teaching the model the variant.<br><br>
+    A (composed) routes between models but won't fix this field. C (template) is worse for layout variability. D (raising confidence threshold) just suppresses low-confidence results; it doesn't improve extraction.`,
+    userChoice: null
+  },
+
+  // ============================================================
+  // AI-103 QUESTIONS FROM EXAM TOPICS
+  // Original questions authored on the same topics seen in
+  // community exam discussions. No verbatim source content.
+  // ============================================================
+  {
+    id: 900, topic: 7, discussions: 0, isExamTopics: true,
+    isCaseStudy: true,
+    caseTitle: 'Contoso, Ltd (Microsoft Foundry)',
+    type: 'HOTSPOT',
+    title: 'Case Study: Configure Agent1 Model Deployment',
+    caseStudy: `<h3>Overview — Company Information</h3>
+    <p><strong>Contoso, Ltd</strong> is a multinational retail company that builds, deploys, and manages generative AI and agent-based solutions by using <strong>Microsoft Foundry</strong>.</p>
+    <h3>Existing Environment — Identity</h3>
+    <p>Contoso uses <strong>Microsoft Entra ID</strong> for identity management, authentication, and authorization that enables agents to access organizational resources. Contoso recently formed an AI engineering team, <em>Agent1Dev Team</em>, to optimize and maintain AI solutions, collaborating with solution architects, DevOps, and security engineers. A separate <em>Agent1Test Team</em> validates AI solutions before deployment.</p>
+    <h3>Generative Environment</h3>
+    <p>Contoso has a Microsoft Foundry deployment containing two projects, <strong>Project1</strong> and <strong>Project2</strong>.</p>
+    <p><strong>Project1</strong> contains a customer support agent named <strong>Agent1</strong> that assists customers with product inquiries and troubleshooting. Agent1 uses a <em>base model deployment</em>. A safety evaluation pipeline is NOT enabled, tool invocation approval workflows are NOT enabled, and conversation memory constraints are NOT configured. Agent1 interacts with customers through digital support channels. <strong>Project1 is deployed to an Azure region located in the European Union (EU).</strong></p>
+    <h3>Planned Changes</h3>
+    <p>Contoso plans to update the base model deployment used by Agent1 and standardize the model version to ensure continuity and consistent responses, enable Agent1 to retrieve product information from product sheets in storage1, implement a semantic + vector indexing solution for those sheets, and complete a video creation solution.</p>
+    <h3>Technical Requirements</h3>
+    <ul>
+      <li>The model deployment used by Agent1 must support <strong>scalable, high-throughput</strong> generative AI workloads and <strong>dynamically scale</strong> to handle variable customer support traffic, <strong>without requiring reserved throughput capacity</strong>.</li>
+      <li>Responses generated from product-sheet information must be relevant, complete, and accurate.</li>
+      <li>The <strong>model version used by Agent1 must remain consistent</strong> to ensure stable responses.</li>
+      <li>The data processed by the model must remain within the <strong>EU</strong>.</li>
+    </ul>
+    <h3>Security and Compliance</h3>
+    <p>API keys must NOT be used to access Foundry-deployed models; access follows least privilege; developers authenticate to Foundry using Microsoft Entra authentication.</p>`,
+    text: `<p><strong>HOTSPOT</strong> — You need to configure the model deployment for Agent1 to meet the technical requirements.</p>
+    <p>What should you configure? Select the appropriate options in the answer area.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'casestudy_hotspot',
+    solution: `• <strong>Deployment type:</strong> <span class="correct-badge">Global Standard</span><br>
+    • <strong>Version update policy:</strong> <span class="correct-badge">Opt out of automatic model version upgrades</span><br><br>
+    <em><strong>Deployment type — Global Standard:</strong> the requirement is scalable, high-throughput, pay-as-you-go capacity that dynamically scales <strong>without reserved throughput</strong>. "Global Provisioned" requires reserved (PTU) capacity, so it's ruled out, and a plain "Standard" deployment offers lower, regional capacity. Global Standard provides the highest default throughput on a consumption basis, satisfying "dynamically scale without reserved capacity."<br><br>
+    <strong>Version update policy — Opt out of automatic model version upgrades:</strong> the model version must remain <strong>consistent</strong> for stable responses, so automatic upgrades must be disabled. "Once the current version expires" and "Upgrade once a new default version becomes available" both allow the version to change automatically, breaking response consistency.</em>`,
+    dropdowns: {
+      'deploy-type': {
+        label: 'Deployment type:',
+        options: ['Standard', 'Global Standard', 'Global Provisioned'],
+        correct: 'Global Standard'
+      },
+      'version-policy': {
+        label: 'Version update policy:',
+        options: ['Once the current version expires', 'Opt out of automatic model version upgrades', 'Upgrade once a new default version becomes available'],
+        correct: 'Opt out of automatic model version upgrades'
+      }
+    },
+    userSelections: {}
+  },
+
+  // ── Contoso case study, Q2 (shares the case panel with id 900) ──
+  {
+    id: 901, topic: 7, discussions: 0, isExamTopics: true,
+    isCaseStudy: true,
+    caseTitle: 'Contoso, Ltd (Microsoft Foundry)',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Protect Agent1 from Hidden Image Instructions',
+    caseStudy: `<h3>Overview — Company Information</h3>
+    <p><strong>Contoso, Ltd</strong> is a multinational retail company that builds, deploys, and manages generative AI and agent-based solutions by using <strong>Microsoft Foundry</strong>.</p>
+    <h3>Generative Environment</h3>
+    <p><strong>Project1</strong> contains a customer support agent named <strong>Agent1</strong> (base model deployment; safety evaluation pipeline, tool-invocation approval, and conversation-memory constraints are NOT enabled). Agent1 answers product questions and is deployed to an EU region.</p>
+    <h3>Data Environment</h3>
+    <p>Product detail sheets (PDF) are stored in <strong>storage1</strong>. The product sheets might contain <strong>images that include embedded text</strong>.</p>
+    <h3>Security and Compliance Requirements (selected)</h3>
+    <ul>
+      <li>API keys must NOT be used to access Foundry-deployed models; access follows least privilege; developers authenticate with Microsoft Entra.</li>
+      <li>Agent1 must never reveal customer information even if a document with customer data is erroneously added to the product-sheet repository.</li>
+      <li><strong>Agent1 must be protected from malicious instructions potentially hidden within the images</strong> in the product sheets.</li>
+    </ul>`,
+    text: `<p>You need to configure Agent1 to meet the security and compliance requirement that it be protected from malicious instructions potentially hidden within images. What should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. self-harm content filtering',
+      'B. prompt shields',
+      'C. Personally identifiable information (PII) detection',
+      'D. violence content filtering'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — prompt shields</strong><br><br>
+    <strong>Prompt Shields</strong> (Azure AI Content Safety) detect and block <strong>prompt injection / jailbreak</strong> attempts, including <strong>indirect attacks</strong> where malicious instructions are embedded in documents or images that the agent ingests. That is exactly the "instructions hidden within the images" threat.<br><br>
+    A and D are harm-category filters (self-harm, violence) — they don't stop injected instructions. C (PII detection) finds personal data; it relates to the "never reveal customer information" requirement, not the hidden-instruction threat.`,
+    userChoice: null
+  },
+
+  // ── Standalone Foundry-scenario ExamTopics questions ──
+  {
+    id: 902, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Centrally Manage Azure AI Search Credentials in a Project',
+    text: `<p>You are planning a Microsoft Foundry project named Project1 that will contain multiple agents. Each agent will access the same Azure AI Search resource.</p>
+    <p>You need to recommend a solution to centrally manage the Azure AI Search credentials within Project1. The solution must be implemented across all the agents. What should you recommend?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Enable role-based access control (RBAC) for the Azure AI Search resource.',
+      'B. Disable key-based access control on the Azure AI Search resource.',
+      'C. Add a connection to the Azure AI Search resource.',
+      'D. Create a managed private endpoint that connects to the Azure AI Search resource.'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — Add a connection to the Azure AI Search resource</strong><br><br>
+    In Microsoft Foundry a <strong>connection</strong> is the project-level object that stores and centrally manages credentials/authentication for an external resource (like Azure AI Search). Once added, <strong>all agents in the project</strong> share that single connection — meeting "centrally manage … across all the agents."<br><br>
+    A (RBAC) governs identity-based access but isn't the central credential object for the project. B (disabling keys) hardens auth but doesn't centrally manage the credential. D (managed private endpoint) is about private network reachability, not credential management.`,
+    userChoice: null
+  },
+  {
+    id: 903, topic: 1, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'LangChain + OpenTelemetry Tracing in Application Insights',
+    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry project (Project1) is connected to an Application Insights resource; the support team reviews runs in the Traces tab.</p>
+    <p>The Foundry Agent Service retrieves the Application Insights connection string via <code>project_client.telemetry.get_application_insights_connection_string()</code> and calls <code>configure_azure_monitor(connection_string=...)</code>. A separate LangChain service uses OpenTelemetry with <code>AzureAIOpenTelemetryTracer(connection_string=..., enable_content_recording=False)</code> and passes the tracer via <code>config={"callbacks":[azure_tracer]}</code>.</p>
+    <p>Company policy: telemetry from LangChain and OpenTelemetry must be distinguishable within the same Application Insights resource; secrets/credentials must NOT be stored in prompts, tool arguments, or span attributes.</p>
+    <p>For each statement, select Yes if true; otherwise No.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_yesno',
+    solution: `• The LangChain service will appear in Traces without configuring a tracer: <span class="correct-badge">No</span><br>
+    • Setting a different OTEL_SERVICE_NAME value separates the services in Application Insights: <span class="correct-badge">Yes</span><br>
+    • When using enable_content_recording=False, prompts and tool data will be captured in the telemetry: <span class="correct-badge">No</span><br><br>
+    <em>A tracer must be configured and passed for LangChain runs to emit traces — without it, nothing appears (No). The OpenTelemetry <code>OTEL_SERVICE_NAME</code> sets the cloud_RoleName, so distinct values let you tell the two services apart in App Insights (Yes). With <code>enable_content_recording=False</code>, message/tool content is intentionally NOT recorded in spans, which also satisfies the "no secrets in span attributes" policy (No).</em>`,
+    statements: [
+      { text: 'The LangChain service will appear in Traces without configuring a tracer.', answer: 'No' },
+      { text: 'Setting a different OTEL_SERVICE_NAME value separates the services in Application Insights.', answer: 'Yes' },
+      { text: 'When using enable_content_recording=False, prompts and tool data will be captured in the telemetry.', answer: 'No' }
+    ],
+    userSelections: {}
+  },
+  {
+    id: 904, topic: 4, discussions: 0, isExamTopics: true,
+    type: 'DRAG DROP',
+    title: 'Content Understanding Pipelines — Standard vs Pro Mode',
+    text: `<p><strong>DRAG DROP</strong> — You have a Microsoft Foundry project that processes procurement documents. You must implement two pipelines using Azure Content Understanding in Foundry Tools:</p>
+    <ul>
+      <li><strong>Pipeline1</strong>: cost-effective, high-volume processing of standalone PDF invoices.</li>
+      <li><strong>Pipeline2</strong>: cross-document validation using multi-step reasoning and reference data.</li>
+    </ul>
+    <p>Drag the appropriate configuration to each pipeline.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>Pipeline1:</strong> <span class="correct-badge">Single-file task in standard mode</span><br>
+    • <strong>Pipeline2:</strong> <span class="correct-badge">Multi-file task in pro mode</span><br><br>
+    <em>Pipeline1 processes <strong>standalone</strong> (single) PDFs at high volume and low cost → a <strong>single-file</strong> task in <strong>standard</strong> mode. Pipeline2 needs <strong>cross-document</strong> validation with multi-step reasoning and reference data → a <strong>multi-file</strong> task in <strong>pro</strong> mode (pro mode adds the reasoning/linking capabilities, standard does not).</em>`,
+    dropdowns: {
+      'pipeline1': {
+        label: 'Pipeline1:',
+        options: ['Multi-file task in pro mode', 'Multi-file task in standard mode', 'Single-file task in pro mode', 'Single-file task in standard mode'],
+        correct: 'Single-file task in standard mode'
+      },
+      'pipeline2': {
+        label: 'Pipeline2:',
+        options: ['Multi-file task in pro mode', 'Multi-file task in standard mode', 'Single-file task in pro mode', 'Single-file task in standard mode'],
+        correct: 'Multi-file task in pro mode'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 905, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'Managed Identity + Azure OpenAI Responses API',
+    text: `<p><strong>HOTSPOT</strong> — A Python application (App1) integrates with a Microsoft Foundry project (Project1). App1 must authenticate by using a Microsoft Entra <strong>managed identity</strong> and send prompts to a deployed model by using the Azure OpenAI <strong>Responses API</strong>.</p>
+    <p>Complete the Python code by selecting the appropriate options.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>credential = </strong> <span class="correct-badge">DefaultAzureCredential()</span><br>
+    • <strong>response = openai_client.responses.</strong> <span class="correct-badge">create</span><br><br>
+    <em><code>DefaultAzureCredential</code> resolves a Microsoft Entra <strong>managed identity</strong> automatically (no keys), satisfying the auth requirement; <code>AzureKeyCredential</code> would use a key and <code>ClientSecretCredential</code> needs a stored secret. The <strong>Responses API</strong> is invoked with <code>responses.create(...)</code> to send a prompt and get a completion — <code>compact</code> and <code>retrieve</code> are not how you create a response.</em>`,
+    dropdowns: {
+      'credential': {
+        label: 'credential =',
+        options: ['AzureKeyCredential', 'ClientSecretCredential', 'DefaultAzureCredential'],
+        correct: 'DefaultAzureCredential'
+      },
+      'responses-method': {
+        label: 'openai_client.responses.',
+        options: ['compact', 'create', 'retrieve'],
+        correct: 'create'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 906, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'Power Fx — Validate and Uppercase a Variable',
+    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry workflow for customer-support triage has an "Ask a question" node that stores the user response in a local variable named <code>Var01</code>. You must create:</p>
+    <ul>
+      <li>An if/else condition that ensures <code>Var01</code> contains a value.</li>
+      <li>A "Send message" expression that returns the stored response in uppercase.</li>
+    </ul>
+    <p>Select the appropriate Power Fx expressions.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>If/else condition:</strong> <span class="correct-badge">!IsBlank(Local.Var01)</span><br>
+    • <strong>Send message:</strong> <span class="correct-badge">Upper(Local.Var01)</span><br><br>
+    <em>"Contains a value" is tested with <code>IsBlank</code>; to branch when it is <em>not</em> empty you negate it: <code>!IsBlank(Local.Var01)</code> (plain <code>IsBlank</code> would be true when empty, and <code>IsEmpty</code> is for tables, not text). <code>Upper(Local.Var01)</code> returns the text in uppercase.</em>`,
+    dropdowns: {
+      'condition': {
+        label: 'If/else condition expression:',
+        options: ['IsBlank(Local.Var01)', 'IsEmpty(Local.Var01)', '!IsBlank(Local.Var01)'],
+        correct: '!IsBlank(Local.Var01)'
+      },
+      'message': {
+        label: 'Send message expression:',
+        options: ['Local.Var01', 'Upper(Local.Var01)', 'IsUpper(Local.Var01)'],
+        correct: 'Upper(Local.Var01)'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 907, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'Content Safety Image Moderation with Least-Privilege Storage Access',
+    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry project contains a customer-support agent built with the Foundry Agent Service. The agent uploads user screenshots to Azure Storage through a ticketing tool and receives a blob URL for additional reasoning.</p>
+    <p>You need image moderation during agent runs that <strong>prevents harmful content from being returned</strong>, and Azure AI Content Safety must access the images by <strong>blob URL</strong>. The solution must follow least privilege.</p>
+    <p>Select what to configure for Content Safety.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>Guardrails:</strong> <span class="correct-badge">Select User input, Output, Tool response, and Tool call and set Action to Block</span><br>
+    • <strong>Storage access:</strong> <span class="correct-badge">A system-assigned managed identity that is assigned the Storage Blob Data Reader role</span><br><br>
+    <em>To actually <strong>prevent</strong> harmful content (not just flag it) the action must be <strong>Block</strong>, and moderating the full run means covering user input, output, tool response, and tool call. For storage, Content Safety only needs to <strong>read</strong> the blob by URL, so a <strong>system-assigned managed identity</strong> with the <strong>Storage Blob Data Reader</strong> role is the least-privilege choice — account keys violate least privilege, the Queue role is the wrong data type, and Blob Data <em>Contributor</em> grants write access that isn't needed.</em>`,
+    dropdowns: {
+      'guardrails': {
+        label: 'Guardrails:',
+        options: [
+          'Select Tool call and set Action to Block.',
+          'Select User input and Output and set Action to Annotate.',
+          'Select User input and Tool response and set Action to Annotate.',
+          'Select User input, Output, Tool response, and Tool call and set Action to Block'
+        ],
+        correct: 'Select User input, Output, Tool response, and Tool call and set Action to Block'
+      },
+      'storage-access': {
+        label: 'Storage access:',
+        options: [
+          'Storage account access keys',
+          'A user-assigned identity that is assigned the Storage Queue Data Contributor role',
+          'A system-assigned managed identity that is assigned the Storage Blob Data Reader role',
+          'A system-assigned managed identity that is assigned the Storage Blob Data Contributor role'
+        ],
+        correct: 'A system-assigned managed identity that is assigned the Storage Blob Data Reader role'
+      }
+    },
+    userSelections: {}
   }
-
-
-
 
 ];
 
@@ -6238,6 +7702,8 @@ let caseStudyCollapsed = false;
 // ============================================================
 // Classify each question into an exam-style section by its behaviour.
 function sectionOf(q) {
+  if (q.isExamTopics) return 'examtopics';               // grouped ExamTopics-style pool
+  if (q.isCertPractice) return 'certpractice';           // grouped certification-practice pool
   if (q.isLearnPool) return 'learn';                     // grouped Microsoft Learn pool
   if (q.isCaseStudy) return 'casestudy';
   if (q.render === 'mcq') return 'mc';
@@ -6259,6 +7725,8 @@ function shuffle(a) {
 
 const SECTION_DEFS = [
   { key: 'learn',     name: 'New Questions from Microsoft Learn', icon: '📘', desc: 'Practice questions mapped to the current official AI-102 objectives (skills measured, Dec 2025).' },
+  { key: 'certpractice', name: 'New AI 103 Questions From Certification Practice', icon: '🆕', desc: 'AI-103 scenario-based questions captured from certification practice sessions — generative AI, planning, vision, NLP, and agentic solutions.' },
+  { key: 'examtopics', name: 'AI-103 Questions from Exam Topics', icon: '📝', desc: 'AI-103 exam-style questions on the same topics seen in community exam discussions — originally authored with verified reasoning, no verbatim content.' },
   { key: 'casestudy', name: 'Case Studies',     icon: '📕', desc: 'Scenario-based questions referencing a case study.' },
   { key: 'mc',        name: 'Multiple Choice',  icon: '🔘', desc: 'Single- and multi-answer questions.' },
   { key: 'dragdrop',  name: 'Drag & Drop',      icon: '🔀', desc: 'Drag values onto targets or arrange actions in the correct order.' },
@@ -6304,6 +7772,30 @@ function domainBadge(q) {
   const d = DOMAIN_DEFS[domainOf(q)];
   if (!d) return '';
   return `<span class="domain-badge" style="--dchip:${d.color}">${d.short}</span>`;
+}
+
+// ── Source taxonomy ──────────────────────────────────────────────
+// Every question belongs to exactly one source pool. This lets the user
+// always identify where a question came from (badge on the card) and
+// browse AI-102 content by source within each domain.
+const SOURCE_DEFS = {
+  et102:    { short: 'AI-102 · ExamTopics',     label: 'AI-102 ExamTopics',        color: '#0067b8', exam: 'AI-102' },
+  learn102: { short: 'AI-102 · MS Learn',       label: 'AI-102 Microsoft Learn',   color: '#107c10', exam: 'AI-102' },
+  cert103:  { short: 'AI-103 · Cert Practice',  label: 'AI-103 Certification Practice', color: '#e3008c', exam: 'AI-103' },
+  et103:    { short: 'AI-103 · ExamTopics',     label: 'AI-103 ExamTopics',        color: '#8661c5', exam: 'AI-103' }
+};
+
+function sourceOf(q) {
+  if (q.isLearnPool)   return 'learn102';   // AI-102 Microsoft Learn pool
+  if (q.isCertPractice) return 'cert103';   // AI-103 certification practice
+  if (q.isExamTopics)  return 'et103';      // AI-103 ExamTopics-style
+  return 'et102';                           // the original AI-102 ExamTopics pool
+}
+
+function sourceBadge(q) {
+  const s = SOURCE_DEFS[sourceOf(q)];
+  if (!s) return '';
+  return `<span class="source-badge" style="--schip:${s.color}">${s.short}</span>`;
 }
 
 function indicesForSection(key) {
@@ -6467,6 +7959,98 @@ function goToSections() {
       </div>
       <div class="domain-legend-hint">Click a domain to practice only those questions.</div>`;
   }
+
+  renderAI102Browser();
+}
+
+// ── AI-102 by Domain × Source browser ────────────────────────────
+// Lets the user browse only AI-102 questions, organized by domain, and
+// filter by source (ExamTopics vs Microsoft Learn) within each domain.
+let ai102SourceFilter = 'all'; // 'all' | 'et102' | 'learn102'
+
+// AI-102 questions are everything NOT tagged as AI-103 (cert practice / examtopics).
+function isAI102(q) { return !q.isCertPractice && !q.isExamTopics; }
+
+function ai102Indices(domainKey, sourceKey) {
+  const arr = [];
+  questions.forEach((q, i) => {
+    if (!isAI102(q)) return;
+    if (domainOf(q) !== domainKey) return;
+    if (sourceKey && sourceKey !== 'all' && sourceOf(q) !== sourceKey) return;
+    arr.push(i);
+  });
+  return arr;
+}
+
+function setAI102Source(key) {
+  ai102SourceFilter = key;
+  renderAI102Browser();
+}
+
+function renderAI102Browser() {
+  const el = document.getElementById('ai102Browser');
+  if (!el) return;
+  const src = ai102SourceFilter;
+  // source filter pills (All + the two AI-102 sources only)
+  const srcKeys = ['all', 'et102', 'learn102'];
+  const pills = srcKeys.map(k => {
+    if (k === 'all') {
+      const n = questions.filter(q => isAI102(q)).length;
+      return `<span class="ai102-srcpill all ${src==='all'?'active':''}" onclick="setAI102Source('all')">All AI-102 (${n})</span>`;
+    }
+    const s = SOURCE_DEFS[k];
+    const n = questions.filter(q => isAI102(q) && sourceOf(q) === k).length;
+    return `<span class="ai102-srcpill ${src===k?'active':''}" style="--schip:${s.color}" onclick="setAI102Source('${k}')">${s.short} (${n})</span>`;
+  }).join('');
+
+  const cards = Object.entries(DOMAIN_DEFS).map(([k, d]) => {
+    const n = ai102Indices(k, src).length;
+    const dis = n === 0;
+    // per-domain source breakdown for the meta line
+    const etN = ai102Indices(k, 'et102').length;
+    const learnN = ai102Indices(k, 'learn102').length;
+    const meta = src === 'all' ? `${etN} ExamTopics · ${learnN} MS Learn` : SOURCE_DEFS[src].label;
+    return `<div class="ai102-card ${dis?'disabled':''}" ${dis?'':`onclick="startAI102Filtered('${k}')" role="button" tabindex="0"`}>
+      <span class="domain-badge" style="--dchip:${d.color}">${d.short}</span>
+      <div>
+        <div class="ai102-card-name">${d.name}</div>
+        <div class="ai102-card-meta">${meta} · exam weight ${d.weight}</div>
+      </div>
+      <div class="ai102-card-count">${n}<span>questions</span></div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="ai102-title"><span class="coach-orb" style="display:inline-block;vertical-align:middle"></span> AI-102 by domain &amp; source</div>
+    <div class="ai102-sub">Browse only AI-102 content, organized by official domain. Filter by source, then pick a domain to practice. Every question card shows a source badge so you can always tell ExamTopics from Microsoft Learn.</div>
+    <div class="ai102-srcfilter">${pills}</div>
+    <div class="ai102-grid">${cards}</div>`;
+}
+
+function startAI102Filtered(domainKey) {
+  const idx = ai102Indices(domainKey, ai102SourceFilter);
+  if (!idx.length) return;
+  const d = DOMAIN_DEFS[domainKey];
+  const srcLabel = ai102SourceFilter === 'all' ? 'All sources' : SOURCE_DEFS[ai102SourceFilter].label;
+  currentSection = 'ai102:' + domainKey + ':' + ai102SourceFilter;
+  activeQuestions = idx;
+  pos = 0;
+  currentQ = activeQuestions[0];
+  reviewMode = false;
+  flagged.clear();
+  caseStudyCollapsed = false;
+  csActiveTab = 0;
+  stageMode = false;
+  activeQuestions.forEach(i => resetQuestion(questions[i]));
+  timeLeft = Math.max(300, activeQuestions.length * 90);
+  document.getElementById('sectionTitle').textContent = `AI-102 · ${d.name} (${srcLabel})`;
+  document.getElementById('sectionScreen').classList.add('hidden');
+  document.getElementById('examUI').classList.remove('hidden');
+  examStarted = true;
+  clearInterval(timerInterval);
+  buildNav();
+  renderQuestion();
+  startTimer();
 }
 
 function startSection(key) {
@@ -6787,9 +8371,36 @@ function coachAction(kind) {
   let html = '';
   if (kind === 'hint') html = `<div class="coach-msg"><span class="coach-tag hint">Hint</span>${coachHint(q)}</div>`;
   else if (kind === 'why') html = `<div class="coach-msg"><span class="coach-tag why">Concept</span>${coachWhy(q)}</div>`;
+  else if (kind === 'eliminate') html = `<div class="coach-msg"><span class="coach-tag elim">Rule out</span>${coachEliminate(q)}</div>`;
   else if (kind === 'check') html = `<div class="coach-msg"><span class="coach-tag check">Progress</span>${coachCheck()}</div>`;
   const body = document.getElementById('coachBody');
   body.innerHTML = html;
+}
+
+// Distractor analysis. During a live, unsubmitted exam this stays strategic
+// (no answer reveal); once solutions are viewable (review or practice) it
+// walks each option and marks keep/drop with the reason.
+function coachEliminate(q) {
+  const liveExam = stageMode && !reviewMode;
+  // Single- and multi-select MCQs have an explicit option list we can walk.
+  if (q.render === 'mcq' && Array.isArray(q.options)) {
+    const correctSet = new Set(q.multiSelect ? (q.correctOptions || []) : (q.correctOption ? [q.correctOption] : []));
+    if (liveExam || correctSet.size === 0) {
+      // strategic, no-spoiler guidance
+      return `${q.multiSelect ? 'This is <strong>multi-select</strong> — more than one option is right. ' : ''}Work by elimination: strike any option that <strong>needs extra training/development</strong>, <strong>solves a different problem</strong>, or <strong>violates the stated constraint</strong> (cost, least privilege, latency, offline, data residency). Whatever survives that filter is your answer. I won't reveal it during a live exam — submit or open the solution to see my per-option breakdown.`;
+    }
+    const rows = q.options.map(opt => {
+      const letter = opt.trim()[0];
+      const keep = correctSet.has(letter);
+      return `<div class="elim-row"><span class="elim-mark ${keep?'elim-keep':'elim-drop'}">${keep?'✓':'✗'}</span><span>${keep?'<strong>Keep.</strong> ':'<strong>Rule out.</strong> '}${opt.replace(/^[A-E]\.\s*/, '')}</span></div>`;
+    }).join('');
+    return `Here's each option, kept or ruled out:<div style="margin-top:8px">${rows}</div><div style="margin-top:8px;font-size:12px;color:#4a2540">The full reasoning is in the solution panel — the kept option(s) are the ones that satisfy the deciding constraint.</div>`;
+  }
+  // Hotspot / sequence / drag-drop: no flat option list — give targeted strategy.
+  if (q.dropdowns) return `For each blank, list the candidates and cross off any that belong to a <strong>different service or operation</strong> than the one the sentence names. Endpoints: the <strong>host</strong> fixes the service, the <strong>path</strong> fixes the operation. Each dropdown is independent — don't let one choice bias the next.`;
+  if (q.correctOrder) return `This is ordering, not elimination — but you can still rule out <strong>impossible first steps</strong> (anything that depends on a resource not yet created) and <strong>impossible last steps</strong> (setup actions). Anchor the ends first, then the middle falls into place.`;
+  if (q.statements) return `Each Yes/No is its own true/false call. Rule out a <strong>Yes</strong> the moment you can't point to the exact line of code or config that performs the claim. Unsupported claim ⇒ No.`;
+  return `Identify the single <strong>deciding constraint</strong> in the prompt and eliminate every option that fails it. The survivor is the answer.`;
 }
 
 // ============================================================
@@ -6840,6 +8451,40 @@ function agentToolResource(domain) {
   return DOMAIN_RESOURCE[domain] || { label: DOMAIN_DEFS[domain] ? DOMAIN_DEFS[domain].name : domain, link: MS_LEARN };
 }
 
+// Tool 4 (bank-wide): scan the ENTIRE question bank — not just this section —
+// for every domain's coverage and how much the user has attempted, so the
+// agent can recommend other sections/domains, not only local gaps.
+function agentToolBankScan() {
+  const stat = {};
+  questions.forEach((q, i) => {
+    const d = domainOf(q);
+    if (!stat[d]) stat[d] = { total: 0, answered: 0 };
+    stat[d].total++;
+    if (isAnswered(i)) stat[d].answered++;
+  });
+  return Object.entries(stat).map(([d, s]) => {
+    const w = (DOMAIN_DEFS[d] && DOMAIN_DEFS[d].weightPct) || 10;
+    const coverage = s.total ? s.answered / s.total : 0;
+    // priority rises with exam weight and with how little has been practiced
+    const priority = (1 - coverage) * w;
+    return { domain: d, total: s.total, answered: s.answered, coverage, weightPct: w, priority };
+  }).sort((a, b) => b.priority - a.priority);
+}
+
+// Tool 5: estimate readiness as a 0–100 confidence score from bank-wide
+// coverage weighted by official exam weight (a transparent heuristic, clearly
+// labelled as an estimate — not a score prediction).
+function agentToolReadiness(bank) {
+  let num = 0, den = 0;
+  bank.forEach(r => { num += r.coverage * r.weightPct; den += r.weightPct; });
+  const pct = den ? Math.round((num / den) * 100) : 0;
+  let band, color;
+  if (pct >= 75) { band = 'On track'; color = '#107c10'; }
+  else if (pct >= 40) { band = 'Building'; color = '#c19c00'; }
+  else { band = 'Early'; color = '#c1440e'; }
+  return { pct, band, color };
+}
+
 // Render one "step" line in the agent transcript.
 function agentStepLine(label, detail) {
   return `<div class="agent-step"><span class="agent-step-dot"></span><div><div class="agent-step-label">${label}</div>${detail ? `<div class="agent-step-detail">${detail}</div>` : ''}</div></div>`;
@@ -6847,80 +8492,75 @@ function agentStepLine(label, detail) {
 
 function runStudyAgent() {
   const body = document.getElementById('coachBody');
-  // Agent's stated goal + plan (transparent reasoning).
+  // Orchestrator's stated goal + the specialist sub-agents it will dispatch.
   const plan = [
-    'Assess attempt state in this section',
-    'Find weak/heavy domains (weighted by exam %)',
-    'Match each gap to a Microsoft Learn resource',
-    'Synthesize a prioritized study plan'
+    'Assessor — read attempt state (this section + whole bank)',
+    'Curriculum — rank domains by exam-weighted gap & map resources',
+    'Scheduler — sequence a focused next-study plan + readiness estimate'
   ];
   body.innerHTML = `
     <div class="coach-msg">
-      <span class="coach-tag agent">Agent</span>
-      <strong>Goal:</strong> build a focused next-study plan from your actual attempt data.
-      <div class="agent-plan"><div class="agent-plan-title">Plan</div>${plan.map((p,i)=>`<div class="agent-plan-item">${i+1}. ${p}</div>`).join('')}</div>
+      <span class="coach-tag agent">Orchestrator</span>
+      <strong>Goal:</strong> turn your real attempt data into a prioritized, exam-weighted study plan.
+      <div class="agent-plan"><div class="agent-plan-title">Multi-agent plan</div>${plan.map((p,i)=>`<div class="agent-plan-item">${i+1}. ${p}</div>`).join('')}</div>
       <div id="agentTranscript" class="agent-transcript"></div>
     </div>`;
   const tx = document.getElementById('agentTranscript');
+  const emit = (html) => tx.insertAdjacentHTML('beforeend', html);
 
-  // Run the loop with small delays so each tool call is visibly sequential.
-  const steps = [];
-  steps.push(() => {
-    const a = agentToolAssess();
-    tx.insertAdjacentHTML('beforeend', agentStepLine(
-      '🔧 assess_state()',
-      `Answered <strong>${a.answered}/${a.total}</strong> (${a.pct}%) here${a.flaggedN?`, <strong>${a.flaggedN}</strong> flagged`:''}.`
-    ));
-    return a;
-  });
-  steps.push(() => {
-    const gaps = agentToolDomainGaps();
-    if (!gaps.length) {
-      tx.insertAdjacentHTML('beforeend', agentStepLine('🔧 find_gaps()', 'No open items in this section — nothing to prioritize here.'));
-    } else {
-      const top = gaps.slice(0, 3).map(g => `${DOMAIN_DEFS[g.domain].short} (${g.open} open)`).join(', ');
-      tx.insertAdjacentHTML('beforeend', agentStepLine('🔧 find_gaps()', `Top gaps by weighted priority: <strong>${top}</strong>.`));
-    }
-    return gaps;
-  });
+  let local = null, bank = null, gaps = null, readiness = null;
+  const t = 350;
 
-  let collectedGaps = [];
-  let timeline = 350;
-  // step 1
-  setTimeout(() => { steps[0](); }, timeline);
-  // step 2
-  setTimeout(() => { collectedGaps = steps[1](); }, timeline + 600);
-  // step 3: resource lookups for top gaps
+  // ── Sub-agent 1: Assessor ──
   setTimeout(() => {
-    const top = collectedGaps.slice(0, 3);
-    if (top.length) {
-      top.forEach(g => {
+    emit(`<div class="agent-step"><span class="agent-step-dot"></span><div><div class="agent-subname">🛰️ Assessor agent</div></div></div>`);
+    local = agentToolAssess();
+    emit(agentStepLine('🔧 assess_section()', `This section: <strong>${local.answered}/${local.total}</strong> answered (${local.pct}%)${local.flaggedN?`, <strong>${local.flaggedN}</strong> flagged`:''}.`));
+    bank = agentToolBankScan();
+    const practiced = bank.reduce((a,r)=>a+r.answered,0);
+    const totalQ = bank.reduce((a,r)=>a+r.total,0);
+    emit(agentStepLine('🔧 scan_bank()', `Whole bank: <strong>${practiced}/${totalQ}</strong> questions attempted across ${bank.length} domains.`));
+  }, t);
+
+  // ── Sub-agent 2: Curriculum ──
+  setTimeout(() => {
+    emit(`<div class="agent-step"><span class="agent-step-dot"></span><div><div class="agent-subname">📚 Curriculum agent</div></div></div>`);
+    gaps = bank.filter(r => r.coverage < 1);
+    if (!gaps.length) {
+      emit(agentStepLine('🔧 rank_gaps()', 'Every domain fully attempted — no coverage gaps to prioritize.'));
+    } else {
+      const top = gaps.slice(0,3).map(g => `${DOMAIN_DEFS[g.domain].short} (${Math.round(g.coverage*100)}% done · ${g.weightPct}% weight)`).join(', ');
+      emit(agentStepLine('🔧 rank_gaps()', `Highest exam-weighted gaps: <strong>${top}</strong>.`));
+      gaps.slice(0,3).forEach(g => {
         const r = agentToolResource(g.domain);
-        tx.insertAdjacentHTML('beforeend', agentStepLine('🔧 lookup_resource()', `${DOMAIN_DEFS[g.domain].short} → <a href="${r.link}" target="_blank" rel="noopener">${r.label}</a>`));
+        emit(agentStepLine('🔧 map_resource()', `${DOMAIN_DEFS[g.domain].short} → <a href="${r.link}" target="_blank" rel="noopener">${r.label}</a>`));
       });
     }
-  }, timeline + 1200);
-  // step 4: synthesize plan
+  }, t + 750);
+
+  // ── Sub-agent 3: Scheduler (synthesize) ──
   setTimeout(() => {
-    const a = agentToolAssess();
-    const gaps = collectedGaps;
+    emit(`<div class="agent-step"><span class="agent-step-dot"></span><div><div class="agent-subname">🗓️ Scheduler agent</div></div></div>`);
+    readiness = agentToolReadiness(bank);
     let planHtml;
-    if (!gaps.length) {
-      planHtml = a.pct >= 100
-        ? 'You\u2019ve cleared this section. Switch to <strong>Today\u2019s Exam</strong> for a full weighted run, or pick a weaker domain tile from the start screen.'
-        : 'Nothing open in this section right now — try another section or the full Today\u2019s Exam.';
+    if (!gaps || !gaps.length) {
+      planHtml = `You've attempted every domain in the bank. Switch to a full <strong>Today's Exam</strong> run for a timed, weighted rehearsal, then review anything you flagged.`;
     } else {
-      const ordered = gaps.slice(0, 3).map((g, i) => {
+      const ordered = gaps.slice(0,3).map((g, i) => {
         const r = agentToolResource(g.domain);
-        return `<li><strong>${DOMAIN_DEFS[g.domain].name}</strong> — clear the ${g.open} open item(s); review <a href="${r.link}" target="_blank" rel="noopener">${r.label}</a> on Microsoft Learn.</li>`;
+        const todo = g.total - g.answered;
+        return `<li><strong>${DOMAIN_DEFS[g.domain].name}</strong> (${g.weightPct}% of exam) — practice the ${todo} remaining question(s); study <a href="${r.link}" target="_blank" rel="noopener">${r.label}</a>.</li>`;
       }).join('');
-      const closer = a.pct >= 80
-        ? 'You\u2019re nearly through this section — finish the open items, then revisit flagged ones before submitting.'
-        : 'Work top-to-bottom; the order above puts the highest exam-weight gaps first.';
-      planHtml = `Here\u2019s your prioritized plan:<ol class="agent-plan-list">${ordered}</ol>${closer}`;
+      const localCloser = local && local.pct < 100
+        ? `First finish the ${local.total - local.answered} open item(s) in this section, then move to the plan above.`
+        : `This section is done — start with item 1 above.`;
+      planHtml = `Suggested order (highest exam-weight gap first):<ol class="agent-plan-list">${ordered}</ol>${localCloser}`;
     }
-    tx.insertAdjacentHTML('beforeend', `<div class="agent-final"><span class="coach-tag agent">Plan</span>${planHtml}</div>`);
-  }, timeline + 1900);
+    emit(`<div class="agent-final"><span class="coach-tag agent">Study plan</span>${planHtml}
+      <div><span class="agent-conf" style="background:${readiness.color}">Readiness estimate: ${readiness.pct}% · ${readiness.band}</span></div>
+      <div style="margin-top:6px;font-size:11px;color:#7a6a8f">Estimate = bank-wide coverage weighted by official exam %. It reflects practice breadth, not a predicted score.</div>
+    </div>`);
+  }, t + 1650);
 }
 
 function toggleFlag() {
@@ -6937,7 +8577,7 @@ function toggleFlag() {
 function renderQuestion() {
   const q = questions[currentQ];
   document.getElementById('qId').textContent = `Question #${q.id}`;
-  document.getElementById('qTopic').innerHTML = `${domainBadge(q)} ${q.topic ? `<span class="topic-tag">Topic ${q.topic}</span>` : ''}`;
+  document.getElementById('qTopic').innerHTML = `${domainBadge(q)} ${sourceBadge(q)} ${q.topic ? `<span class="topic-tag">Topic ${q.topic}</span>` : ''}`;
   document.getElementById('discCount').textContent = q.discussions || 0;
   document.getElementById('flagBtn').className = `flag-btn${flagged.has(currentQ)?' flagged':''}`;
 
@@ -7325,6 +8965,7 @@ function escAttr(s) {
 
 function renderCaseStudyHotspot() {
   const q = questions[currentQ];
+  if (!q.userSelections) q.userSelections = {};
   const entries = Object.entries(q.dropdowns);
   const hotspotArea = `
     <div class="hotspot-area">
@@ -7379,6 +9020,7 @@ function renderQ12() {
 // ============================================================
 function renderHotspotGeneric() {
   const q = questions[currentQ];
+  if (!q.userSelections) q.userSelections = {};
   const entries = Object.entries(q.dropdowns);
   document.getElementById('questionContent').innerHTML = `
     <div class="hotspot-area">
@@ -7491,6 +9133,7 @@ function selectChoice(letter) {
 // ============================================================
 function renderYesNo() {
   const q = questions[currentQ];
+  if (!q.userSelections) q.userSelections = {};
   document.getElementById('questionContent').innerHTML = `
     <div class="hotspot-area">
       <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px 24px;align-items:center">
@@ -7549,6 +9192,82 @@ function seqRemove(qi, slot) {
   questions[qi].userSequence[slot] = null;
   renderQuestion();
 }
+
+// ============================================================
+// TAP / TOUCH TO PLACE  (works on phones & tablets where HTML5
+// drag events don't fire). Tap a source item to select it, then
+// tap a target zone/slot to drop it. Tapping the selected item
+// again deselects. Fully interoperable with mouse drag above.
+// ============================================================
+let tapSel = null; // { value, mode:'drag'|'seq', qi }
+
+function clearTapSel() {
+  if (tapSel) {
+    document.querySelectorAll('.tap-selected').forEach(el => el.classList.remove('tap-selected'));
+    document.querySelectorAll('.tap-target').forEach(el => el.classList.remove('tap-target'));
+  }
+  tapSel = null;
+}
+
+function highlightTapTargets() {
+  document.querySelectorAll('.tap-target').forEach(el => el.classList.remove('tap-target'));
+  if (!tapSel) return;
+  const sel = tapSel.mode === 'seq' ? '.seq-slot' : '.drop-zone';
+  document.querySelectorAll(sel).forEach(el => el.classList.add('tap-target'));
+}
+
+document.addEventListener('click', function (e) {
+  // --- DRAG/DROP value-to-target questions ---
+  const dragItem = e.target.closest('.drag-item');
+  if (dragItem && !dragItem.classList.contains('placed')) {
+    const value = dragItem.getAttribute('data-value');
+    if (tapSel && tapSel.mode === 'drag' && tapSel.value === value) { clearTapSel(); return; }
+    clearTapSel();
+    tapSel = { value, mode: 'drag', qi: currentQ };
+    dragItem.classList.add('tap-selected');
+    highlightTapTargets();
+    return;
+  }
+  const dropZone = e.target.closest('.drop-zone');
+  if (dropZone && tapSel && tapSel.mode === 'drag') {
+    const zoneId = dropZone.id.replace(/^drop-/, '');
+    const q = questions[currentQ];
+    Object.keys(q.userAnswers).forEach(k => { if (q.userAnswers[k] === tapSel.value) delete q.userAnswers[k]; });
+    q.userAnswers[zoneId] = tapSel.value;
+    clearTapSel();
+    renderQuestion();
+    return;
+  }
+
+  // --- SEQUENCE / ordering questions ---
+  const seqItem = e.target.closest('.seq-item');
+  if (seqItem && !seqItem.classList.contains('placed')) {
+    const value = seqItem.getAttribute('data-value');
+    const qi = parseInt((seqItem.id.match(/^seqact-(\d+)-/) || [])[1], 10);
+    if (tapSel && tapSel.mode === 'seq' && tapSel.value === value) { clearTapSel(); return; }
+    clearTapSel();
+    tapSel = { value, mode: 'seq', qi: isNaN(qi) ? currentQ : qi };
+    seqItem.classList.add('tap-selected');
+    highlightTapTargets();
+    return;
+  }
+  const seqSlot = e.target.closest('.seq-slot');
+  if (seqSlot && tapSel && tapSel.mode === 'seq') {
+    const m = seqSlot.id.match(/^seq-slot-(\d+)-(\d+)$/);
+    if (m) {
+      const qi = parseInt(m[1], 10), slot = parseInt(m[2], 10);
+      const q = questions[qi];
+      q.userSequence = q.userSequence.map(v => v === tapSel.value ? null : v);
+      q.userSequence[slot] = tapSel.value;
+      clearTapSel();
+      renderQuestion();
+    }
+    return;
+  }
+
+  // tap elsewhere (not a remove button) clears selection
+  if (tapSel && !e.target.closest('.remove-btn')) clearTapSel();
+}, true);
 
 // Hotspot
 function setSelection(key, value) {
@@ -7690,6 +9409,11 @@ function submitExam() {
   else if (currentSection && currentSection.startsWith('dom:')) {
     const dd = DOMAIN_DEFS[currentSection.slice(4)];
     titleText = (dd ? dd.name : 'Domain') + ' Results';
+  } else if (currentSection && currentSection.startsWith('ai102:')) {
+    const parts = currentSection.split(':');
+    const dd = DOMAIN_DEFS[parts[1]];
+    const sl = parts[2] === 'all' ? 'All sources' : (SOURCE_DEFS[parts[2]] ? SOURCE_DEFS[parts[2]].short : '');
+    titleText = `AI-102 · ${dd ? dd.short : 'Domain'} (${sl}) Results`;
   } else titleText = `${def ? def.name : 'Section'} Results`;
   document.getElementById('resultsTitle').textContent = titleText;
   document.getElementById('scoreNum').textContent = score;
@@ -7738,6 +9462,12 @@ function submitExam() {
 function restartExam() {
   if (currentSection === 'today') { startTodaysExam(); return; }
   if (currentSection && currentSection.startsWith('dom:')) { startDomain(currentSection.slice(4)); return; }
+  if (currentSection && currentSection.startsWith('ai102:')) {
+    const parts = currentSection.split(':');
+    ai102SourceFilter = parts[2] || 'all';
+    startAI102Filtered(parts[1]);
+    return;
+  }
   activeQuestions.forEach(qi => resetQuestion(questions[qi]));
   flagged.clear();
   pos = 0;
