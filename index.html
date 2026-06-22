@@ -164,6 +164,32 @@
   .domain-legend-meta { font-size: 11px; color: var(--ms-text-2); }
   /* ── AI-102 by-domain × source browser ── */
   .ai102-browser { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--ms-border-lt); }
+  /* ── AI-103 ExamTopics browser ── */
+  .et-browser { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--ms-border-lt); }
+  .et-title { font-size: 12px; font-weight: 700; color: var(--ms-text-2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; display: flex; align-items: center; gap: 7px; }
+  .et-sub { font-size: 11px; color: var(--ms-text-3); margin-bottom: 14px; }
+  .et-group-label { font-size: 11px; font-weight: 700; color: var(--ms-text-2); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px; }
+  .et-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .et-card { display: flex; align-items: center; gap: 12px; padding: 11px 13px; border: 1px solid var(--ms-border); border-radius: var(--radius); cursor: pointer; transition: all .15s; background: var(--ms-panel); }
+  .et-card:hover { border-color: var(--echip, var(--ms-blue)); background: var(--ms-panel-2); box-shadow: 0 2px 10px color-mix(in srgb, var(--echip, #0067b8) 18%, transparent); }
+  .et-card.disabled { opacity: .4; pointer-events: none; }
+  .et-icon { font-size: 22px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: color-mix(in srgb, var(--echip, #0067b8) 12%, #fff); flex-shrink: 0; }
+  .et-card-info { flex: 1; min-width: 0; }
+  .et-card-name { font-size: 13.5px; font-weight: 700; color: var(--ms-text); }
+  .et-card-meta { font-size: 11px; color: var(--ms-text-2); margin-top: 2px; }
+  .et-card-count { font-size: 22px; font-weight: 800; color: var(--echip, var(--ms-blue)); text-align: center; line-height: 1; }
+  .et-card-count span { display: block; font-size: 9px; font-weight: 600; color: var(--ms-text-3); text-transform: uppercase; letter-spacing: .3px; margin-top: 3px; }
+  .et-dom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .et-dom { padding: 11px 13px; border: 1px solid var(--ms-border); border-radius: var(--radius); cursor: pointer; transition: all .15s; background: var(--ms-panel); }
+  .et-dom:hover { border-color: var(--ms-blue); background: var(--ms-panel-2); }
+  .et-dom.disabled { opacity: .4; pointer-events: none; }
+  .et-dom-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+  .et-dom-count { font-size: 18px; font-weight: 800; color: var(--ms-text); }
+  .et-dom-name { font-size: 12px; font-weight: 600; color: var(--ms-text); margin-bottom: 7px; line-height: 1.3; }
+  .et-dom-bar { height: 6px; border-radius: 3px; background: var(--ms-border-lt); overflow: hidden; }
+  .et-dom-bar span { display: block; height: 100%; border-radius: 3px; transition: width .3s; }
+  .et-dom-meta { font-size: 10.5px; color: var(--ms-text-3); margin-top: 6px; }
+  @media (max-width: 560px) { .et-type-grid, .et-dom-grid { grid-template-columns: 1fr; } }
   .ai102-title { font-size: 12px; font-weight: 700; color: var(--ms-text-2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; display: flex; align-items: center; gap: 7px; }
   .ai102-sub { font-size: 11px; color: var(--ms-text-3); margin-bottom: 12px; }
   .ai102-srcfilter { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
@@ -1036,6 +1062,7 @@
       <div id="sectionCards"></div>
       <div id="domainLegend" class="domain-legend"></div>
       <div id="ai102Browser" class="ai102-browser"></div>
+      <div id="examTopicsBrowser" class="et-browser"></div>
     </div>
   </div>
 </div>
@@ -7679,6 +7706,1188 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
       }
     },
     userSelections: {}
+  },
+
+  // ── ExamTopics batch 2 (Q9–Q26) — Foundry agents, observability, RAI ──
+  {
+    id: 908, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Orchestrating Agents — Deterministic Step-Based Process',
+    text: `<p>A Microsoft Foundry project contains three agents: <strong>TriageAgent</strong> (classifies incoming customer requests), <strong>PolicyAgent</strong> (answers policy questions by searching internal content), and <strong>ActionAgent</strong> (creates/updates tickets by calling an HTTP API).</p>
+    <p>You must orchestrate the agents so the process is <strong>deterministic and step-based with conditional branching and shared state</strong>, optionally triggering a ticket action based on the triage result, with <strong>minimal development effort</strong>. What should you include?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. a workflow',
+      'B. threads and runs without a workflow',
+      'C. a multi-agent group chat session',
+      'D. separate agent runs coordinated in the application code'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — a workflow</strong><br><br>
+    A Foundry <strong>workflow</strong> is the declarative orchestration primitive built for exactly this: <strong>deterministic, step-based</strong> execution with <strong>conditional branching</strong> and <strong>shared state</strong> across agents — and it minimizes code because you define steps rather than hand-coding coordination.<br><br>
+    B (threads/runs alone) gives conversation state but no deterministic branching engine. C (group chat) is non-deterministic, model-driven turn-taking. D (custom app code) maximizes, not minimizes, development effort.`,
+    userChoice: null
+  },
+  {
+    id: 909, topic: 3, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Custom Speech REST API — project Property',
+    text: `<p>A Microsoft Foundry project contains an agent that uses Azure Speech in Foundry Tools. You fine-tune a baseline speech-to-text model for the <code>en-us</code> locale and publish it. The agent calls the Speech-to-text REST API and returns an error that the <strong>project ID is invalid</strong>. You must set the <code>project</code> property to the correct ID. To what should you set it?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. the project URL',
+      'B. the custom speech project ID',
+      'C. the project ID',
+      'D. the custom speech endpoint URL'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — the project ID</strong><br><br>
+    The error names the <strong>project ID</strong> specifically, and the <code>project</code> property expects the <strong>GUID/identifier of the project</strong> — not a URL and not the custom-speech sub-project label. Set it to the project's ID.<br><br>
+    A and D are URLs (wrong type for an ID property). B sounds plausible but the property is the project's own ID, not a separate "custom speech project ID"; the deciding signal is the error text matching the <code>project</code> identifier.`,
+    userChoice: null
+  },
+  {
+    id: 910, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'YAML Workflow — Human Approval Gate',
+    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry project contains an agent named <strong>PaymentAgent</strong> with a function tool that issues customer refunds via an external API. You are creating a workflow in YAML that must <strong>pause for human approval</strong> and continue to the refund step <strong>only after approval is granted</strong>.</p>
+    <p>Complete the workflow definition by selecting the appropriate options.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>approval step type:</strong> <span class="correct-badge">ask_question</span><br>
+    • <strong>execute_refund condition:</strong> <span class="correct-badge">approval == "approved"</span><br><br>
+    <em>The pause-for-human step is an <strong>ask_question</strong> node — it suspends the workflow and waits for input (basic_chat and data_transformation don't gate on human approval). The refund step then runs only when the approval result equals "approved", so its condition is <code>approval == "approved"</code> — not <code>true</code> (always runs) and not the unrelated propose_refund output check.</em>`,
+    dropdowns: {
+      'approval-type': {
+        label: 'approval → type:',
+        options: ['ask_question', 'basic_chat', 'data_transformation'],
+        correct: 'ask_question'
+      },
+      'refund-condition': {
+        label: 'execute_refund → condition:',
+        options: ['approval == "approved"', 'propose_refund.output != null', 'true'],
+        correct: 'approval == "approved"'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 911, topic: 3, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Expired Custom Speech-to-Text Model Behavior',
+    text: `<p>An Azure Speech in Foundry Tools resource hosts a custom speech-to-text model deployed to a custom endpoint; an agent uses the endpoint for real-time recognition. You are approaching the model's <strong>expiration date</strong>. What is the expected behavior when the model expires?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Speech recognition requests will return a 4xx error until a new custom model is deployed.',
+      'B. Speech recognition requests will continue to use the expired custom model until the model is removed manually.',
+      'C. Speech recognition requests will fall back to the most recent base model for the same locale.',
+      'D. The custom model will be deleted automatically when the model expires.'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — requests fall back to the most recent base model for the same locale</strong><br><br>
+    When a custom speech model reaches its expiration, the endpoint doesn't break — Azure <strong>falls back to the latest base model</strong> for that locale so recognition keeps working (with base-model accuracy rather than your tuned accuracy).<br><br>
+    A (hard 4xx) is wrong — service continues. B (keeps using the expired model) is wrong — the expired model is no longer used. D (auto-deleted) is wrong — expiration affects use, not deletion.`,
+    userChoice: null
+  },
+  {
+    id: 912, topic: 1, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Least-Privilege RBAC for Model Inference',
+    text: `<p>A Microsoft Foundry project contains a model deployment. An application calls it using the Azure OpenAI v1 API and <code>DefaultAzureCredential</code>. Developers get <strong>HTTP 403</strong> errors on inference requests even after <code>az login</code>. You must let them perform inference following <strong>least privilege</strong>. Which RBAC role should you assign?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Cognitive Services User',
+      'B. Cognitive Services OpenAI User',
+      'C. Contributor',
+      'D. Cognitive Services Data Reader'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Cognitive Services OpenAI User</strong><br><br>
+    Inference against an Azure OpenAI / Foundry model deployment requires the <strong>Cognitive Services OpenAI User</strong> role — it grants exactly the data-plane permission to call deployments, and nothing more, satisfying least privilege.<br><br>
+    A (Cognitive Services User) doesn't cover the OpenAI data-plane actions. C (Contributor) is management-plane and far too broad. D (Data Reader) can't invoke inference.`,
+    userChoice: null
+  },
+  {
+    id: 913, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Forcing an MCP Tool Call with tool_choice',
+    text: `<p>A Microsoft Foundry project contains an agent with a <strong>Model Context Protocol (MCP)</strong> tool that queries a knowledge base in Azure AI Search. Some runs answer from the base model without invoking the knowledge base, producing ungrounded responses. Given <code>run = project_client.agents.runs.create_and_process(thread_id=..., agent_id=...)</code>, you must add the correct <code>tool_choice</code> parameter to <strong>deterministically force</strong> the agent to invoke the MCP tool on each run. What should you add?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. tool_choice={"required"}',
+      'B. tool_choice={"auto"}',
+      'C. tool_choice={"type":"knowledge_base"}',
+      'D. tool_choice={"type":"mcp"}'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — tool_choice={"type":"mcp"}</strong><br><br>
+    To force a <strong>specific</strong> tool every run, <code>tool_choice</code> must name that tool's type — here <code>{"type":"mcp"}</code> deterministically directs the agent to the MCP tool.<br><br>
+    A is malformed syntax. B ("auto") lets the model decide — the very non-determinism you're fixing. C uses an invalid type value ("knowledge_base" isn't the tool type; the MCP tool's type is "mcp").`,
+    userChoice: null
+  },
+  {
+    id: 914, topic: 1, discussions: 0, isExamTopics: true,
+    type: 'DRAG DROP',
+    title: 'Observability Signals for Grounding and Safety Issues',
+    text: `<p><strong>DRAG DROP</strong> — A Microsoft Foundry project contains a customer-support agent grounded in internal documentation. Users report two issues: some answers are <strong>unsupported by retrieved documents</strong>, and a small number of responses are <strong>flagged for policy violations</strong>. Drag the appropriate observability signal to each issue.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>Unsupported responses:</strong> <span class="correct-badge">Groundedness evaluation metrics</span><br>
+    • <strong>Policy violations:</strong> <span class="correct-badge">Risk and safety metrics</span><br><br>
+    <em>"Unsupported by retrieved documents" is a <strong>grounding</strong> problem → <strong>Groundedness evaluation metrics</strong> measure how well answers are supported by the source. "Flagged for policy violations" is a <strong>content-safety</strong> problem → <strong>Risk and safety metrics</strong>. Latency traces and token-usage analytics measure performance/cost, not correctness or safety.</em>`,
+    dropdowns: {
+      'unsupported': {
+        label: 'Unsupported responses:',
+        options: ['Groundedness evaluation metrics', 'Latency breakdown traces', 'Risk and safety metrics', 'Token usage analytics'],
+        correct: 'Groundedness evaluation metrics'
+      },
+      'policy': {
+        label: 'Policy violations:',
+        options: ['Groundedness evaluation metrics', 'Latency breakdown traces', 'Risk and safety metrics', 'Token usage analytics'],
+        correct: 'Risk and safety metrics'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 915, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'OpenAPI Tool — Auto-Include a Connection Key',
+    text: `<p>A Microsoft Foundry project named Project1 contains an agent that uses an <strong>OpenAPI 3.0</strong> specification to call an external weather service. The service requires a key passed in an <strong>HTTP header</strong>; the key value is stored as a <strong>connection</strong> in Project1. You must ensure the key from the connection is included automatically whenever the OpenAPI tool is invoked. What should you configure in the OpenAPI specification?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. a header parameter defined for each operation',
+      'B. an Azure Key Vault connection',
+      'C. an API key security scheme',
+      'D. a Bearer token security scheme'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — an API key security scheme</strong><br><br>
+    Defining an <strong>API key security scheme</strong> (in header) in the OpenAPI spec is what lets Foundry bind the stored <strong>connection</strong> credential and inject the key header <strong>automatically</strong> on every tool call.<br><br>
+    A (manual header parameter per operation) means passing the value yourself — not automatic from the connection. B (Key Vault connection) is where a secret could live but isn't the OpenAPI-spec mechanism that injects it. D (Bearer) is the wrong scheme — the service uses an API key header, not OAuth bearer tokens.`,
+    userChoice: null
+  },
+  {
+    id: 916, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Reduce Cost/Latency Without Hurting Complex Answers',
+    text: `<p>A Microsoft Foundry project serves a high-volume chat app. Most requests are simple FAQs, but some require advanced reasoning. You must <strong>reduce cost and latency for common queries without degrading the quality</strong> of responses to complex questions. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Route all the requests to a smaller model.',
+      'B. Use a model cascade that routes the requests to different models.',
+      'C. Increase the value of the max_tokens parameter for all the requests.',
+      'D. Route all the requests to the most capable model.'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Use a model cascade that routes requests to different models</strong><br><br>
+    A <strong>model cascade</strong> (router) sends simple FAQs to a small, cheap, fast model and escalates only the hard, reasoning-heavy queries to a larger model — cutting cost/latency on the common case <strong>without</strong> degrading complex answers.<br><br>
+    A degrades complex answers. D wastes money/latency on simple ones. C (bigger max_tokens) raises cost/latency and doesn't address routing.`,
+    userChoice: null
+  },
+  {
+    id: 917, topic: 1, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'Diagnose Availability vs Rate-Limit Issues',
+    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry project contains an internal Q&A agent. Users report an increase in <strong>"No relevant information found"</strong> responses and periodic <strong>HTTP 429 rate-limit</strong> errors during peak hours. You must identify whether each issue is caused by model unavailability, resource limits, or inference failures.</p>
+    <p>Select the appropriate options.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>Metrics to enable:</strong> <span class="correct-badge">Model Availability Rate and Provisioned Utilization</span><br>
+    • <strong>Diagnostic log to collect:</strong> <span class="correct-badge">RequestResponse</span><br><br>
+    <em>To separate availability from rate-limiting you need <strong>Model Availability Rate</strong> (is the model up?) and <strong>Provisioned Utilization</strong> (are you hitting capacity → 429s). For per-call diagnosis the <strong>RequestResponse</strong> log captures each request/response (status codes like 429) — "AllMetrics" is metrics not logs, "audit" records control-plane access, and "trace" alone won't show the request/response status detail.</em>`,
+    dropdowns: {
+      'metrics': {
+        label: 'Metrics to enable:',
+        options: ['Model Availability Rate and Provisioned Utilization', 'Only Tokens Cache Match Rate', 'Only Total Requests filtered to status code 200', 'Time To Response and Total Tokens'],
+        correct: 'Model Availability Rate and Provisioned Utilization'
+      },
+      'log': {
+        label: 'Diagnostic log to collect:',
+        options: ['AllMetrics', 'audit', 'RequestResponse', 'trace'],
+        correct: 'RequestResponse'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 918, topic: 1, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Identify Driver of Rising Costs at Constant Traffic',
+    text: `<p>A Microsoft Foundry project contains a high-traffic agent. After an update, operational costs rise significantly while monitoring confirms user traffic volume is <strong>unchanged</strong>. You suspect the request/response characteristics changed and must identify whether the extra cost is driven by model input size, output size, or expanded tool usage. Which observability capability should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. latency',
+      'B. evaluation metrics',
+      'C. run success rate',
+      'D. token usage'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — token usage</strong><br><br>
+    Azure OpenAI / Foundry cost is driven by <strong>tokens</strong>. <strong>Token usage</strong> observability breaks down input (prompt) vs output (completion) tokens — and rising tokens from expanded tool usage — so it directly isolates what's inflating cost at constant traffic.<br><br>
+    A (latency) is speed, not cost. B (evaluation metrics) measures quality. C (run success rate) measures reliability — none of these attribute cost to input/output/tool token growth.`,
+    userChoice: null
+  },
+  {
+    id: 919, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'Publish Agent — Forced Tool Use with Isolated Identity',
+    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry project contains an agent that uses tools to retrieve internal content and call external APIs (model decides when to call them). You must publish it for a compliance workflow where: each run <strong>must include a retrieval step before responding</strong>; tool calls <strong>authenticate using the published agent's own identity</strong>; tool access uses an identity <strong>isolated from other project resources</strong> and <strong>supports audit tracing</strong>.</p>
+    <p>Select the appropriate options.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>Set tool_choice to:</strong> <span class="correct-badge">required</span><br>
+    • <strong>Configure the tool to authenticate by:</strong> <span class="correct-badge">Using a distinct agent identity bound to the client application</span><br><br>
+    <em>"Each run must include a retrieval step" means tool use can't be optional → <strong>tool_choice = required</strong> (auto = model's discretion, none = never). For an <strong>isolated, auditable</strong> identity that is the agent's own, use a <strong>distinct agent identity bound to the client application</strong> — storing API keys in prompts is insecure, and the shared project identity isn't isolated from other resources.</em>`,
+    dropdowns: {
+      'toolchoice': {
+        label: 'Set tool_choice to:',
+        options: ['auto', 'none', 'required'],
+        correct: 'required'
+      },
+      'authby': {
+        label: 'Configure the tool to authenticate by:',
+        options: ['Storing API keys in prompts', 'Using the shared project agent identity', 'Using a distinct agent identity bound to the client application'],
+        correct: 'Using a distinct agent identity bound to the client application'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 920, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'OpenAPI Tool — Wire the Connection for the API Key',
+    text: `<p>A Microsoft Foundry project named Project1 contains an OpenAPI tool that calls an external API, and a project connection named <strong>Connection1</strong> that stores the API key. When the agent calls the tool, the API returns <strong>401 unauthorized</strong> and traces show the API key header is <strong>NOT being sent</strong>. You must ensure the tool automatically includes the API key from Connection1 on all requests. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Enable identity passthrough so that the tool uses the Microsoft Entra token of the caller.',
+      'B. Add the API key header manually to the OpenAPI specification.',
+      'C. Configure the tool to use the default connection of Project1.',
+      'D. Connect the tool to Connection1.'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Connect the tool to Connection1</strong><br><br>
+    The key already exists in <strong>Connection1</strong>; the tool just isn't bound to it, so no auth header is sent. <strong>Associating the OpenAPI tool with Connection1</strong> makes Foundry inject that connection's API key on every request.<br><br>
+    A (identity passthrough) sends an Entra token, not the API key. B (manual header) defeats the purpose of the stored connection and risks leaking the key. C (default connection) points at the wrong connection — the key is specifically in Connection1.`,
+    userChoice: null
+  },
+  {
+    id: 921, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Inspect a Single Run — Ordered LLM/Tool Sequence',
+    text: `<p>A Microsoft Foundry project contains a customer-support agent that calls an internal knowledge API tool before generating responses. Users report some requests take more than 15 seconds and some responses are incorrect even when the API returns the expected data. You must inspect <strong>individual agent runs</strong> to view the <strong>ordered sequence of LLM calls, tool invocations, and timing</strong>. Which observability capability should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. token usage',
+      'B. monitoring',
+      'C. safety metrics',
+      'D. tracing'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — tracing</strong><br><br>
+    <strong>Tracing</strong> captures the end-to-end <strong>span tree</strong> of a single run — the ordered LLM calls, tool invocations, inputs/outputs, and per-span timing — which is exactly what you need to see why a run is slow or wrong despite good tool data.<br><br>
+    A (token usage) shows cost, not sequence. B (monitoring) is aggregate dashboards, not per-run detail. C (safety metrics) measures harmful content, not the call sequence/timing.`,
+    userChoice: null
+  },
+  {
+    id: 922, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Mitigate Hidden Image Instructions — Prompt Shield (Prompts)',
+    text: `<p>This question is part of a series that present the same scenario with different proposed solutions. Determine whether the solution meets the goal.</p>
+    <p>A multimodal generative model accepts image uploads and uses extracted image text to generate responses. Users can upload unsafe images and <strong>embed hidden instructions into images</strong> to manipulate the model. You need controls to mitigate the risk.</p>
+    <p><strong>Solution:</strong> You configure a <strong>prompt shield for user prompts</strong>. Does this meet the goal?</p>`,
+    note: '',
+    render: 'mcq',
+    options: ['A. Yes', 'B. No'],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — No</strong><br><br>
+    A prompt shield for <strong>user prompts</strong> guards against jailbreak text the user types directly. But the attack here is an <strong>indirect</strong> injection — instructions hidden <strong>inside the uploaded image</strong> (document/embedded content). That requires a prompt shield for <strong>documents</strong> (indirect attacks), so guarding only user prompts does <strong>not</strong> meet the goal.`,
+    userChoice: null
+  },
+  {
+    id: 923, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Mitigate Hidden Image Instructions — Image Moderation',
+    text: `<p>This question is part of a series that present the same scenario with different proposed solutions. Determine whether the solution meets the goal.</p>
+    <p>A multimodal generative model accepts image uploads and uses extracted image text to generate responses. Users can upload unsafe images and embed hidden instructions into images to manipulate the model. You need controls to mitigate the risk.</p>
+    <p><strong>Solution:</strong> You configure <strong>image moderation to block unsafe content</strong> before processing the images. Does this meet the goal?</p>`,
+    note: '',
+    render: 'mcq',
+    options: ['A. Yes', 'B. No'],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Yes</strong><br><br>
+    The risk has two parts; this solution addresses the <strong>"unsafe images"</strong> part. <strong>Image moderation</strong> (Content Safety for images) inspects and <strong>blocks unsafe content before processing</strong>, which is a valid mitigating control for the harmful-image vector. (A complete defense would add a document prompt shield for the hidden-instruction vector, but as a control that meets the stated goal of mitigating the risk, image moderation qualifies.)`,
+    userChoice: null
+  },
+  {
+    id: 924, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Mitigate Hidden Image Instructions — Prompt Shield (Documents)',
+    text: `<p>This question is part of a series that present the same scenario with different proposed solutions. Determine whether the solution meets the goal.</p>
+    <p>A multimodal generative model accepts image uploads and uses extracted image text to generate responses. Users can upload unsafe images and embed hidden instructions into images to manipulate the model. You need controls to mitigate the risk.</p>
+    <p><strong>Solution:</strong> You configure a <strong>prompt shield for documents</strong>. Does this meet the goal?</p>`,
+    note: '',
+    render: 'mcq',
+    options: ['A. Yes', 'B. No'],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — No</strong><br><br>
+    A prompt shield for <strong>documents</strong> is the right tool for the <strong>hidden-instruction (indirect injection)</strong> vector — but on its own it does <strong>not</strong> address the <strong>unsafe-image</strong> part of the stated risk, so as a complete control for "mitigate the risk" it falls short. The series treats this single-control solution as not meeting the full goal; image moderation is the option scored as meeting it.`,
+    userChoice: null
+  },
+  {
+    id: 925, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Mitigate Hidden Image Instructions — Protected Material Detection',
+    text: `<p>This question is part of a series that present the same scenario with different proposed solutions. Determine whether the solution meets the goal.</p>
+    <p>A multimodal generative model accepts image uploads and uses extracted image text to generate responses. Users can upload unsafe images and embed hidden instructions into images to manipulate the model. You need controls to mitigate the risk.</p>
+    <p><strong>Solution:</strong> You configure <strong>protected material detection</strong>. Does this meet the goal?</p>`,
+    note: '',
+    render: 'mcq',
+    options: ['A. Yes', 'B. No'],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — No</strong><br><br>
+    <strong>Protected material detection</strong> flags copyrighted text/code in model output. It has nothing to do with <strong>unsafe images</strong> or <strong>hidden image instructions</strong>, so it does <strong>not</strong> meet the goal of mitigating this risk.`,
+    userChoice: null
+  },
+
+  // ── Contoso case-study questions (share the case panel with id 900) ──
+  {
+    id: 926, topic: 1, discussions: 0, isExamTopics: true,
+    isCaseStudy: true,
+    caseTitle: 'Contoso, Ltd (Microsoft Foundry)',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Assess Agent1 Responses from storage1',
+    caseStudy: `<h3>Overview — Company Information</h3>
+    <p><strong>Contoso, Ltd</strong> is a multinational retail company that builds, deploys, and manages generative AI and agent-based solutions by using <strong>Microsoft Foundry</strong>.</p>
+    <h3>Generative Environment</h3>
+    <p><strong>Project1</strong> contains a customer support agent named <strong>Agent1</strong> (base model deployment, deployed to an EU region). Product detail sheets (PDF) live in <strong>storage1</strong>.</p>
+    <h3>Planned Changes & Technical Requirements (selected)</h3>
+    <ul>
+      <li>Enable Agent1 to retrieve and use product info from the sheets via a semantic + vector indexing pipeline.</li>
+      <li><strong>Responses generated using the product-sheet information must be relevant, complete, and accurate.</strong></li>
+      <li>The model version must remain consistent; data must stay within the EU.</li>
+    </ul>`,
+    text: `<p>You need to recommend a solution to <strong>assess the responses</strong> generated by Agent1 when it uses the product information in storage1, meeting the technical requirements. What should you include?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. a Retrieval Augmented Generation (RAG) evaluator',
+      'B. a custom guardrail',
+      'C. model fine-tuning',
+      'D. a groundedness evaluator'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — a groundedness evaluator</strong><br><br>
+    The requirement is that responses built from the product sheets be <strong>relevant, complete, and accurate</strong> — i.e. faithful to the retrieved source. A <strong>groundedness evaluator</strong> measures exactly that: how well the answer is supported by the grounding documents.<br><br>
+    A (RAG evaluator) is a broader suite; the targeted metric the requirement describes is groundedness. B (guardrail) enforces safety, not response-quality assessment. C (fine-tuning) changes the model — it doesn't assess responses.`,
+    userChoice: null
+  },
+  {
+    id: 927, topic: 7, discussions: 0, isExamTopics: true,
+    isCaseStudy: true,
+    caseTitle: 'Contoso, Ltd (Microsoft Foundry)',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Restrict Agent1 to Contoso Products',
+    caseStudy: `<h3>Overview — Company Information</h3>
+    <p><strong>Contoso, Ltd</strong> is a multinational retail company that builds, deploys, and manages generative AI and agent-based solutions by using <strong>Microsoft Foundry</strong>.</p>
+    <h3>Generative Environment</h3>
+    <p><strong>Project1</strong> contains a customer support agent named <strong>Agent1</strong> that answers general questions about Contoso products.</p>
+    <h3>Business Requirements (selected)</h3>
+    <ul>
+      <li>Users must have a personalized experience with conversation context retained across interactions.</li>
+      <li><strong>Agent1 must answer questions only about the products sold by Contoso.</strong></li>
+    </ul>`,
+    text: `<p>You need to configure Agent1 to answer customer questions about <strong>only the Contoso products</strong>, meeting the business requirements. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Modify the system message instructions.',
+      'B. Add few-shot examples.',
+      'C. Apply top-p sampling.',
+      'D. Increase the value of the temperature parameter.'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Modify the system message instructions</strong><br><br>
+    Scoping an agent's allowed topics is a <strong>behavioral instruction</strong>: the <strong>system message</strong> is where you tell the agent to answer only about Contoso products and to refuse off-topic questions. It's the direct, deterministic control for topic restriction.<br><br>
+    B (few-shot) shapes style/format, not hard topic boundaries. C (top-p) and D (temperature) only adjust randomness of wording — they don't constrain subject matter.`,
+    userChoice: null
+  },
+  {
+    id: 928, topic: 4, discussions: 0, isExamTopics: true,
+    isCaseStudy: true,
+    caseTitle: 'Contoso, Ltd (Microsoft Foundry)',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Vendor Invoice Review Solution',
+    caseStudy: `<h3>Overview — Company Information</h3>
+    <p><strong>Contoso, Ltd</strong> is a multinational retail company that builds, deploys, and manages generative AI and agent-based solutions by using <strong>Microsoft Foundry</strong>.</p>
+    <h3>Problem Statements (selected)</h3>
+    <p>The finance department reports that <strong>vendor invoices must be reviewed manually</strong> to ensure they match the terms in vendor contracts. The invoices contain <strong>tables, logos, and varied layouts</strong> that make them hard to process consistently.</p>
+    <h3>Planned Changes (selected)</h3>
+    <p>Implement a solution that analyzes vendor invoices by evaluating <strong>both the visual layout and the textual content</strong>, so invoice details can be verified against contract terms.</p>`,
+    text: `<p>You need to recommend an invoice-review solution that resolves the finance department's issue. What should you include?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. chat completions',
+      'B. Azure Document Intelligence in Foundry Tools',
+      'C. Azure Content Understanding in Foundry Tools',
+      'D. Image Analysis'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — Azure Content Understanding in Foundry Tools</strong><br><br>
+    The invoices have <strong>varied layouts</strong> and must be analyzed for <strong>both visual layout and textual content</strong>, then reasoned about against contract terms. <strong>Content Understanding</strong> is the multimodal analyzer built for that — it generalizes across layouts and combines layout + text extraction with reasoning, no custom model per template.<br><br>
+    B (Document Intelligence) extracts fields well but the "evaluate visual layout + textual content and verify against contract terms" framing points to Content Understanding's multimodal reasoning. A (chat completions) can't parse the documents. D (Image Analysis) describes images, not structured invoice extraction.`,
+    userChoice: null
+  },
+
+  // ── Standalone ExamTopics (Q29–Q55) ──
+  {
+    id: 929, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Model Type for Grounded, Deep-Reasoning Agent',
+    text: `<p>You plan to build a customer-support agent that must: provide accurate, context-aware responses <strong>grounded in internal product documentation</strong> in Azure AI Search; perform <strong>deep, multi-step reasoning across long contexts</strong>; and generate <strong>detailed natural-language responses</strong>. Which type of model should power the agent?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. a multimodal model',
+      'B. a small language model (SLM)',
+      'C. a key phrase extraction model',
+      'D. a large language model (LLM)'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — a large language model (LLM)</strong><br><br>
+    Deep multi-step reasoning over long contexts plus detailed natural-language generation is the hallmark of a <strong>large language model</strong>; RAG grounding sits on top of it.<br><br>
+    A (multimodal) adds image/audio inputs not required here. B (SLM) trades reasoning depth for size/cost. C (key phrase extraction) isn't a generative model at all.`,
+    userChoice: null
+  },
+  {
+    id: 930, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'DRAG DROP',
+    title: 'Force a Tool Call in run_payload',
+    text: `<p><strong>DRAG DROP</strong> — A Microsoft Foundry ticket-triage agent sometimes responds without calling any tools, even when a tool is required. You must ensure the agent calls a tool during execution. Complete the Python by dragging values into the run payload:</p>
+    <pre style="font-size:12px">run_payload = {
+  "assistant_id": agent_id,
+  ____ : ____ ,
+  "metadata": { "scenario": "ticket-triage" }
+}</pre>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>key:</strong> <span class="correct-badge">"tool_choice"</span><br>
+    • <strong>value:</strong> <span class="correct-badge">"required"</span><br><br>
+    <em>Setting <code>"tool_choice": "required"</code> forces the agent to invoke a tool on the run, fixing the "responds without calling tools" problem. "auto" leaves it to the model; "tools"/"type"/"response_format" are not the parameter that forces tool use.</em>`,
+    dropdowns: {
+      'key': {
+        label: 'Parameter key:',
+        options: ['"auto"', '"required"', '"response_format"', '"tool_choice"', '"tools"', '"type"'],
+        correct: '"tool_choice"'
+      },
+      'value': {
+        label: 'Parameter value:',
+        options: ['"auto"', '"required"', '"response_format"', '"tool_choice"', '"tools"', '"type"'],
+        correct: '"required"'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 931, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Share One AI Search Config Across Apps Without Keys',
+    text: `<p>You are building a web app (App1) that generates responses using a model in Project1. Before prompting, App1 must retrieve documents using Azure AI Search. You must integrate Project1 and App1 so that <strong>multiple client applications use the same search configuration</strong>, a security policy <strong>prevents key-based authentication</strong>, and <strong>administrative effort is minimized</strong>. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Create a custom HTTP connection in Foundry and manually configure Azure AI Search endpoints per application.',
+      'B. Configure an Azure AI Search connection in Project1 and reference the connection in each application.',
+      'C. Call Azure AI Search directly from each application by using Microsoft Entra authentication.',
+      'D. Enable a managed identity for each application and call Azure AI Search directly.'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Configure an Azure AI Search connection in Project1 and reference it in each application</strong><br><br>
+    A project <strong>connection</strong> centralizes one shared search configuration (and can use Entra-based auth, not keys); referencing it from each app gives consistency with the least admin overhead.<br><br>
+    A (manual per-app config) maximizes effort and drift. C and D have each app call Search directly — duplicating configuration across apps instead of sharing one.`,
+    userChoice: null
+  },
+  {
+    id: 932, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'DRAG DROP',
+    title: 'Map Agent Tools to Capabilities',
+    text: `<p><strong>DRAG DROP</strong> — A Microsoft Foundry agent used by financial analysts needs: to <strong>perform calculations during conversations</strong>, <strong>access up-to-date info from public websites</strong>, and <strong>retrieve information from documents uploaded directly to the agent</strong>. Drag the appropriate tool to each requirement.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>Up-to-date info from public websites:</strong> <span class="correct-badge">Grounding with Bing Search</span><br>
+    • <strong>Perform calculations during conversations:</strong> <span class="correct-badge">Code interpreter</span><br>
+    • <strong>Retrieve info from uploaded documents:</strong> <span class="correct-badge">File search</span><br><br>
+    <em>Bing grounding pulls live public-web data; Code interpreter runs code for calculations; File search retrieves from documents uploaded to the agent. Computer use (UI automation) and Microsoft Fabric (enterprise data) don't fit these three needs.</em>`,
+    dropdowns: {
+      'websites': {
+        label: 'Access up-to-date info from public websites:',
+        options: ['Code interpreter', 'Computer use', 'File search', 'Grounding with Bing Search', 'Microsoft Fabric'],
+        correct: 'Grounding with Bing Search'
+      },
+      'calc': {
+        label: 'Perform calculations during conversations:',
+        options: ['Code interpreter', 'Computer use', 'File search', 'Grounding with Bing Search', 'Microsoft Fabric'],
+        correct: 'Code interpreter'
+      },
+      'docs': {
+        label: 'Retrieve info from uploaded documents:',
+        options: ['Code interpreter', 'Computer use', 'File search', 'Grounding with Bing Search', 'Microsoft Fabric'],
+        correct: 'File search'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 933, topic: 1, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE', multiSelect: true,
+    title: 'End-to-End Tracing Outside the Foundry Portal',
+    text: `<p>A Microsoft Foundry project contains a prompt agent used by a customer-support web app, invoked from a Python service that does <strong>NOT</strong> run in the Foundry portal. You must implement <strong>end-to-end tracing</strong> to capture latency breakdowns and exceptions across agent runs. Which two components can you use? (Select Two — each is a complete solution.)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq',
+    options: [
+      'A. a Log Analytics workspace',
+      'B. Application Insights',
+      'C. OpenTelemetry',
+      'D. the Azure Monitor Agent',
+      'E. Microsoft Sentinel'
+    ],
+    correctOptions: ['B', 'C'],
+    solution: `<strong>Correct Answer: B and C</strong><br><br>
+    From an external Python service, you instrument with <strong>OpenTelemetry</strong> (emits the spans/traces) and send them to <strong>Application Insights</strong> (stores and visualizes the end-to-end traces with latency and exceptions). Either anchors the tracing pipeline.<br><br>
+    A (Log Analytics) is the backing store but not the tracing component you configure here. D (Azure Monitor Agent) collects VM/host telemetry, not app traces. E (Sentinel) is SIEM/security, not app tracing.`,
+    userChoices: []
+  },
+  {
+    id: 934, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Cross-Session Continuity for a Support Case',
+    text: `<p>A customer-support agent uses the Foundry Agent Service. Customers return days later to continue the same case, and the agent must resume with <strong>full historical context</strong>: multi-turn continuity within a session, <strong>cross-session continuity</strong> for the same case, and access to the full interaction history (messages, tool calls, outputs), automatically reloaded each turn. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Create and reuse a conversation by storing the conversation\'s ID and supplying the ID on subsequent requests.',
+      'B. Persist only the final model response stored in the client application and prepend the response to future prompts.',
+      'C. Enable memory summarization on the agent definition to persist the context automatically.'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Reuse the conversation by storing its ID and supplying it on later requests</strong><br><br>
+    The Agent Service persists each conversation (thread) server-side. Storing the <strong>conversation/thread ID</strong> and passing it back days later resumes the <strong>full history</strong> — messages, tool calls, and outputs — automatically, giving both in-session and cross-session continuity.<br><br>
+    B keeps only the last response, losing the history. C summarization compresses context (lossy) and isn't the mechanism for exact full-history resumption.`,
+    userChoice: null
+  },
+  {
+    id: 935, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'Stable Output with Maximum Reasoning',
+    text: `<p><strong>HOTSPOT</strong> — A deployed chat model's outputs are checked by an automated validation system against approved response patterns; small wording differences cause mismatches. You must update request parameters to <strong>improve output stability</strong> while <strong>maximizing reasoning quality</strong>:</p>
+    <pre style="font-size:12px">message = client.messages.create(
+  model="deployment-name",
+  messages=[{"role":"user","content":"Summarize the release notes in 3 bullet points."}],
+  max_tokens=800,
+  temperature=____,
+  thinking={"type":"enabled"},
+  output_config={"effort": ____}
+)</pre>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>temperature:</strong> <span class="correct-badge">0</span><br>
+    • <strong>effort:</strong> <span class="correct-badge">high</span><br><br>
+    <em><strong>temperature = 0</strong> makes output as deterministic as possible, eliminating the small wording variations that break validation. <strong>effort = high</strong> maximizes the model's reasoning. (1 or 2 add randomness; low/medium effort reduces reasoning quality.)</em>`,
+    dropdowns: {
+      'temp': {
+        label: 'temperature =',
+        options: ['0', '1', '2'],
+        correct: '0'
+      },
+      'effort': {
+        label: 'effort =',
+        options: ['high', 'low', 'medium'],
+        correct: 'high'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 936, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Retrieval Approach — Multi-Chunk, Planning, Parallel',
+    text: `<p>A chat app uses a Foundry project with an Azure AI Search vectorized index. To connect to the index: complex questions must retrieve from <strong>multiple chunks</strong>; <strong>multi-turn conversations must influence retrieval planning</strong>; retrievals must <strong>run in parallel</strong> to reduce latency. Which retrieval approach should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. iterative retrieval',
+      'B. agentic Retrieval Augmented Generation (RAG)',
+      'C. chain of thought',
+      'D. classic Retrieval Augmented Generation (RAG)'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — agentic Retrieval Augmented Generation (RAG)</strong><br><br>
+    <strong>Agentic RAG</strong> (Azure AI Search agentic retrieval) plans queries from the <strong>conversation context</strong>, decomposes complex questions into <strong>multiple subqueries run in parallel</strong>, and merges results — matching all three requirements.<br><br>
+    A (iterative) is sequential, not parallel. C (chain of thought) is a prompting style, not a retrieval pipeline. D (classic RAG) does a single query without conversation-aware planning or parallel subqueries.`,
+    userChoice: null
+  },
+  {
+    id: 937, topic: 8, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'Foundry Capabilities — Preferences and In-Chat Grounding',
+    text: `<p><strong>HOTSPOT</strong> — You are planning a customer-support agent on the Foundry Agent Service that must <strong>retain user preferences across multiple conversations</strong> and <strong>enable users to provide contextual grounding by uploading documents during a chat</strong>. Select the appropriate capability for each requirement.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>Retain preferences across conversations:</strong> <span class="correct-badge">Agent memory that uses persistent storage</span><br>
+    • <strong>Provide grounding via uploaded documents during a chat:</strong> <span class="correct-badge">File search tool</span><br><br>
+    <em>Persistent <strong>agent memory</strong> survives across separate conversations (conversation history alone is per-thread; orchestration session context is transient). The <strong>File search tool</strong> ingests documents a user uploads mid-chat and grounds responses on them (Azure AI Search tool grounds on a pre-built index, not ad-hoc uploads).</em>`,
+    dropdowns: {
+      'prefs': {
+        label: 'To retain user preferences across conversations, use:',
+        options: ['Agent memory that uses persistent storage', 'Conversation history', 'Orchestration-managed session context'],
+        correct: 'Agent memory that uses persistent storage'
+      },
+      'grounding': {
+        label: 'To enable contextual grounding via uploads during chats, use the:',
+        options: ['Azure AI Search tool', 'Code interpreter tool', 'File search tool'],
+        correct: 'File search tool'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 938, topic: 1, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Improve Completeness in Application Logic',
+    text: `<p>A Microsoft Foundry agent generates summaries from retrieved policy documents. You must <strong>improve response completeness</strong>, and the solution <strong>must be implemented in the application-code logic before responses are returned</strong>. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Add a retry evaluation before the responses are returned.',
+      'B. Decrease the value of the max_tokens parameter.',
+      'C. Switch to Retrieval Augmented Generation (RAG).',
+      'D. Replace the model with a smaller deployment.'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Add a retry evaluation before responses are returned</strong><br><br>
+    The constraint is "in the application-code logic before responses are returned." A <strong>retry/evaluation gate</strong> — score the draft for completeness and regenerate if it falls short — lives exactly there and directly improves completeness.<br><br>
+    B (lower max_tokens) truncates output, hurting completeness. C (switch to RAG) is an architecture change, not app-logic post-processing (and the content is already retrieved). D (smaller model) reduces capability.`,
+    userChoice: null
+  },
+  {
+    id: 939, topic: 1, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Handle HTTP 429 Under Load Within Limits',
+    text: `<p>A customer-support agent (Foundry Agent Service) calls an Azure OpenAI model deployment. Under load testing, calls intermittently fail with <strong>HTTP 429 rate-limit exceeded</strong>. You must handle throttling to reduce failures and improve reliability under load, <strong>staying within the service and model limits</strong>. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Create a new thread and retry the calls immediately.',
+      'B. Reduce the number of registered tools.',
+      'C. Implement a retry policy that uses exponential backoff and jitter.',
+      'D. Split uploaded content into smaller files.'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — Retry with exponential backoff and jitter</strong><br><br>
+    429 means you're exceeding the rate limit. The standard, within-limits fix is a <strong>retry policy with exponential backoff and jitter</strong> — it spaces retries out and avoids synchronized retry storms, smoothing traffic under the cap.<br><br>
+    A (immediate retry) worsens throttling. B (fewer tools) doesn't address request rate. D (smaller files) is unrelated to call-rate limits.`,
+    userChoice: null
+  },
+  {
+    id: 940, topic: 1, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'CI/CD Evaluation Gate in GitHub Actions',
+    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry agent uses a GitHub Actions workflow for CI/CD. You must <strong>automatically evaluate the agent when a pull request is created</strong> and <strong>prevent branches from merging if evaluation results do NOT meet the defined thresholds</strong>. Select the appropriate options.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>Authentication method:</strong> <span class="correct-badge">An Azure Login action that uses OpenID Connect (OIDC)</span><br>
+    • <strong>If evaluation results are NOT met:</strong> <span class="correct-badge">Fail</span><br><br>
+    <em>GitHub Actions authenticates to Azure securely and without stored secrets via <strong>OIDC</strong> (PATs and long-lived managed-identity secrets are less secure/appropriate here). To block the merge, the workflow step must <strong>Fail</strong> — a failed required check stops the PR (sending an alert or locking the branch doesn't gate the merge on the result).</em>`,
+    dropdowns: {
+      'auth': {
+        label: 'Authentication method:',
+        options: ['A personal access token (PAT)', 'A user-assigned managed identity', 'An Azure Login action that uses OpenID Connect (OIDC)'],
+        correct: 'An Azure Login action that uses OpenID Connect (OIDC)'
+      },
+      'fail': {
+        label: 'If evaluation results are NOT met, configure the workflow to:',
+        options: ['Lock the target branch', 'Send an alert', 'Fail'],
+        correct: 'Fail'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 941, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Completeness Series — Increase max_tokens',
+    text: `<p>This question is part of a series presenting the same scenario with different solutions. A Foundry agent generates summaries from retrieved policy documents. Users report some responses <strong>omit required regulatory clauses</strong>, even when present in the retrieved content. You must improve <strong>response completeness</strong>.</p>
+    <p><strong>Solution:</strong> You increase the value of the <code>max_tokens</code> parameter. Does this meet the goal?</p>`,
+    note: '',
+    render: 'mcq',
+    options: ['A. Yes', 'B. No'],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — No</strong><br><br>
+    The clauses are <strong>present in the retrieved content</strong> but the model omits them — a <strong>selection/completeness</strong> problem, not a length cap. Raising <code>max_tokens</code> only allows longer output; it doesn't make the model include the missing clauses. Does not meet the goal.`,
+    userChoice: null
+  },
+  {
+    id: 942, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Completeness Series — Reflection Pass',
+    text: `<p>Same scenario: a Foundry agent's summaries omit required regulatory clauses that exist in the retrieved content; you must improve completeness.</p>
+    <p><strong>Solution:</strong> You add a <strong>reflection pass</strong> that regenerates the response if the required clauses are missing. Does this meet the goal?</p>`,
+    note: '',
+    render: 'mcq',
+    options: ['A. Yes', 'B. No'],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Yes</strong><br><br>
+    A <strong>reflection pass</strong> checks the draft for the required clauses and <strong>regenerates</strong> when they're missing — directly enforcing completeness against the retrieved content. This meets the goal.`,
+    userChoice: null
+  },
+  {
+    id: 943, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Completeness Series — Increase temperature',
+    text: `<p>Same scenario: a Foundry agent's summaries omit required regulatory clauses that exist in the retrieved content; you must improve completeness.</p>
+    <p><strong>Solution:</strong> You increase the value of the <code>temperature</code> parameter. Does this meet the goal?</p>`,
+    note: '',
+    render: 'mcq',
+    options: ['A. Yes', 'B. No'],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — No</strong><br><br>
+    Higher <strong>temperature</strong> just increases randomness/creativity of wording — it does nothing to guarantee the omitted regulatory clauses are included, and can make output less reliable. Does not meet the goal.`,
+    userChoice: null
+  },
+  {
+    id: 944, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Completeness Series — Evaluation Flow with Threshold',
+    text: `<p>Same scenario: a Foundry agent's summaries omit required regulatory clauses that exist in the retrieved content; you must improve completeness.</p>
+    <p><strong>Solution:</strong> You run an <strong>evaluation flow that scores responses for completeness and blocks responses that fall below a defined threshold</strong>. Does this meet the goal?</p>`,
+    note: '',
+    render: 'mcq',
+    options: ['A. Yes', 'B. No'],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Yes</strong><br><br>
+    An <strong>evaluation flow</strong> that scores completeness and <strong>blocks sub-threshold responses</strong> enforces the requirement — incomplete answers (missing clauses) are caught and not returned. This meets the goal.`,
+    userChoice: null
+  },
+  {
+    id: 945, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Built-in Mask-Based Inpainting Edit',
+    text: `<p>You are creating an image-editing workflow in a Foundry project that must: remove background objects via a <strong>mask-based inpainting edit</strong>; preserve original lighting/style; use <strong>built-in</strong> editing controls (not a custom model); and ensure edits apply <strong>exclusively inside the masked area</strong>. How should you configure the workflow?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Set generation mode to image_variation and provide the original image as a reference.',
+      'B. Enable text_to_image mode and a prompt describing the desired background removal.',
+      'C. Enable image_to_image mode and a high-strength value to regenerate the full image based on the prompt.',
+      'D. Enable mask_inpainting and supply both the input image and a mask indicating which part of the image to modify.'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Enable mask_inpainting with the input image and a mask</strong><br><br>
+    <strong>Mask inpainting</strong> edits <strong>only the masked region</strong>, leaving the rest (lighting, style) untouched — exactly the requirement, using built-in controls.<br><br>
+    A (image_variation) regenerates a new variation, not a localized edit. B (text_to_image) makes a brand-new image. C (high-strength image_to_image) regenerates the whole image, not just the mask.`,
+    userChoice: null
+  },
+  {
+    id: 946, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Remove Only a Logo from a Published Image',
+    text: `<p>A Foundry project generates product-marketing images from text prompts. After publishing, legal identifies a competitor's <strong>logo on a sign in the background</strong>. You must remove <strong>only the logo</strong> while preserving the rest of the image. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Apply a mask-based inpainting edit to the part of the image that contains the logo.',
+      'B. Increase the prompt guidance strength.',
+      'C. Modify the original prompt to exclude brand names.',
+      'D. Rerun the prompt by using a different random seed.'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Mask-based inpainting on the logo region</strong><br><br>
+    To remove <strong>only</strong> the logo while keeping everything else, mask that region and <strong>inpaint</strong> it — a localized edit to the existing image.<br><br>
+    B, C, and D all <strong>regenerate</strong> a new image (different prompt/guidance/seed), changing the whole picture rather than surgically removing the logo from the published one.`,
+    userChoice: null
+  },
+  {
+    id: 947, topic: 4, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Content Understanding Analyzer — Layout + QR Codes',
+    text: `<p>A Foundry agent ingests scanned PDF vendor invoices with tables and embedded <strong>QR codes</strong>, and must <strong>preserve the PDF layout</strong> in the extracted output so downstream processing can reference sections and tables. Using Azure Content Understanding in Foundry Tools, you must extract content + layout elements and <strong>detect QR codes without deploying a language model</strong>. Which built-in analyzer should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. prebuilt-documentFieldSchema',
+      'B. prebuilt-read',
+      'C. prebuilt-documentSearch',
+      'D. prebuilt-layout'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — prebuilt-layout</strong><br><br>
+    <strong>prebuilt-layout</strong> extracts text, tables, structure, and selection/visual elements (including barcodes/QR codes) while <strong>preserving layout</strong>, and needs no language-model deployment.<br><br>
+    B (prebuilt-read) is OCR text only — no layout/tables/QR. A (field schema) and C (document search) target field extraction/search, not layout-preserving structural extraction with QR detection.`,
+    userChoice: null
+  },
+  {
+    id: 948, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Preserve Product Identity in Generated Images',
+    text: `<p>A Foundry agent generates original images from <strong>user-supplied product photos</strong>. You must ensure the generated images <strong>maintain the product identity and visual characteristics</strong> of the provided photo. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Set the input_fidelity parameter to high.',
+      'B. Apply a groundedness detection filter.',
+      'C. Include a prompt and input image in the request.',
+      'D. Decrease the value of the temperature parameter.'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Set input_fidelity to high</strong><br><br>
+    <strong>input_fidelity = high</strong> instructs the image model to closely preserve the <strong>identity and visual characteristics</strong> of the supplied reference photo in the generated output — exactly the requirement.<br><br>
+    C (include a prompt + image) is necessary plumbing but doesn't by itself guarantee fidelity to the product's identity. B (groundedness) is for text grounding. D (temperature) isn't the image-fidelity control.`,
+    userChoice: null
+  },
+  {
+    id: 949, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'Prompt Shields for Document Attacks',
+    text: `<p><strong>HOTSPOT</strong> — A Foundry agent accepts user-uploaded screenshots and uses a multimodal chat model; some screenshots contain potentially malicious embedded text. You must <strong>prevent a prompt-injection attack</strong> and ensure third-party content is treated as <strong>lower trust</strong>. Configure prompt shields for document attacks.</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>Prompt shields action:</strong> <span class="correct-badge">Set action to block</span><br>
+    • <strong>Additional mitigation:</strong> <span class="correct-badge">Enable Spotlighting</span><br><br>
+    <em>To actually stop an injection, the shield's action must be <strong>block</strong> (annotate only flags; disable does nothing). <strong>Spotlighting</strong> marks third-party/embedded content as <strong>lower trust</strong> so the model treats it as data, not instructions — the targeted defense here. (A blocklist matches known strings; OCR-extracting the text doesn't reduce its trust.)</em>`,
+    dropdowns: {
+      'action': {
+        label: 'Prompt shields action:',
+        options: ['Disable the shield.', 'Set action to block.', 'Set action to annotate.'],
+        correct: 'Set action to block.'
+      },
+      'mitigation': {
+        label: 'Additional mitigation:',
+        options: ['Enable Spotlighting.', 'Create a custom blocklist.', 'Use optical character recognition (OCR) to extract the text from the images first.'],
+        correct: 'Enable Spotlighting.'
+      }
+    },
+    userSelections: {}
+  },
+  {
+    id: 950, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Classify Uploaded Images by Severity',
+    text: `<p>You are deploying a support agent that lets users upload photos. You must <strong>automatically classify uploaded images for harmful content</strong> and <strong>block content based on severity levels</strong>. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Apply keyword scanning to optical character recognition (OCR) output by using Azure Vision in Foundry Tools.',
+      'B. Enable prompt shields.',
+      'C. Use blocklists.',
+      'D. Implement image moderation.'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Implement image moderation</strong><br><br>
+    <strong>Image moderation</strong> (Azure AI Content Safety for images) classifies uploads across harm categories with <strong>severity levels</strong> and blocks based on thresholds — exactly the requirement.<br><br>
+    A scans text from OCR, not the image content. B (prompt shields) defends against injection text. C (blocklists) matches known terms, not image harm severity.`,
+    userChoice: null
+  },
+  {
+    id: 951, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Protect Against Malicious Instructions in OCR Text',
+    text: `<p>App1 uses a Foundry multimodal deployment; it runs OCR on uploaded images and <strong>appends the OCR output to the prompt as additional context</strong>. Some images contain embedded text. You must <strong>prevent potentially malicious instructions from being processed</strong> by the model. What should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. image moderation',
+      'B. prompt shields for documents',
+      'C. protected material text',
+      'D. prompt shields for user prompts'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — prompt shields for documents</strong><br><br>
+    The OCR text is <strong>third-party/document content appended to the prompt</strong> — an <strong>indirect (document) injection</strong> vector. <strong>Prompt shields for documents</strong> detect injected instructions in that embedded content.<br><br>
+    A (image moderation) blocks unsafe imagery, not injected instructions in text. C (protected material) is copyright detection. D (prompt shields for user prompts) covers what the user types directly, not the embedded OCR content.`,
+    userChoice: null
+  },
+  {
+    id: 952, topic: 4, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Mixed-Format Docs to Structure-Preserving Markdown',
+    text: `<p>A Foundry agent must process <strong>mixed-format documents</strong> (scanned text, tables, multicolumn layouts). The extracted content must <strong>preserve document structure</strong> and be converted to <strong>Markdown</strong> for downstream reasoning. What should you configure <strong>first</strong>?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. an Azure Language in Foundry Tools text analysis model deployment',
+      'B. a generative chat completion request',
+      'C. an Azure OpenAI Responses API call that uses a multimodal model',
+      'D. an Azure Content Understanding in Foundry Tools analyzer'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — an Azure Content Understanding analyzer</strong><br><br>
+    <strong>Content Understanding</strong> extracts mixed-format documents (scans, tables, multicolumn) while <strong>preserving structure</strong> and can output <strong>Markdown</strong> — the right first step before any downstream reasoning.<br><br>
+    A (Language text analysis) doesn't do layout-preserving document extraction. B and C are generative steps that should consume the structured Markdown, not produce it from raw scanned documents.`,
+    userChoice: null
+  },
+  {
+    id: 953, topic: 4, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'OCR + Layout + Template-Generalizing Extraction, No Training',
+    text: `<p>An application processes scanned PDF invoices with varied layouts and multipage tables. An OCR pipeline extracts totals and invoice numbers but is often wrong because document structure is ignored. You need OCR, layout analysis, and <strong>template-generalizing field extraction</strong>, with <strong>NO custom-model training</strong> and minimal admin effort. What should you include?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Azure Language in Foundry Tools',
+      'B. Azure Content Understanding in Foundry Tools',
+      'C. an Azure Machine Learning model'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Azure Content Understanding in Foundry Tools</strong><br><br>
+    <strong>Content Understanding</strong> provides OCR, layout analysis, and field extraction that <strong>generalizes across templates</strong> without training a custom model — minimal admin effort for varied invoice layouts.<br><br>
+    A (Language) handles text analytics, not layout-aware document field extraction. C (Azure ML) requires building/training your own model — the opposite of "no custom training, minimal effort."`,
+    userChoice: null
+  },
+  {
+    id: 954, topic: 4, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'RAG Ingestion — Structure-Aware Chunks with Page Metadata',
+    text: `<p>A Foundry agent's knowledge source is built from Blob Storage documents, including <strong>digitally scanned PDFs with multipage tables</strong>. The current ingestion extracts only plain text, losing table structure, headings, and page-number metadata, and users ask questions needing specific table rows across pages. You must configure ingestion that performs OCR, preserves tables/headings as <strong>structure-aware chunks</strong>, and stores <strong>page-number metadata</strong> with each chunk. How should you configure the ingestion job?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Use advanced data parsing to reingest the documents.',
+      'B. Use OCR and page-level chunking.',
+      'C. Use page-level OCR extraction and store each page as a single chunk.',
+      'D. Use basic parsing and fixed-size chunking.'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — Use advanced data parsing to reingest the documents</strong><br><br>
+    <strong>Advanced data parsing</strong> runs OCR on scanned PDFs and produces <strong>structure-aware chunks</strong> (preserving tables and headings) with <strong>page-number metadata</strong> — exactly what row-level, cross-page retrieval needs.<br><br>
+    B and C chunk by page, which still loses table/heading structure within a page. D (basic parsing + fixed-size chunks) is the current failing approach.`,
+    userChoice: null
+  },
+  {
+    id: 955, topic: 4, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Extract Images for the Built-in OCR Skill',
+    text: `<p>A Foundry agent uses Azure AI Search as retriever. You will ingest PDFs into an Azure AI Search index so the agent can ground responses in <strong>text and embedded images</strong>, with citations to source files. You must ensure that during indexing, <strong>images are extracted into a structure usable as input for the built-in OCR skill</strong>. Which indexing approach should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. an indexer to extract image data into a normalized_images collection',
+      'B. a Shaper skill to restructure the OCR input',
+      'C. a skillset to run the OCR skill directly against the content field of the index',
+      'D. the outputFieldMappings parameter to write image data to a searchable field'
+    ],
+    correctOption: 'A',
+    solution: `<strong>Correct Answer: A — extract image data into a normalized_images collection</strong><br><br>
+    Setting the indexer's image action to extract images produces the <strong><code>/document/normalized_images</code></strong> collection, which is the required input the <strong>built-in OCR skill</strong> consumes. Without it, the OCR skill has no image input.<br><br>
+    B (Shaper) reshapes outputs, it doesn't generate the normalized images. C runs OCR against text content, not images. D (outputFieldMappings) maps enriched results to index fields — it's a later step, not image extraction.`,
+    userChoice: null
+  },
+
+  // ── ExamTopics batch — Q57–Q65 (+ Contoso case-study Q61, Q62) ──
+  {
+    id: 956, topic: 4, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Per-Field Confidence and Source Grounding',
+    text: `<p>A Foundry agent's knowledge source is scanned PDF troubleshooting guides in Blob Storage with two-column layouts and tables, processed with <strong>Azure Content Understanding</strong>. You ingest the processed content into a RAG index and store extracted fields for automation. Stakeholders must <strong>verify where each extracted field value came from</strong> in the original PDF and <strong>route low-reliability extractions for manual review</strong>. You must ensure the document analyzer output includes a <strong>per-field confidence score and source grounding</strong> to locations in the source document. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Set enableSegment to true.',
+      'B. Provide labeled samples.',
+      'C. Enable estimateFieldSourceAndConfidence.',
+      'D. Configure the analyzer to use generative extraction for all fields.'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — Enable estimateFieldSourceAndConfidence</strong><br><br>
+    Turning on <strong>estimateFieldSourceAndConfidence</strong> makes the Content Understanding analyzer return, for each field, a <strong>confidence score</strong> and a <strong>source/grounding location</strong> in the document — exactly what's needed to verify provenance and route low-confidence results for review.<br><br>
+    A (enableSegment) controls segmentation, not confidence/source. B (labeled samples) trains extraction quality but doesn't emit per-field source+confidence. D (generative extraction) changes how values are produced, not whether grounding/confidence is reported.`,
+    userChoice: null
+  },
+  {
+    id: 957, topic: 3, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Low-Latency Live Call Transcription',
+    text: `<p>You are building a speech solution in Foundry for a support platform that transcribes <strong>live phone calls</strong> so supervisors can view transcripts and detect issues <strong>while calls are in progress</strong>. Audio arrives as a <strong>continuous stream</strong> from telephony. Transcripts must appear within <strong>only a few seconds</strong> of the audio. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Use text to speech by using a custom neural voice.',
+      'B. Use speech translation to generate the transcripts into multiple languages.',
+      'C. Run a batch transcription job on recorded audio files.',
+      'D. Use real-time speech to text to process streaming audio input.'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — real-time speech to text on the streaming input</strong><br><br>
+    Live, in-progress transcription of a continuous stream with a few seconds' latency is the definition of <strong>real-time speech to text</strong>.<br><br>
+    A (text to speech) produces audio, not transcripts. B (speech translation) is for translating, not the core low-latency transcription requirement. C (batch) processes recorded files after the fact — far too slow for live calls.`,
+    userChoice: null
+  },
+  {
+    id: 958, topic: 3, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Real-Time Voice Agent — STT + TTS',
+    text: `<p>You are creating an agent workflow in Foundry for natural voice interactions: the agent must receive <strong>continuous audio input</strong>, convert it to text for reasoning, and return <strong>spoken responses</strong>. It must support <strong>turn-taking</strong> (begin generating speech before the user finishes speaking) and operate with <strong>low latency</strong>. You must enable both speech to text and text to speech in a real-time interaction. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Use batch transcription to convert the audio input and return text responses from the agent.',
+      'B. Use real-time speech to text for incoming audio and text to speech for agent responses.',
+      'C. Use an embeddings model to encode the audio, and then decode the audio into text and speech.',
+      'D. Use speech translation to convert the audio into another language and return the translated text.'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — real-time STT for input, TTS for responses</strong><br><br>
+    A real-time voice agent pairs <strong>real-time speech to text</strong> (continuous input → text for reasoning) with <strong>text to speech</strong> (spoken responses), giving the low-latency turn-taking experience.<br><br>
+    A (batch) isn't real-time and returns text, not speech. C (embeddings) doesn't transcribe or synthesize speech. D (speech translation) translates rather than enabling a spoken conversational loop.`,
+    userChoice: null
+  },
+  {
+    id: 959, topic: 3, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Reduce Errors on Mixed-Language Segments',
+    text: `<p>App1 uses Azure Speech in Foundry Tools to transcribe live calls. Transcript segments often contain <strong>both English and Spanish</strong>. App1 sends each segment to Azure Translator to translate to another language, but <strong>mixed-language segments</strong> produce incomplete or incorrect translations. You must reduce translation errors and ensure the <strong>entire transcript is translated successfully</strong>. What should you do before sending segments to Translator?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Use document translation to translate the entire transcript as a single document.',
+      'B. Split the mixed-language segments into single-language segments and translate each segment separately.',
+      'C. Enable automatic language detection for the translation request.',
+      'D. Specify English as the source language in the translation request for all the segments.'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — Split mixed-language segments into single-language segments, then translate each</strong><br><br>
+    Translator works per source language. <strong>Splitting</strong> a mixed English/Spanish segment into single-language pieces lets each be translated correctly, so the whole transcript translates successfully.<br><br>
+    A (document translation) still chokes on mixed languages within the text. C (auto-detect) returns one dominant language per request and mistranslates the other portion. D (force English) mistranslates the Spanish parts.`,
+    userChoice: null
+  },
+  {
+    id: 960, topic: 2, discussions: 0, isExamTopics: true,
+    isCaseStudy: true,
+    caseTitle: 'Contoso, Ltd (Microsoft Foundry)',
+    type: 'MULTIPLE CHOICE', multiSelect: true,
+    title: 'Case Study: Two Built-in Skills for the Indexing Pipeline',
+    caseStudy: `<h3>Overview — Company Information</h3>
+    <p><strong>Contoso, Ltd</strong> is a multinational retail company that builds, deploys, and manages generative AI and agent-based solutions by using <strong>Microsoft Foundry</strong>.</p>
+    <h3>Data Environment</h3>
+    <p>Product detail sheets (PDF) for all Contoso products are stored in an Azure Blob Storage account named <strong>storage1</strong> (specifications, feature descriptions, support info).</p>
+    <h3>Technical Requirements (selected)</h3>
+    <ul>
+      <li>Process the product sheets with an <strong>indexing pipeline that enables semantic and vector search</strong> so Agent1 can retrieve relevant product information.</li>
+      <li>Agent1 must answer natural-language questions about product details.</li>
+    </ul>`,
+    text: `<p>You need to configure the indexing pipeline for Agent1 to retrieve relevant product information in storage1, meeting the technical requirement. <strong>Which two built-in skills</strong> should you use? (Each correct answer is part of the solution.)</p>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'mcq',
+    options: [
+      'A. Azure OpenAI Embedding',
+      'B. Entity Recognition',
+      'C. Text Split',
+      'D. Merge',
+      'E. Language Detection',
+      'F. key phrase extraction'
+    ],
+    correctOptions: ['A', 'C'],
+    solution: `<strong>Correct Answer: A and C</strong><br><br>
+    A <strong>vector + semantic</strong> pipeline needs to (1) break long PDFs into manageable passages with the <strong>Text Split</strong> skill (C), then (2) generate embeddings for those chunks with the <strong>Azure OpenAI Embedding</strong> skill (A) so vector search works.<br><br>
+    B (Entity Recognition), D (Merge), E (Language Detection), and F (key phrase) are useful for other enrichments but are not what enables semantic/vector retrieval of the product sheets.`,
+    userChoices: []
+  },
+  {
+    id: 961, topic: 1, discussions: 0, isExamTopics: true,
+    isCaseStudy: true,
+    caseTitle: 'Contoso, Ltd (Microsoft Foundry)',
+    type: 'MULTIPLE CHOICE',
+    title: 'Case Study: Solution for Agent1 to Use storage1 Product Info',
+    caseStudy: `<h3>Overview — Company Information</h3>
+    <p><strong>Contoso, Ltd</strong> is a multinational retail company that builds, deploys, and manages generative AI and agent-based solutions by using <strong>Microsoft Foundry</strong>.</p>
+    <h3>Data Environment</h3>
+    <p>Product detail sheets (PDF) live in an Azure Blob Storage account named <strong>storage1</strong>.</p>
+    <h3>Planned Changes & Technical Requirements (selected)</h3>
+    <ul>
+      <li>Enable Agent1 to retrieve and use detailed product info from the sheets in storage1.</li>
+      <li>Implement an indexing pipeline enabling <strong>semantic and vector search</strong>; Agent1 must answer natural-language questions about product details.</li>
+    </ul>`,
+    text: `<p>You need to recommend a solution that supports the planned changes and technical requirements for Agent1 to use the product information stored in storage1. What should you include?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Azure Translator in Foundry Tools',
+      'B. Grounding with Bing Search',
+      'C. Azure AI Search',
+      'D. Azure Document Intelligence in Foundry Tools'
+    ],
+    correctOption: 'C',
+    solution: `<strong>Correct Answer: C — Azure AI Search</strong><br><br>
+    The requirement is an <strong>indexing pipeline with semantic and vector search</strong> over the product sheets so Agent1 can retrieve and ground answers. <strong>Azure AI Search</strong> is the retrieval/indexing service that provides exactly that (the agent's RAG knowledge source).<br><br>
+    A (Translator) is for languages. B (Bing) grounds on the public web, not private storage1 content. D (Document Intelligence) extracts fields from documents but isn't the semantic/vector retrieval index the agent queries.`,
+    userChoice: null
+  },
+  {
+    id: 962, topic: 4, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Document Intelligence — Markdown Output',
+    text: `<p>Project1 contains an application that processes PDF vendor invoices. You must configure <strong>Azure Document Intelligence</strong> in Foundry Tools to generate a <strong>Markdown output</strong> that <strong>preserves the sections and table structure</strong> of the PDFs, with <strong>minimal development effort</strong>. What should you do?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. Configure output=figures when you analyze the PDF.',
+      'B. Configure content=markdown when you analyze the document.',
+      'C. Increase the confidence threshold.',
+      'D. Set the output_content_format=ContentFormat.MARKDOWN value.'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — Set output_content_format = ContentFormat.MARKDOWN</strong><br><br>
+    Document Intelligence emits structure-preserving <strong>Markdown</strong> when you set <strong>output_content_format to ContentFormat.MARKDOWN</strong> on the analyze call — minimal effort, sections and tables preserved.<br><br>
+    A (output=figures) extracts figures only. B (content=markdown) isn't the correct parameter name/value for this SDK. C (confidence threshold) affects filtering, not output format.`,
+    userChoice: null
+  },
+  {
+    id: 963, topic: 4, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Single Analyzer — Fields Across Templates + Confidence',
+    text: `<p>A Foundry project ingests scanned PDF invoices (Blob Storage) with printed line items and table-based layouts; results are stored as structured JSON used as RAG grounding. You must create a <strong>single analyzer</strong> that: extracts <strong>invoice number, invoice date, vendor name, and total amount across varying templates</strong>, and <strong>returns confidence scores</strong> so results below 0.80 route for supervisor review. What should you use?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. a Foundry agent that has groundedness guardrails enabled to extract invoice fields and confidence scores',
+      'B. a custom Azure Content Understanding in Foundry Tools analyzer that defines the required fields as the extracted fields and the returned confidence scores for routing',
+      'C. the Azure Content Understanding in Foundry Tools prebuilt-layout analyzer',
+      'D. the Azure Content Understanding in Foundry Tools prebuilt-documentSearch analyzer and search.score from the Azure AI Search results for routing'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — a custom Content Understanding analyzer defining the required fields + returning confidence</strong><br><br>
+    Extracting a <strong>specific set of fields across varying templates</strong> with per-field <strong>confidence</strong> for routing calls for a <strong>custom Content Understanding analyzer</strong> whose schema defines those fields; it returns the confidence used to route sub-0.80 results.<br><br>
+    A (agent groundedness) measures answer grounding, not field extraction confidence. C (prebuilt-layout) returns structure, not your named business fields. D (documentSearch + search.score) is a search relevance score, not field-extraction confidence.`,
+    userChoice: null
+  },
+  {
+    id: 964, topic: 1, discussions: 0, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Observability — Retrieved Content Hurting Answers',
+    text: `<p>A Foundry project uses Azure AI Search to ground an agent in internal documentation. After a content update, users report the agent's answers are <strong>less accurate</strong>. You must identify whether the <strong>retrieved content is negatively influencing</strong> the model's generated responses. Which observability signal should you review?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. indexer status and failure history',
+      'B. latency breakdown traces',
+      'C. prediction drift metrics',
+      'D. groundedness evaluation metrics'
+    ],
+    correctOption: 'D',
+    solution: `<strong>Correct Answer: D — groundedness evaluation metrics</strong><br><br>
+    <strong>Groundedness metrics</strong> measure how well responses are supported by the retrieved content — the direct signal for whether the updated retrieved content is degrading answer accuracy.<br><br>
+    A (indexer status) shows pipeline health, not answer quality. B (latency) is performance. C (prediction drift) tracks input/model distribution change, not grounding of generated answers against retrieved text.`,
+    userChoice: null
   }
 
 ];
@@ -7961,6 +9170,7 @@ function goToSections() {
   }
 
   renderAI102Browser();
+  renderExamTopicsBrowser();
 }
 
 // ── AI-102 by Domain × Source browser ────────────────────────────
@@ -8044,6 +9254,128 @@ function startAI102Filtered(domainKey) {
   activeQuestions.forEach(i => resetQuestion(questions[i]));
   timeLeft = Math.max(300, activeQuestions.length * 90);
   document.getElementById('sectionTitle').textContent = `AI-102 · ${d.name} (${srcLabel})`;
+  document.getElementById('sectionScreen').classList.add('hidden');
+  document.getElementById('examUI').classList.remove('hidden');
+  examStarted = true;
+  clearInterval(timerInterval);
+  buildNav();
+  renderQuestion();
+  startTimer();
+}
+
+// ── AI-103 ExamTopics browser: group by question type & official domain ──
+// Official AI-103 exam domains (5). GenAI + Agentic are one combined domain.
+const DOMAIN103_DEFS = {
+  plan103:   { name: 'Plan & Manage an Azure AI Solution',                 short: 'Plan & Manage', weight: '20–25%', color: '#0067b8' },
+  genai103:  { name: 'Generative AI & Agentic Solutions',                  short: 'GenAI & Agentic', weight: '20–25%', color: '#d83b01' },
+  vision103: { name: 'Computer Vision Solutions',                          short: 'Vision', weight: '10–15%', color: '#8661c5' },
+  nlp103:    { name: 'Natural Language Processing Solutions',              short: 'NLP & Speech', weight: '15–20%', color: '#107c10' },
+  mining103: { name: 'Knowledge Mining & Information Extraction',          short: 'Knowledge Mining', weight: '15–20%', color: '#c19c00' }
+};
+
+// Map an ExamTopics question to one of the five AI-103 domains by its topic.
+function domain103Of(q) {
+  switch (q.topic) {
+    case 1: return 'plan103';
+    case 2: return 'vision103';
+    case 3: return 'nlp103';
+    case 4: return 'mining103';
+    case 7: return 'genai103';
+    case 8: return 'genai103';   // agentic folds into GenAI & Agentic for AI-103
+    default: return 'plan103';
+  }
+}
+
+// Classify an ExamTopics question by its interaction TYPE.
+function etTypeOf(q) {
+  if (q.isCaseStudy) return 'case';
+  if (q.render === 'hotspot_yesno' || q.statements) return 'hotspot';
+  const isDrag = /DRAG\s*DROP/i.test(q.text || '') || /\bdrag\b/i.test(q.title || '');
+  if (q.dropdowns) return isDrag ? 'dragdrop' : 'hotspot';
+  if (q.correctOrder || q.correctAnswers) return 'dragdrop';
+  return 'mcq';
+}
+
+const ET_TYPE_DEFS = {
+  case:     { name: 'Case Studies',    icon: '📁', color: '#8661c5', desc: 'Scenario-based, multi-question sets sharing a case panel.' },
+  mcq:      { name: 'Multiple Choice', icon: '☑️', color: '#0067b8', desc: 'Single- and multi-select questions.' },
+  dragdrop: { name: 'Drag & Drop',     icon: '🔀', color: '#d83b01', desc: 'Match/order items by dragging into targets.' },
+  hotspot:  { name: 'Hotspot',         icon: '🎯', color: '#107c10', desc: 'Dropdown selections and Yes/No grids.' }
+};
+const ET_TYPE_ORDER = ['case', 'mcq', 'dragdrop', 'hotspot'];
+
+function etIndices(filterKind, filterValue) {
+  const arr = [];
+  questions.forEach((q, i) => {
+    if (!q.isExamTopics) return;
+    if (filterKind === 'type' && etTypeOf(q) !== filterValue) return;
+    if (filterKind === 'domain' && domain103Of(q) !== filterValue) return;
+    arr.push(i);
+  });
+  return arr;
+}
+
+function renderExamTopicsBrowser() {
+  const el = document.getElementById('examTopicsBrowser');
+  if (!el) return;
+  const total = questions.filter(q => q.isExamTopics).length;
+
+  // group 1: by question type
+  const typeCards = ET_TYPE_ORDER.map(k => {
+    const def = ET_TYPE_DEFS[k];
+    const n = etIndices('type', k).length;
+    const dis = n === 0;
+    return `<div class="et-card ${dis?'disabled':''}" ${dis?'':`onclick="startExamTopicsFiltered('type','${k}')" role="button" tabindex="0"`}>
+      <span class="et-icon" style="--echip:${def.color}">${def.icon}</span>
+      <div class="et-card-info">
+        <div class="et-card-name">${def.name}</div>
+        <div class="et-card-meta">${def.desc}</div>
+      </div>
+      <div class="et-card-count" style="--echip:${def.color}">${n}<span>questions</span></div>
+    </div>`;
+  }).join('');
+
+  // group 2: by official AI-103 domain
+  const domCards = Object.entries(DOMAIN103_DEFS).map(([k, d]) => {
+    const n = etIndices('domain', k).length;
+    const dis = n === 0;
+    const pct = total ? Math.round((n / total) * 100) : 0;
+    return `<div class="et-dom ${dis?'disabled':''}" ${dis?'':`onclick="startExamTopicsFiltered('domain','${k}')" role="button" tabindex="0"`}>
+      <div class="et-dom-head">
+        <span class="domain-badge" style="--dchip:${d.color}">${d.short}</span>
+        <span class="et-dom-count">${n}</span>
+      </div>
+      <div class="et-dom-name">${d.name}</div>
+      <div class="et-dom-bar"><span style="width:${pct}%;background:${d.color}"></span></div>
+      <div class="et-dom-meta">${pct}% of pool · exam weight ${d.weight}</div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="et-title"><span class="coach-orb" style="display:inline-block;vertical-align:middle"></span> AI-103 ExamTopics — browse the ${total} questions</div>
+    <div class="et-sub">Grouped two ways. Pick a <strong>question type</strong> to drill a format, or a <strong>domain</strong> to focus an objective area. Each launches a timed, scored set.</div>
+    <div class="et-group-label">By question type</div>
+    <div class="et-type-grid">${typeCards}</div>
+    <div class="et-group-label" style="margin-top:16px">Coverage by official AI-103 domain</div>
+    <div class="et-dom-grid">${domCards}</div>`;
+}
+
+function startExamTopicsFiltered(kind, value) {
+  const idx = etIndices(kind, value);
+  if (!idx.length) return;
+  const label = kind === 'type' ? ET_TYPE_DEFS[value].name : DOMAIN103_DEFS[value].name;
+  currentSection = 'et103:' + kind + ':' + value;
+  activeQuestions = idx;
+  pos = 0;
+  currentQ = activeQuestions[0];
+  reviewMode = false;
+  flagged.clear();
+  caseStudyCollapsed = false;
+  csActiveTab = 0;
+  stageMode = false;
+  activeQuestions.forEach(i => resetQuestion(questions[i]));
+  timeLeft = Math.max(300, activeQuestions.length * 90);
+  document.getElementById('sectionTitle').textContent = `AI-103 ExamTopics · ${label}`;
   document.getElementById('sectionScreen').classList.add('hidden');
   document.getElementById('examUI').classList.remove('hidden');
   examStarted = true;
@@ -9414,6 +10746,12 @@ function submitExam() {
     const dd = DOMAIN_DEFS[parts[1]];
     const sl = parts[2] === 'all' ? 'All sources' : (SOURCE_DEFS[parts[2]] ? SOURCE_DEFS[parts[2]].short : '');
     titleText = `AI-102 · ${dd ? dd.short : 'Domain'} (${sl}) Results`;
+  } else if (currentSection && currentSection.startsWith('et103:')) {
+    const parts = currentSection.split(':');
+    const lbl = parts[1] === 'type'
+      ? (ET_TYPE_DEFS[parts[2]] ? ET_TYPE_DEFS[parts[2]].name : 'Type')
+      : (DOMAIN103_DEFS[parts[2]] ? DOMAIN103_DEFS[parts[2]].short : 'Domain');
+    titleText = `AI-103 ExamTopics · ${lbl} Results`;
   } else titleText = `${def ? def.name : 'Section'} Results`;
   document.getElementById('resultsTitle').textContent = titleText;
   document.getElementById('scoreNum').textContent = score;
@@ -9466,6 +10804,11 @@ function restartExam() {
     const parts = currentSection.split(':');
     ai102SourceFilter = parts[2] || 'all';
     startAI102Filtered(parts[1]);
+    return;
+  }
+  if (currentSection && currentSection.startsWith('et103:')) {
+    const parts = currentSection.split(':');
+    startExamTopicsFiltered(parts[1], parts[2]);
     return;
   }
   activeQuestions.forEach(qi => resetQuestion(questions[qi]));
