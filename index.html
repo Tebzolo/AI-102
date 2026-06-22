@@ -420,6 +420,92 @@
   .mc-option.correct-highlight { background: var(--ms-green-bg); border-color: var(--ms-green); box-shadow: inset 0 0 0 1px var(--ms-green); }
   .mc-option.wrong-highlight { background: var(--ms-red-bg); border-color: var(--ms-red); box-shadow: inset 0 0 0 1px var(--ms-red); }
   .mc-option input[type=radio], .mc-option input[type=checkbox] { accent-color: var(--ms-blue); width: 16px; height: 16px; }
+
+  /* ════════════════════════════════════════════════════════════════
+     EXAM MODE — authentic Microsoft/Pearson VUE look, scoped to
+     ExamTopics questions only (body of #examUI gets .exam-mode).
+     Aligned to the post-2024 Microsoft Learn exam UI: Segoe UI,
+     clean white pane, Communication-blue accents, radio/checkbox rows.
+     ════════════════════════════════════════════════════════════════ */
+  .exam-mode {
+    --xm-blue: #0067b8;          /* Microsoft Communication blue */
+    --xm-blue-dk: #005a9e;
+    --xm-ink: #201f1e;           /* Segoe near-black */
+    --xm-ink-2: #323130;
+    --xm-line: #c8c6c4;          /* neutral border */
+    --xm-line-lt: #e1dfdd;
+    --xm-sel: #eff6fc;           /* selected row tint */
+    --xm-hover: #f3f2f1;         /* neutral hover */
+  }
+  .exam-mode #qBody {
+    font-family: "Segoe UI", "Segoe UI Web (West European)", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background: #ffffff;
+    color: var(--xm-ink);
+  }
+  /* Question type chip → quieter, exam-style label */
+  .exam-mode .q-type-badge {
+    background: transparent; color: var(--xm-ink-2);
+    font-weight: 600; font-size: 12px; letter-spacing: .2px;
+    padding: 0 0 4px 0; border: none; text-transform: none;
+  }
+  .exam-mode .q-text { color: var(--xm-ink); font-size: 15px; line-height: 1.6; }
+  .exam-mode .q-note {
+    background: #f3f9fd; border-left: 3px solid var(--xm-blue);
+    color: var(--xm-ink-2); font-size: 13px;
+  }
+  /* Answer options — VUE-style rows */
+  .exam-mode .mc-options { gap: 0; margin-top: 14px; border-top: 1px solid var(--xm-line-lt); }
+  .exam-mode .mc-option {
+    border: none; border-bottom: 1px solid var(--xm-line-lt);
+    border-radius: 0; background: #fff; padding: 13px 14px;
+    align-items: center; gap: 13px; font-size: 14.5px; color: var(--xm-ink);
+    transition: background .1s ease;
+  }
+  .exam-mode .mc-option:hover { background: var(--xm-hover); border-color: var(--xm-line-lt); box-shadow: none; }
+  .exam-mode .mc-option.selected {
+    background: var(--xm-sel); border-color: var(--xm-line-lt);
+    box-shadow: inset 3px 0 0 0 var(--xm-blue);
+  }
+  /* Native control replaced by drawn radio/checkbox for exact VUE feel */
+  .exam-mode .mc-option input[type=radio],
+  .exam-mode .mc-option input[type=checkbox] {
+    appearance: none; -webkit-appearance: none;
+    width: 18px; height: 18px; margin: 0; flex-shrink: 0;
+    border: 1.5px solid #605e5c; background: #fff;
+    position: relative; cursor: pointer; transition: border-color .1s, background .1s;
+  }
+  .exam-mode .mc-option input[type=radio] { border-radius: 50%; }
+  .exam-mode .mc-option input[type=checkbox] { border-radius: 2px; }
+  .exam-mode .mc-option:hover input { border-color: var(--xm-blue); }
+  .exam-mode .mc-option input[type=radio]:checked {
+    border-color: var(--xm-blue);
+  }
+  .exam-mode .mc-option input[type=radio]:checked::after {
+    content: ""; position: absolute; inset: 3px;
+    border-radius: 50%; background: var(--xm-blue);
+  }
+  .exam-mode .mc-option input[type=checkbox]:checked {
+    border-color: var(--xm-blue); background: var(--xm-blue);
+  }
+  .exam-mode .mc-option input[type=checkbox]:checked::after {
+    content: ""; position: absolute; left: 5px; top: 1px;
+    width: 5px; height: 10px; border: solid #fff;
+    border-width: 0 2px 2px 0; transform: rotate(45deg);
+  }
+  .exam-mode .mc-option > span { line-height: 1.5; }
+  /* Keep grading colors but in exam-flat style (review after submit) */
+  .exam-mode .mc-option.correct-highlight { background: #f1faf1; box-shadow: inset 3px 0 0 0 var(--ms-green); border-color: var(--xm-line-lt); }
+  .exam-mode .mc-option.wrong-highlight { background: #fdf3f4; box-shadow: inset 3px 0 0 0 var(--ms-red); border-color: var(--xm-line-lt); }
+  /* Hotspot & sequence surfaces inherit the cleaner exam type face */
+  .exam-mode .hotspot-area, .exam-mode .hotspot-row, .exam-mode .seq-area, .exam-mode .dnd-area {
+    font-family: "Segoe UI", system-ui, sans-serif; color: var(--xm-ink);
+  }
+  .exam-mode .hotspot-select {
+    border: 1px solid #605e5c; border-radius: 2px; font-size: 13.5px;
+    padding: 6px 8px; background: #fff; color: var(--xm-ink);
+  }
+  .exam-mode .hotspot-select:focus { border-color: var(--xm-blue); outline: 1px solid var(--xm-blue); }
+  .exam-mode .hotspot-label { color: var(--xm-ink-2); font-weight: 600; }
   .mc-letter { font-weight: 700; color: var(--ms-blue); min-width: 20px; }
   .most-voted-badge { display: inline-block; background: var(--ms-green); color: white; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
 
@@ -9908,6 +9994,9 @@ function toggleFlag() {
 // ============================================================
 function renderQuestion() {
   const q = questions[currentQ];
+  // Authentic Microsoft/Pearson VUE exam look is applied only to ExamTopics questions.
+  const examUIEl = document.getElementById('examUI');
+  if (examUIEl) examUIEl.classList.toggle('exam-mode', !!q.isExamTopics);
   document.getElementById('qId').textContent = `Question #${q.id}`;
   document.getElementById('qTopic').innerHTML = `${domainBadge(q)} ${sourceBadge(q)} ${q.topic ? `<span class="topic-tag">Topic ${q.topic}</span>` : ''}`;
   document.getElementById('discCount').textContent = q.discussions || 0;
