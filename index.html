@@ -107,6 +107,11 @@
   .coach-btn { position: relative; background: linear-gradient(135deg, #0067b8, #8661c5); color: #fff; border: none; padding: 6px 14px 6px 11px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 16px; display: inline-flex; align-items: center; gap: 7px; font-family: inherit; box-shadow: 0 2px 10px rgba(134,97,197,.35); transition: transform .15s, box-shadow .15s; }
   .coach-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(134,97,197,.5); }
   .coach-btn.active { box-shadow: 0 0 0 2px rgba(134,97,197,.5), 0 4px 16px rgba(134,97,197,.5); }
+  .study-btn { background: #fff; color: #107c10; border: 1.5px solid #107c10; padding: 6px 13px; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 16px; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; transition: all .15s; }
+  .study-btn:hover { background: #f1faf1; transform: translateY(-1px); }
+  .study-btn.active { background: #107c10; color: #fff; box-shadow: 0 0 0 2px rgba(16,124,16,.35), 0 2px 10px rgba(16,124,16,.35); }
+  .timer.study { color: #107c10; font-size: 15px; letter-spacing: .3px; }
+  .timer-block.study-paused { opacity: .85; }
   .coach-orb { width: 11px; height: 11px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #b7f5ff 40%, #50c8ff 70%, #8661c5); box-shadow: 0 0 6px #7fdcff, 0 0 12px rgba(134,97,197,.6); animation: orbPulse 2.4s ease-in-out infinite; flex-shrink: 0; }
   .coach-orb.big { width: 26px; height: 26px; }
   @keyframes orbPulse { 0%,100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.18); filter: brightness(1.25); } }
@@ -423,6 +428,25 @@
   .bd-bar { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--ms-border-lt); overflow: hidden; }
   .bd-fill { display: block; height: 100%; }
   .bd-foot { font-size: 11px; color: var(--ms-text-3); margin-top: 10px; line-height: 1.5; }
+  .bd-progress { font-size: 11.5px; color: var(--ms-text-2); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--ms-border-lt); line-height: 1.6; }
+  /* progress dashboard on section screen */
+  .progress-dash { margin: 0 0 18px; padding: 14px 16px; border: 1px solid var(--ms-border); border-radius: var(--radius); background: var(--ms-panel); }
+  .pd-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .pd-title { font-size: 13px; font-weight: 700; color: var(--ms-text); }
+  .pd-reset { font-size: 11px; color: var(--ms-text-3); background: none; border: 1px solid var(--ms-border); border-radius: 12px; padding: 3px 10px; cursor: pointer; font-family: inherit; }
+  .pd-reset:hover { color: #d13438; border-color: #d13438; }
+  .pd-bar { height: 8px; border-radius: 4px; background: var(--ms-border-lt); overflow: hidden; margin-bottom: 10px; }
+  .pd-bar span { display: block; height: 100%; border-radius: 4px; background: #107c10; transition: width .4s; }
+  .pd-stats { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 12px; color: var(--ms-text-2); }
+  .pd-stat b { color: var(--ms-text); }
+  .pd-stat.pd-partial b { color: #c19c00; }
+  .pd-stat.pd-wrong b { color: #d13438; }
+  .pd-muted { color: var(--ms-text-3); }
+  /* persistent per-question status dots in the nav */
+  .nav-item.st-mastered .nav-dot { background: #107c10; }
+  .nav-item.st-wrong .nav-dot { background: #d13438; }
+  .nav-item.st-partial .nav-dot { background: #c19c00; }
+  .nav-item.st-unseen .nav-dot { background: var(--ms-border); }
 
   /* CASE STUDY — OnVUE tabbed exhibit look */
   .case-study-wrap { border: 1px solid var(--ms-border); border-radius: var(--radius); margin-bottom: 18px; overflow: hidden; }
@@ -570,6 +594,48 @@
   .exam-mode .hotspot-select:focus { border-color: var(--xm-blue); outline: 1px solid var(--xm-blue); }
   .exam-mode .hotspot-label { color: var(--xm-ink-2); font-weight: 600; }
   .exam-mode .answer-area-label { color: var(--xm-ink); font-weight: 700; }
+
+  /* ── Exam-mode coverage for the remaining surfaces ── */
+  /* Question header (id + topic/source badges) */
+  .exam-mode .q-header { font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .q-id { color: var(--xm-ink); font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .q-topic { color: var(--xm-ink-2); }
+  .exam-mode .topic-tag { color: #605e5c; }
+
+  /* Yes/No grid — exam radios + header rule */
+  .exam-mode .yn-grid { font-family: "Segoe UI", system-ui, sans-serif; color: var(--xm-ink); }
+  .exam-mode .yn-head { font-weight: 700; color: var(--xm-ink); border-bottom: 1px solid var(--xm-line); padding-bottom: 6px; }
+  .exam-mode .yn-stmt { color: var(--xm-ink); border-bottom: 1px solid var(--xm-line-lt); }
+  .exam-mode .yn-cell input[type=radio] {
+    appearance: none; -webkit-appearance: none; width: 18px; height: 18px; margin: 0;
+    border: 1.5px solid #605e5c; border-radius: 50%; background: #fff; position: relative; cursor: pointer;
+  }
+  .exam-mode .yn-cell input[type=radio]:checked { border-color: var(--xm-blue); }
+  .exam-mode .yn-cell input[type=radio]:checked::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--xm-blue); }
+
+  /* Sequence / ordering */
+  .exam-mode .seq-area { font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .seq-item { border-color: #8a8886; background: #fff; color: var(--xm-ink); font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .seq-item:hover { border-color: var(--xm-blue); background: #eff6fc; }
+  .exam-mode .seq-slot { border-color: var(--xm-blue); background: #fafafa; }
+  .exam-mode .seq-slot.over { background: #eff6fc; }
+  .exam-mode .seq-slot .seq-num { color: var(--xm-blue); }
+
+  /* Case study panel + tabs */
+  .exam-mode .case-study-wrap { border-color: var(--xm-line); font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .case-study-header { background: #f3f2f1; color: var(--xm-ink); border-bottom-color: var(--xm-line); }
+  .exam-mode .case-study-header:hover { background: #edebe9; }
+  .exam-mode .case-study-body { background: #fff; color: var(--xm-ink); }
+  .exam-mode .case-study-body h3 { color: var(--xm-blue); }
+  .exam-mode .cs-tabs { background: #f3f2f1; border-bottom-color: var(--xm-line); }
+  .exam-mode .cs-tab { color: var(--xm-ink-2); font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .cs-tab:hover { color: var(--xm-ink); }
+  .exam-mode .cs-tab.active { color: var(--xm-blue); border-bottom-color: var(--xm-blue); }
+
+  /* Solution & discussion panels keep their semantic colors but adopt Segoe */
+  .exam-mode .solution-body, .exam-mode .discussion-body { font-family: "Segoe UI", system-ui, sans-serif; color: var(--xm-ink); }
+  .exam-mode .solution-header, .exam-mode .discussion-header { font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .q-note { font-family: "Segoe UI", system-ui, sans-serif; }
   .mc-letter { font-weight: 700; color: var(--ms-blue); min-width: 20px; }
   .most-voted-badge { display: inline-block; background: var(--ms-green); color: white; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
 
@@ -1212,6 +1278,7 @@
       <div id="sectionCards"></div>
       <div id="domainLegend" class="domain-legend"></div>
       <div id="ai102Browser" class="ai102-browser"></div>
+      <div id="progressDash" class="progress-dash"></div>
       <div id="examTopicsBrowser" class="et-browser"></div>
     </div>
   </div>
@@ -1262,6 +1329,7 @@
         </div>
         <div style="display:flex;gap:10px;align-items:center;">
           <button class="coach-btn" id="coachBtn" onclick="toggleCoach()"><span class="coach-orb"></span> AI Coach</button>
+          <button class="study-btn" id="studyBtn" onclick="toggleStudyMode()"><span>📖</span> Study Mode</button>
           <button class="discussion-btn" id="discBtn" onclick="toggleDiscussion()"><span>💬 Discussion</span><span class="discussion-badge" id="discCount">7</span></button>
           <button class="flag-btn" id="flagBtn" onclick="toggleFlag()">🚩 Flag</button>
         </div>
@@ -9066,11 +9134,68 @@ let currentQ = 0;            // index into master `questions`
 let activeQuestions = [];    // master indices in the current section
 let pos = 0;                 // cursor within activeQuestions
 let currentSection = null;
+
+// ============================================================
+// PERSISTENT PROGRESS  (survives sessions via localStorage)
+// Tracks per-question history: attempts, correct/total points,
+// last-seen time, and a derived mastered flag. Safe if storage
+// is unavailable (private mode) — falls back to in-memory only.
+// ============================================================
+const PROGRESS_KEY = 'ai10x_progress_v1';
+let progressStore = { byId: {}, sessions: [] };
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    if (raw) progressStore = JSON.parse(raw);
+  } catch (e) { /* storage unavailable — keep in-memory default */ }
+  if (!progressStore.byId) progressStore.byId = {};
+  if (!progressStore.sessions) progressStore.sessions = [];
+}
+function saveProgress() {
+  try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(progressStore)); } catch (e) {}
+}
+// Record one attempt for a question (called at submit time).
+function recordAttempt(q, correct, total) {
+  const id = String(q.id);
+  const rec = progressStore.byId[id] || { attempts: 0, correctSum: 0, totalSum: 0, lastCorrect: 0, lastTotal: 0, lastSeen: 0, mastered: false };
+  rec.attempts++;
+  rec.correctSum += correct;
+  rec.totalSum += total;
+  rec.lastCorrect = correct;
+  rec.lastTotal = total;
+  rec.lastSeen = Date.now();
+  // "mastered" = last attempt was fully correct
+  rec.mastered = total > 0 && correct === total;
+  progressStore.byId[id] = rec;
+}
+function questionStatus(id) {
+  const rec = progressStore.byId[String(id)];
+  if (!rec || !rec.attempts) return 'unseen';
+  if (rec.mastered) return 'mastered';
+  if (rec.lastTotal > 0 && rec.lastCorrect === 0) return 'wrong';
+  return 'partial';
+}
+// Aggregate stats across the whole bank (for the dashboard).
+function progressSummary() {
+  let seen = 0, mastered = 0, wrong = 0, partial = 0;
+  Object.keys(progressStore.byId).forEach(id => {
+    const st = questionStatus(id);
+    if (st === 'unseen') return;
+    seen++;
+    if (st === 'mastered') mastered++;
+    else if (st === 'wrong') wrong++;
+    else partial++;
+  });
+  return { seen, mastered, wrong, partial, total: questions.length };
+}
+loadProgress();
+
 let timerInterval = null;
 let timeLeft = 1500; // 25 min
 let flagged = new Set();      // holds master indices
 let examStarted = false;
 let reviewMode = false;
+let studyMode = false;      // study mode: answers always revealed, timer paused
 let caseStudyCollapsed = false;
 
 // ============================================================
@@ -9338,6 +9463,39 @@ function goToSections() {
 
   renderAI102Browser();
   renderExamTopicsBrowser();
+  renderProgressDash();
+}
+
+// Persistent progress dashboard on the section screen.
+function renderProgressDash() {
+  const el = document.getElementById('progressDash');
+  if (!el) return;
+  const ps = progressSummary();
+  if (!ps.seen) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  const pct = ps.total ? Math.round((ps.mastered / ps.total) * 100) : 0;
+  const sessions = progressStore.sessions.length;
+  const lastScore = sessions ? progressStore.sessions[progressStore.sessions.length - 1].score : null;
+  el.innerHTML = `
+    <div class="pd-head">
+      <div class="pd-title">📈 Your progress</div>
+      <button class="pd-reset" onclick="resetProgress()">Reset</button>
+    </div>
+    <div class="pd-bar"><span style="width:${pct}%"></span></div>
+    <div class="pd-stats">
+      <span class="pd-stat"><b>${ps.mastered}</b> mastered</span>
+      <span class="pd-stat pd-partial"><b>${ps.partial}</b> partial</span>
+      <span class="pd-stat pd-wrong"><b>${ps.wrong}</b> to review</span>
+      <span class="pd-stat pd-muted"><b>${ps.seen}/${ps.total}</b> attempted</span>
+      ${lastScore != null ? `<span class="pd-stat pd-muted">last score <b>${lastScore}</b>/1000</span>` : ''}
+    </div>`;
+}
+
+function resetProgress() {
+  if (!confirm('Reset all saved progress? This clears your per-question history and session scores on this device.')) return;
+  progressStore = { byId: {}, sessions: [] };
+  saveProgress();
+  renderProgressDash();
 }
 
 // ── AI-102 by Domain × Source browser ────────────────────────────
@@ -9625,11 +9783,33 @@ function startExam() {
 }
 
 function startTimer() {
+  if (studyMode) { clearInterval(timerInterval); return; } // no timer in study mode
+  clearInterval(timerInterval);
   timerInterval = setInterval(() => {
     timeLeft--;
     updateTimer();
     if (timeLeft <= 0) { clearInterval(timerInterval); submitExam(); }
   }, 1000);
+}
+
+// Study Mode: reveals the correct answer/solution on every question and
+// pauses the timer. Toggling off restores normal (timed, hidden-answer) flow.
+function toggleStudyMode() {
+  studyMode = !studyMode;
+  const btn = document.getElementById('studyBtn');
+  if (btn) btn.classList.toggle('active', studyMode);
+  const timerBlock = document.querySelector('.timer-block');
+  if (studyMode) {
+    clearInterval(timerInterval);                 // stop the clock
+    const el = document.getElementById('timerDisplay');
+    if (el) { el.textContent = 'Study'; el.className = 'timer study'; }
+    if (timerBlock) timerBlock.classList.add('study-paused');
+  } else {
+    if (timerBlock) timerBlock.classList.remove('study-paused');
+    updateTimer();
+    if (examStarted) startTimer();                // resume the clock
+  }
+  renderQuestion();                               // re-render to reveal/hide answers
 }
 
 function updateTimer() {
@@ -9655,7 +9835,7 @@ function buildNav() {
       if (p < st.start) lockCls = ' sealed';
       else if (p >= st.end) lockCls = ' locked';
     }
-    return `<div class="nav-item ${p===pos?'active':''}${lockCls}" id="nav-${qi}" onclick="goTo(${p})">
+    return `<div class="nav-item ${p===pos?'active':''}${lockCls} st-${questionStatus(q.id)}" id="nav-${qi}" onclick="goTo(${p})">
       <div class="nav-dot"></div>
       Q${q.id} ${q.topic ? `· T${q.topic}` : ''}
     </div>`;
@@ -10098,7 +10278,7 @@ function renderQuestion() {
     } else {
       nextBtn.textContent = 'Next →';
     }
-    if (solBtn) solBtn.style.display = 'none'; // no answer peeking during a live exam
+    if (solBtn) solBtn.style.display = studyMode ? '' : 'none'; // study mode always allows reveal
   } else {
     document.getElementById('prevBtn').style.visibility = pos === 0 ? 'hidden' : 'visible';
     const isLast = pos === activeQuestions.length - 1;
@@ -10149,7 +10329,7 @@ function renderQuestion() {
   if (renderers[q.render]) renderers[q.render]();
 
   updateNav();
-  if (reviewMode) showSolution();
+  if (reviewMode || studyMode) showSolution();
 }
 
 // ============================================================
@@ -10747,15 +10927,16 @@ function renderYesNo() {
   const q = questions[currentQ];
   if (!q.userSelections) q.userSelections = {};
   document.getElementById('questionContent').innerHTML = `
+    <div class="answer-area-label">Answer Area</div>
     <div class="hotspot-area">
-      <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px 24px;align-items:center">
-        <div style="font-weight:600;font-size:13px"></div>
-        <div style="font-weight:600;font-size:13px;text-align:center">Yes</div>
-        <div style="font-weight:600;font-size:13px;text-align:center">No</div>
+      <div class="yn-grid" style="display:grid;grid-template-columns:1fr auto auto;gap:8px 24px;align-items:center">
+        <div class="yn-head"></div>
+        <div class="yn-head" style="text-align:center">Yes</div>
+        <div class="yn-head" style="text-align:center">No</div>
         ${q.statements.map((s, i) => `
-          <div style="font-size:13px">${s.text}</div>
-          <div style="text-align:center"><input type="radio" name="yn-${i}" ${q.userSelections['s'+i]==='Yes'?'checked':''} onclick="setSelection('s${i}','Yes')"></div>
-          <div style="text-align:center"><input type="radio" name="yn-${i}" ${q.userSelections['s'+i]==='No'?'checked':''} onclick="setSelection('s${i}','No')"></div>
+          <div class="yn-stmt" style="font-size:13px;padding:8px 0">${s.text}</div>
+          <div class="yn-cell" style="text-align:center"><input type="radio" name="yn-${i}" ${q.userSelections['s'+i]==='Yes'?'checked':''} onclick="setSelection('s${i}','Yes')"></div>
+          <div class="yn-cell" style="text-align:center"><input type="radio" name="yn-${i}" ${q.userSelections['s'+i]==='No'?'checked':''} onclick="setSelection('s${i}','No')"></div>
         `).join('')}
       </div>
     </div>
@@ -10899,7 +11080,8 @@ function showSolution() {
   panel.style.display = 'block';
   body.innerHTML = q.solution;
   body.classList.add('show');
-  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  // Auto-scroll only on an explicit click, not on every study/review re-render.
+  if (!studyMode && !reviewMode) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function toggleSolution() {
@@ -11011,9 +11193,14 @@ function submitExam() {
     const { correct, total } = scoreQuestion(questions[qi]);
     totalCorrect += correct;
     totalPoints += total;
+    recordAttempt(questions[qi], correct, total);   // persist per-question history
   });
   const score = totalPoints ? Math.round((totalCorrect / totalPoints) * 1000) : 0;
   const passed = score >= 700;
+  // log a session summary, then persist everything
+  progressStore.sessions.push({ at: Date.now(), section: currentSection, score, correct: totalCorrect, total: totalPoints, n: activeQuestions.length });
+  if (progressStore.sessions.length > 100) progressStore.sessions = progressStore.sessions.slice(-100);
+  saveProgress();
 
   const def = SECTION_DEFS.find(d => d.key === currentSection);
   let titleText;
@@ -11044,34 +11231,39 @@ function submitExam() {
   badge.textContent = passed ? 'PASS' : 'FAIL';
   badge.className = `pass-badge ${passed ? 'pass' : 'fail'}`;
 
-  // For the full Today's Exam, show a per-domain breakdown + the (informational)
-  // experience level the user selected.
+  // Per-domain breakdown for ANY section. Uses the AI-103 domain model
+  // when the set is AI-103 (ExamTopics / Cert Practice), else AI-102.
   const bdEl = document.getElementById('todayBreakdown');
   if (bdEl) {
-    if (currentSection === 'today') {
-      const dom = {};
-      activeQuestions.forEach(qi => {
-        const q = questions[qi];
-        const dk = domainOf(q);
-        const { correct, total } = scoreQuestion(q);
-        if (!dom[dk]) dom[dk] = { c: 0, t: 0 };
-        dom[dk].c += correct; dom[dk].t += total;
-      });
-      const rows = Object.entries(DOMAIN_DEFS).map(([k, d]) => {
-        const s = dom[k]; if (!s || !s.t) return '';
-        const pct = Math.round((s.c / s.t) * 100);
-        return `<div class="bd-row">
-          <span class="domain-badge" style="--dchip:${d.color}">${d.short}</span>
-          <span class="bd-meta">${s.c}/${s.t} · ${pct}% <span class="bd-w">(exam weight ${d.weight})</span></span>
-          <span class="bd-bar"><span class="bd-fill" style="width:${pct}%;background:${d.color}"></span></span>
-        </div>`;
-      }).join('');
-      bdEl.innerHTML = `<div class="bd-title">Score by official AI-102 domain</div>${rows}
-        <div class="bd-foot">Self-reported level: <strong>${experienceLevel}</strong> — recorded for your reference only; it did not change the questions drawn (same behavior as the real OnVUE survey).</div>`;
-      bdEl.style.display = 'block';
-    } else {
-      bdEl.style.display = 'none';
-    }
+    const isAI103set = activeQuestions.some(qi => questions[qi].isExamTopics || questions[qi].isCertPractice);
+    const DOMS = isAI103set ? DOMAIN103_DEFS : DOMAIN_DEFS;
+    const domOf = isAI103set ? domain103Of : domainOf;
+    const dom = {};
+    activeQuestions.forEach(qi => {
+      const q = questions[qi];
+      const dk = domOf(q);
+      const { correct, total } = scoreQuestion(q);
+      if (!dom[dk]) dom[dk] = { c: 0, t: 0 };
+      dom[dk].c += correct; dom[dk].t += total;
+    });
+    const rows = Object.entries(DOMS).map(([k, d]) => {
+      const s = dom[k]; if (!s || !s.t) return '';
+      const pct = Math.round((s.c / s.t) * 100);
+      const col = pct >= 70 ? d.color : (pct >= 40 ? '#c19c00' : '#d13438');
+      return `<div class="bd-row">
+        <span class="domain-badge" style="--dchip:${d.color}">${d.short}</span>
+        <span class="bd-meta">${s.c}/${s.t} · ${pct}% <span class="bd-w">(weight ${d.weight})</span></span>
+        <span class="bd-bar"><span class="bd-fill" style="width:${pct}%;background:${col}"></span></span>
+      </div>`;
+    }).join('');
+    const foot = currentSection === 'today'
+      ? `<div class="bd-foot">Self-reported level: <strong>${experienceLevel}</strong> — recorded for your reference only; it did not change the questions drawn.</div>`
+      : '';
+    // overall progress line from persistent history
+    const ps = progressSummary();
+    const progLine = `<div class="bd-progress">📈 Overall progress: <strong>${ps.mastered}</strong> mastered · <strong>${ps.partial}</strong> partial · <strong>${ps.wrong}</strong> to review · ${ps.seen}/${ps.total} attempted across all sessions.</div>`;
+    bdEl.innerHTML = `<div class="bd-title">Score by official ${isAI103set ? 'AI-103' : 'AI-102'} domain</div>${rows}${foot}${progLine}`;
+    bdEl.style.display = 'block';
   }
 
   document.getElementById('resultsModal').classList.add('show');
