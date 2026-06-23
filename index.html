@@ -212,6 +212,13 @@
   .hard-badge { display: inline-block; background: var(--ms-red, #d83b01); color: #fff; font-size: 9px; font-weight: 800; padding: 1px 7px; border-radius: 9px; letter-spacing: .5px; border-bottom: none; margin-left: 6px; vertical-align: middle; }
   .q-text { font-size: 14px; line-height: 1.65; margin-bottom: 16px; color: var(--ms-text); }
   .q-text p { margin-bottom: 8px; }
+  .q-table { border-collapse: collapse; margin: 12px 0 16px; font-size: 13.5px; width: auto; max-width: 100%; }
+  .q-table th, .q-table td { border: 1px solid var(--ms-text-3, #999); padding: 5px 12px; text-align: left; vertical-align: top; }
+  .q-table th { background: var(--ms-panel, #f3f2f1); font-weight: 700; text-align: center; color: var(--ms-text); }
+  .q-table td:first-child { white-space: nowrap; }
+  .exam-mode .q-table { font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .q-table th, .exam-mode .q-table td { border: 1px solid #8a8886; color: var(--xm-ink); }
+  .exam-mode .q-table th { background: #f3f2f1; }
   .q-text ul { padding-left: 20px; margin-bottom: 8px; }
   .q-text li { margin-bottom: 4px; }
   .q-note { background: var(--ms-panel); border-left: 3px solid var(--ms-blue); padding: 9px 13px; font-size: 13px; margin-bottom: 16px; color: var(--ms-text-2); }
@@ -221,6 +228,61 @@
   .values-panel, .answer-panel { flex: 1; min-width: 200px; }
   .panel-title { font-weight: 600; font-size: 12px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--ms-border); color: var(--ms-text-2); text-transform: uppercase; letter-spacing: 0.5px; }
   .drag-item { background: var(--ms-panel-2); border: 1px solid var(--ms-border); padding: 8px 12px; margin-bottom: 6px; cursor: grab; font-size: 13px; border-radius: var(--radius); user-select: none; transition: all 0.12s; }
+  /* ── Exam-style two-pane drag & drop ── */
+  .dde-wrap { display: grid; grid-template-columns: 1fr auto 1.1fr; gap: 0; margin-top: 14px; align-items: start; }
+  .dde-source { padding-right: 18px; }
+  .dde-divider { width: 1px; background: var(--ms-border); align-self: stretch; }
+  .dde-answer { padding-left: 18px; }
+  .dde-pane-title { font-size: 14px; font-weight: 700; color: var(--ms-text); margin-bottom: 12px; }
+  .dde-chips { display: flex; flex-direction: column; gap: 10px; }
+  .dde-chip { display: flex; align-items: center; gap: 9px; border: 1px solid var(--ms-border); background: #fff; border-radius: 3px; padding: 10px 12px; min-height: 44px; font-size: 14px; cursor: grab; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: all .12s; color: var(--ms-text); box-sizing: border-box; }
+  .dde-chip:hover { border-color: var(--ms-blue); background: var(--ms-panel-2); }
+  .dde-chip:active { cursor: grabbing; }
+  .dde-chip.dde-sel { border-color: var(--ms-blue); background: #deecf9; box-shadow: 0 0 0 2px var(--ms-blue); }
+  .dde-chip-text { flex: 1; }
+  .dde-chip-cue { font-size: 11px; font-weight: 700; color: var(--ms-blue); white-space: nowrap; }
+  .dde-grip { color: #a19f9d; font-size: 12px; letter-spacing: -2px; flex-shrink: 0; pointer-events: none; }
+  .dde-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
+  .dde-row-label { font-size: 14px; color: var(--ms-text); flex-shrink: 0; }
+  .dde-target { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 230px; min-height: 44px; border: 1px solid var(--ms-text-2); background: #fff; border-radius: 2px; padding: 7px 12px; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: all .12s; vertical-align: middle; box-sizing: border-box; }
+  .dde-target.inline { min-width: 150px; min-height: 34px; margin: 0 2px; }
+  .dde-target.dde-over { border-color: var(--ms-blue); background: #deecf9; box-shadow: inset 0 0 0 1px var(--ms-blue); }
+  .dde-target.filled { background: #f3f9fd; border-color: var(--ms-blue); border-style: solid; }
+  /* "armed" = a chip is selected; show every target as a tappable drop spot */
+  .dde-target.dde-armed { border-color: var(--ms-blue); border-style: dashed; background: #f3f9fd; animation: ddePulse 1.3s ease-in-out infinite; }
+  @keyframes ddePulse { 0%,100% { box-shadow: 0 0 0 0 rgba(0,103,184,.0); } 50% { box-shadow: 0 0 0 3px rgba(0,103,184,.18); } }
+  .dde-placeholder { color: #8a8886; font-size: 13.5px; font-style: normal; }
+  .dde-val { font-size: 14px; color: var(--ms-text); }
+  .dde-x { border: none; background: transparent; color: #a19f9d; font-size: 20px; line-height: 1; cursor: pointer; padding: 4px 6px; margin: -4px -4px -4px 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  .dde-x:hover { color: var(--ms-red); }
+  .dde-code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 13px; white-space: pre-wrap; color: var(--ms-text); line-height: 2.4; }
+  .dde-hint { font-size: 12.5px; color: var(--ms-text-2); background: var(--ms-panel); border-left: 3px solid var(--ms-border); padding: 8px 12px; border-radius: 4px; margin-bottom: 14px; line-height: 1.5; }
+  .dde-hint-active { color: var(--ms-text); border-left-color: var(--ms-blue); background: #f3f9fd; }
+  /* exam-mode tints */
+  .exam-mode .dde-pane-title, .exam-mode .dde-row-label, .exam-mode .dde-val { color: var(--xm-ink); font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .dde-chip { border-color: #8a8886; font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .dde-chip:hover { border-color: var(--xm-blue); }
+  .exam-mode .dde-chip.dde-sel { border-color: var(--xm-blue); background: #eff6fc; box-shadow: 0 0 0 2px var(--xm-blue); }
+  .exam-mode .dde-chip-cue { color: var(--xm-blue); }
+  .exam-mode .dde-target { border-color: #8a8886; }
+  .exam-mode .dde-target.dde-over, .exam-mode .dde-target.filled { border-color: var(--xm-blue); background: #eff6fc; }
+  .exam-mode .dde-target.dde-armed { border-color: var(--xm-blue); background: #eff6fc; }
+  .exam-mode .dde-divider { background: #d2d0ce; }
+  .exam-mode .dde-hint-active { border-left-color: var(--xm-blue); background: #eff6fc; }
+  @media (max-width: 640px) {
+    .dde-wrap { grid-template-columns: 1fr; }
+    .dde-divider { display: none; }
+    .dde-source { padding-right: 0; border-bottom: 1px solid var(--ms-border); padding-bottom: 16px; margin-bottom: 16px; }
+    .dde-answer { padding-left: 0; }
+    .dde-pane-title { font-size: 13px; }
+    .dde-chip { font-size: 15px; padding: 12px 14px; min-height: 48px; }
+    .dde-row { flex-direction: column; align-items: stretch; gap: 6px; margin-bottom: 18px; }
+    .dde-row-label { font-size: 13.5px; }
+    .dde-target { min-width: 0; width: 100%; min-height: 48px; }
+    .dde-target.inline { width: auto; min-width: 120px; display: inline-flex; }
+    .dde-code { font-size: 12px; line-height: 2.6; overflow-x: auto; }
+    .dde-chip-cue { display: none; }
+  }
   .drag-item:hover { background: #deecf9; border-color: var(--ms-blue); }
   .drag-item.dragging { opacity: 0.4; cursor: grabbing; }
   .drag-item.placed { opacity: 0.45; cursor: default; background: var(--ms-panel); border-color: var(--ms-border-lt); }
@@ -249,6 +311,7 @@
   .seq-slots-wrap { padding-left: 28px; }
 
   /* HOTSPOT / DROPDOWN */
+  .answer-area-label { font-size: 13px; font-weight: 700; color: var(--ms-text); margin: 6px 0 10px; }
   .hotspot-area { margin-top: 12px; }
   .hotspot-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
   .hotspot-label { font-size: 13px; min-width: 180px; font-weight: 600; color: var(--ms-text); }
@@ -506,6 +569,7 @@
   }
   .exam-mode .hotspot-select:focus { border-color: var(--xm-blue); outline: 1px solid var(--xm-blue); }
   .exam-mode .hotspot-label { color: var(--xm-ink-2); font-weight: 600; }
+  .exam-mode .answer-area-label { color: var(--xm-ink); font-weight: 700; }
   .mc-letter { font-weight: 700; color: var(--ms-blue); min-width: 20px; }
   .most-voted-badge { display: inline-block; background: var(--ms-green); color: white; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; margin-left: 8px; vertical-align: middle; }
 
@@ -7678,30 +7742,27 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 904, topic: 4, discussions: 0, isExamTopics: true,
     type: 'DRAG DROP',
     title: 'Content Understanding Pipelines — Standard vs Pro Mode',
-    text: `<p><strong>DRAG DROP</strong> — You have a Microsoft Foundry project that processes procurement documents. You must implement two pipelines using Azure Content Understanding in Foundry Tools:</p>
-    <ul>
-      <li><strong>Pipeline1</strong>: cost-effective, high-volume processing of standalone PDF invoices.</li>
-      <li><strong>Pipeline2</strong>: cross-document validation using multi-step reasoning and reference data.</li>
-    </ul>
-    <p>Drag the appropriate configuration to each pipeline.</p>`,
+    text: `<p><strong>DRAG DROP</strong> — You have a Microsoft Foundry project that processes procurement documents submitted by suppliers.</p>
+    <p>You need to implement two pipelines by using Azure Content Understanding in Foundry Tools. The solution must meet the following requirements:</p>
+    <p>Include a pipeline named Pipeline1 that supports cost-effective, high-volume processing of standalone PDF invoices.</p>
+    <p>Include a pipeline named Pipeline2 that supports cross-document validation by using multi-step reasoning and reference data.</p>
+    <p>How should you configure each pipeline? To answer, drag the appropriate configurations to the correct pipelines. Each configuration may be used once, more than once, or not at all.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
-    render: 'hotspot_generic',
+    render: 'dragdrop_exam',
+    sourceLabel: 'Configurations',
+    dragPool: ['Multi-file task in pro mode', 'Multi-file task in standard mode', 'Single-file task in pro mode', 'Single-file task in standard mode'],
+    targets: [
+      { id: 'pipeline1', label: 'Pipeline1:' },
+      { id: 'pipeline2', label: 'Pipeline2:' }
+    ],
+    correctAnswers: {
+      pipeline1: 'Single-file task in standard mode',
+      pipeline2: 'Multi-file task in pro mode'
+    },
     solution: `• <strong>Pipeline1:</strong> <span class="correct-badge">Single-file task in standard mode</span><br>
     • <strong>Pipeline2:</strong> <span class="correct-badge">Multi-file task in pro mode</span><br><br>
     <em>Pipeline1 processes <strong>standalone</strong> (single) PDFs at high volume and low cost → a <strong>single-file</strong> task in <strong>standard</strong> mode. Pipeline2 needs <strong>cross-document</strong> validation with multi-step reasoning and reference data → a <strong>multi-file</strong> task in <strong>pro</strong> mode (pro mode adds the reasoning/linking capabilities, standard does not).</em>`,
-    dropdowns: {
-      'pipeline1': {
-        label: 'Pipeline1:',
-        options: ['Multi-file task in pro mode', 'Multi-file task in standard mode', 'Single-file task in pro mode', 'Single-file task in standard mode'],
-        correct: 'Single-file task in standard mode'
-      },
-      'pipeline2': {
-        label: 'Pipeline2:',
-        options: ['Multi-file task in pro mode', 'Multi-file task in standard mode', 'Single-file task in pro mode', 'Single-file task in standard mode'],
-        correct: 'Multi-file task in pro mode'
-      }
-    },
-    userSelections: {}
+    userAnswers: {}
   },
   {
     id: 905, topic: 7, discussions: 0, isExamTopics: true,
@@ -7732,27 +7793,29 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 906, topic: 8, discussions: 0, isExamTopics: true,
     type: 'HOTSPOT',
     title: 'Power Fx — Validate and Uppercase a Variable',
-    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry workflow for customer-support triage has an "Ask a question" node that stores the user response in a local variable named <code>Var01</code>. You must create:</p>
+    text: `<p><strong>HOTSPOT</strong> — You have a Microsoft Foundry project that contains a workflow for a customer support triage process.</p>
+    <p>You have an "Ask a question" node that stores user responses in a local variable named <code>Var01</code>.</p>
+    <p>You need to create the following Power Fx expressions:</p>
     <ul>
-      <li>An if/else condition that ensures <code>Var01</code> contains a value.</li>
-      <li>A "Send message" expression that returns the stored response in uppercase.</li>
+      <li>An if/else condition expression that ensures that <code>Var01</code> contains a value.</li>
+      <li>A Send message expression that returns the stored user response in uppercase.</li>
     </ul>
-    <p>Select the appropriate Power Fx expressions.</p>`,
+    <p>How should you configure the expressions? To answer, select the appropriate options in the answer area.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
     render: 'hotspot_generic',
-    solution: `• <strong>If/else condition:</strong> <span class="correct-badge">!IsBlank(Local.Var01)</span><br>
-    • <strong>Send message:</strong> <span class="correct-badge">Upper(Local.Var01)</span><br><br>
-    <em>"Contains a value" is tested with <code>IsBlank</code>; to branch when it is <em>not</em> empty you negate it: <code>!IsBlank(Local.Var01)</code> (plain <code>IsBlank</code> would be true when empty, and <code>IsEmpty</code> is for tables, not text). <code>Upper(Local.Var01)</code> returns the text in uppercase.</em>`,
+    solution: `• <strong>If/else condition:</strong> <span class="correct-badge">Not(IsBlank(Local.Var01))</span><br>
+    • <strong>Send message:</strong> <span class="correct-badge">{Upper(Local.Var01)}</span><br><br>
+    <em>"Contains a value" is tested with <code>IsBlank</code>; to branch when it is <em>not</em> empty you wrap it in <code>Not(...)</code>: <code>Not(IsBlank(Local.Var01))</code> (plain <code>IsBlank</code> is true when empty, and <code>IsEmpty</code> is for tables, not text). In a Send message, expressions are embedded in braces and <code>Upper(Local.Var01)</code> returns the text in uppercase — the variable must be fully qualified as <code>Local.Var01</code>, so <code>{Upper(Local.Var01)}</code>.</em>`,
     dropdowns: {
       'condition': {
         label: 'If/else condition expression:',
-        options: ['IsBlank(Local.Var01)', 'IsEmpty(Local.Var01)', '!IsBlank(Local.Var01)'],
-        correct: '!IsBlank(Local.Var01)'
+        options: ['IsBlank(Local.Var01)', 'IsEmpty(Local.Var01)', 'Not(IsBlank(Local.Var01))'],
+        correct: 'Not(IsBlank(Local.Var01))'
       },
       'message': {
         label: 'Send message expression:',
-        options: ['Local.Var01', 'Upper(Local.Var01)', 'IsUpper(Local.Var01)'],
-        correct: 'Upper(Local.Var01)'
+        options: ['{Local.Var01}', '{Upper(Local.Var01)}', '{Upper(Var01)}'],
+        correct: '{Upper(Local.Var01)}'
       }
     },
     userSelections: {}
@@ -7799,8 +7862,20 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 908, topic: 8, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Orchestrating Agents — Deterministic Step-Based Process',
-    text: `<p>A Microsoft Foundry project contains three agents: <strong>TriageAgent</strong> (classifies incoming customer requests), <strong>PolicyAgent</strong> (answers policy questions by searching internal content), and <strong>ActionAgent</strong> (creates/updates tickets by calling an HTTP API).</p>
-    <p>You must orchestrate the agents so the process is <strong>deterministic and step-based with conditional branching and shared state</strong>, optionally triggering a ticket action based on the triage result, with <strong>minimal development effort</strong>. What should you include?</p>`,
+    text: `<p>You have a Microsoft Foundry project that contains three agents as shown in the following table.</p>
+    <table class="q-table">
+      <thead><tr><th>Name</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>TriageAgent</td><td>Classifies incoming customer requests</td></tr>
+        <tr><td>PolicyAgent</td><td>Answers policy questions by searching internal content</td></tr>
+        <tr><td>ActionAgent</td><td>Creates or updates tickets by calling an HTTP API</td></tr>
+      </tbody>
+    </table>
+    <p>You need to orchestrate the agents to ensure that the customer requests meet the following requirements:</p>
+    <p>Support a deterministic, step-based process that uses conditional branching and shared state across the agents.</p>
+    <p>Optionally trigger a ticket action based on the triage result.</p>
+    <p>The solution must minimize development effort.</p>
+    <p>What should you include in the solution?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -7920,25 +7995,28 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 914, topic: 1, discussions: 0, isExamTopics: true,
     type: 'DRAG DROP',
     title: 'Observability Signals for Grounding and Safety Issues',
-    text: `<p><strong>DRAG DROP</strong> — A Microsoft Foundry project contains a customer-support agent grounded in internal documentation. Users report two issues: some answers are <strong>unsupported by retrieved documents</strong>, and a small number of responses are <strong>flagged for policy violations</strong>. Drag the appropriate observability signal to each issue.</p>`,
+    text: `<p><strong>DRAG DROP</strong> — You have a Microsoft Foundry project that contains a customer support agent grounded in internal documentation.</p>
+    <p>After a recent update, users report the following issues:</p>
+    <p>Some answers are unsupported by retrieved documents.</p>
+    <p>A small number of responses are flagged for policy violations.</p>
+    <p>You need to evaluate each issue.</p>
+    <p>Which observability signals should you use for each issue? To answer, drag the appropriate observability signals to the correct issues. Each observability signal may be used once, more than once, or not at all.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
-    render: 'hotspot_generic',
+    render: 'dragdrop_exam',
+    sourceLabel: 'Observability signals',
+    dragPool: ['Groundedness evaluation metrics', 'Latency breakdown traces', 'Risk and safety metrics', 'Token usage analytics'],
+    targets: [
+      { id: 'unsupported', label: 'Unsupported responses:', placeholder: 'Observability signal' },
+      { id: 'policy', label: 'Policy violations:', placeholder: 'Observability signal' }
+    ],
+    correctAnswers: {
+      unsupported: 'Groundedness evaluation metrics',
+      policy: 'Risk and safety metrics'
+    },
     solution: `• <strong>Unsupported responses:</strong> <span class="correct-badge">Groundedness evaluation metrics</span><br>
     • <strong>Policy violations:</strong> <span class="correct-badge">Risk and safety metrics</span><br><br>
     <em>"Unsupported by retrieved documents" is a <strong>grounding</strong> problem → <strong>Groundedness evaluation metrics</strong> measure how well answers are supported by the source. "Flagged for policy violations" is a <strong>content-safety</strong> problem → <strong>Risk and safety metrics</strong>. Latency traces and token-usage analytics measure performance/cost, not correctness or safety.</em>`,
-    dropdowns: {
-      'unsupported': {
-        label: 'Unsupported responses:',
-        options: ['Groundedness evaluation metrics', 'Latency breakdown traces', 'Risk and safety metrics', 'Token usage analytics'],
-        correct: 'Groundedness evaluation metrics'
-      },
-      'policy': {
-        label: 'Policy violations:',
-        options: ['Groundedness evaluation metrics', 'Latency breakdown traces', 'Risk and safety metrics', 'Token usage analytics'],
-        correct: 'Risk and safety metrics'
-      }
-    },
-    userSelections: {}
+    userAnswers: {}
   },
   {
     id: 915, topic: 8, discussions: 0, isExamTopics: true,
@@ -8260,30 +8338,33 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 930, topic: 8, discussions: 0, isExamTopics: true,
     type: 'DRAG DROP',
     title: 'Force a Tool Call in run_payload',
-    text: `<p><strong>DRAG DROP</strong> — A Microsoft Foundry ticket-triage agent sometimes responds without calling any tools, even when a tool is required. You must ensure the agent calls a tool during execution. Complete the Python by dragging values into the run payload:</p>
-    <pre style="font-size:12px">run_payload = {
-  "assistant_id": agent_id,
-  ____ : ____ ,
-  "metadata": { "scenario": "ticket-triage" }
-}</pre>`,
+    text: `<p><strong>DRAG DROP</strong> — You have a Microsoft Foundry project that contains a deployed ticket-triage agent.</p>
+    <p>You discover that sometimes the agent responds without calling any tools, even when a tool is required.</p>
+    <p>You need to ensure that the agent calls a tool during execution.</p>
+    <p>How should you complete the Python code? To answer, drag the appropriate values to the correct targets. Each value may be used once, more than once, or not at all.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
-    render: 'hotspot_generic',
+    render: 'dragdrop_exam',
+    sourceLabel: 'Values',
+    dragPool: ['"auto"', '"required"', '"response_format"', '"tool_choice"', '"tools"', '"type"'],
+    codeTemplate: `run_payload = {
+    "assistant_id": agent_id,
+    {{key}} : {{value}} ,
+    "metadata": {
+        "scenario": "ticket-triage"
+    }
+}`,
+    targets: [
+      { id: 'key', label: 'Key', placeholder: 'Value' },
+      { id: 'value', label: 'Value', placeholder: 'Value' }
+    ],
+    correctAnswers: {
+      key: '"tool_choice"',
+      value: '"required"'
+    },
     solution: `• <strong>key:</strong> <span class="correct-badge">"tool_choice"</span><br>
     • <strong>value:</strong> <span class="correct-badge">"required"</span><br><br>
     <em>Setting <code>"tool_choice": "required"</code> forces the agent to invoke a tool on the run, fixing the "responds without calling tools" problem. "auto" leaves it to the model; "tools"/"type"/"response_format" are not the parameter that forces tool use.</em>`,
-    dropdowns: {
-      'key': {
-        label: 'Parameter key:',
-        options: ['"auto"', '"required"', '"response_format"', '"tool_choice"', '"tools"', '"type"'],
-        correct: '"tool_choice"'
-      },
-      'value': {
-        label: 'Parameter value:',
-        options: ['"auto"', '"required"', '"response_format"', '"tool_choice"', '"tools"', '"type"'],
-        correct: '"required"'
-      }
-    },
-    userSelections: {}
+    userAnswers: {}
   },
   {
     id: 931, topic: 8, discussions: 0, isExamTopics: true,
@@ -8308,31 +8389,31 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 932, topic: 8, discussions: 0, isExamTopics: true,
     type: 'DRAG DROP',
     title: 'Map Agent Tools to Capabilities',
-    text: `<p><strong>DRAG DROP</strong> — A Microsoft Foundry agent used by financial analysts needs: to <strong>perform calculations during conversations</strong>, <strong>access up-to-date info from public websites</strong>, and <strong>retrieve information from documents uploaded directly to the agent</strong>. Drag the appropriate tool to each requirement.</p>`,
+    text: `<p><strong>DRAG DROP</strong> — You have a Microsoft Foundry project that contains an agent used by the financial analysts at your company.</p>
+    <p>You need to optimize the agent workflow by providing additional data access and processing capabilities. The solution must meet the following requirements:</p>
+    <p>Ensure that the agent can perform calculations during conversations.</p>
+    <p>Ensure that the agent can access up-to-date information from public websites.</p>
+    <p>Ensure that the agent can retrieve information from documents uploaded directly to the agent.</p>
+    <p>What should you use for each requirement? To answer, drag the appropriate tools to the correct requirements. Each tool may be used once, more than once, or not at all.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
-    render: 'hotspot_generic',
+    render: 'dragdrop_exam',
+    sourceLabel: 'Tools',
+    dragPool: ['Code interpreter', 'Computer use', 'File search', 'Grounding with Bing Search', 'Microsoft Fabric'],
+    targets: [
+      { id: 'websites', label: 'Access up-to-date information from public websites:', placeholder: 'Tool' },
+      { id: 'calc', label: 'Perform calculations during conversations:', placeholder: 'Tool' },
+      { id: 'docs', label: 'Retrieve information from documents uploaded directly to the agent:', placeholder: 'Tool' }
+    ],
+    correctAnswers: {
+      websites: 'Grounding with Bing Search',
+      calc: 'Code interpreter',
+      docs: 'File search'
+    },
     solution: `• <strong>Up-to-date info from public websites:</strong> <span class="correct-badge">Grounding with Bing Search</span><br>
     • <strong>Perform calculations during conversations:</strong> <span class="correct-badge">Code interpreter</span><br>
     • <strong>Retrieve info from uploaded documents:</strong> <span class="correct-badge">File search</span><br><br>
     <em>Bing grounding pulls live public-web data; Code interpreter runs code for calculations; File search retrieves from documents uploaded to the agent. Computer use (UI automation) and Microsoft Fabric (enterprise data) don't fit these three needs.</em>`,
-    dropdowns: {
-      'websites': {
-        label: 'Access up-to-date info from public websites:',
-        options: ['Code interpreter', 'Computer use', 'File search', 'Grounding with Bing Search', 'Microsoft Fabric'],
-        correct: 'Grounding with Bing Search'
-      },
-      'calc': {
-        label: 'Perform calculations during conversations:',
-        options: ['Code interpreter', 'Computer use', 'File search', 'Grounding with Bing Search', 'Microsoft Fabric'],
-        correct: 'Code interpreter'
-      },
-      'docs': {
-        label: 'Retrieve info from uploaded documents:',
-        options: ['Code interpreter', 'Computer use', 'File search', 'Grounding with Bing Search', 'Microsoft Fabric'],
-        correct: 'File search'
-      }
-    },
-    userSelections: {}
+    userAnswers: {}
   },
   {
     id: 933, topic: 1, discussions: 0, isExamTopics: true,
@@ -10055,6 +10136,7 @@ function renderQuestion() {
     hotspot_q58: renderQ58,
     hotspot_q60: renderQ60,
     hotspot_generic: renderHotspotGeneric,
+    dragdrop_exam: renderDragDropExam,
     hotspot_q13: renderQ13,
     hotspot_q12: renderQ12,
     hotspot_q15: renderQ15,
@@ -10444,6 +10526,7 @@ function renderHotspotGeneric() {
   if (!q.userSelections) q.userSelections = {};
   const entries = Object.entries(q.dropdowns);
   document.getElementById('questionContent').innerHTML = `
+    <div class="answer-area-label">Answer Area</div>
     <div class="hotspot-area">
       ${entries.map(([key, dd]) => `
         <div class="hotspot-row">
@@ -10456,6 +10539,114 @@ function renderHotspotGeneric() {
       `).join('')}
     </div>
   `;
+}
+
+// ============================================================
+// EXAM-STYLE DRAG & DROP (authentic Microsoft/Pearson VUE):
+// left "source" pane of draggable chips + right "Answer Area"
+// with labeled drop targets. Values may be reused across targets
+// (once, more than once, or not at all). Mouse-drag + tap-to-place.
+// Schema: render:'dragdrop_exam', dragPool:[...], sourceLabel,
+//   targets:[{id,label,placeholder?}], correctAnswers:{id:value},
+//   codeTemplate? (HTML with {{id}} tokens for inline targets)
+// ============================================================
+function renderDragDropExam() {
+  const q = questions[currentQ];
+  if (!q.userAnswers) q.userAnswers = {};
+  const armed = ddTapSel && ddTapSel.qi === currentQ;  // a chip is selected → targets are tappable
+
+  const chips = q.dragPool.map(v => {
+    const sel = armed && ddTapSel.value === v;
+    return `<div class="dde-chip${sel?' dde-sel':''}" draggable="true"
+      ondragstart="ddExamDragStart(event,'${ddEsc(v)}')"
+      onclick="ddExamTapSource('${ddEsc(v)}')">
+      <span class="dde-grip" aria-hidden="true">⠿</span><span class="dde-chip-text">${v}</span>
+      ${sel?'<span class="dde-chip-cue">tap a target →</span>':''}
+    </div>`;
+  }).join('');
+
+  const targetBox = (t, inline) => {
+    const val = q.userAnswers[t.id];
+    const filled = val != null;
+    // When armed, every target is a valid tap destination → show it.
+    return `<span class="dde-target${filled?' filled':''}${inline?' inline':''}${armed?' dde-armed':''}"
+      id="dde-${t.id}"
+      ondragover="ddExamOver(event)" ondragleave="ddExamLeave(event)"
+      ondrop="ddExamDrop(event,'${t.id}')"
+      onclick="ddExamTapTarget('${t.id}')">
+      ${filled ? `<span class="dde-val">${val}</span>
+        <button class="dde-x" onclick="event.stopPropagation();ddExamClear('${t.id}')" title="Remove" aria-label="Remove">×</button>`
+        : `<span class="dde-placeholder">${t.placeholder || 'Configuration'}</span>`}
+    </span>`;
+  };
+
+  let answerArea;
+  if (q.codeTemplate) {
+    let codeHtml = q.codeTemplate;
+    q.targets.forEach(t => { codeHtml = codeHtml.replace('{{' + t.id + '}}', targetBox(t, true)); });
+    answerArea = `<div class="dde-code">${codeHtml}</div>`;
+  } else {
+    answerArea = q.targets.map(t => `
+      <div class="dde-row">
+        <div class="dde-row-label">${t.label}</div>
+        ${targetBox(t, false)}
+      </div>`).join('');
+  }
+
+  const hint = armed
+    ? `<div class="dde-hint dde-hint-active">✋ Now tap a box in the Answer Area to drop "<strong>${ddTapSel.value}</strong>" — or tap the chip again to cancel.</div>`
+    : `<div class="dde-hint">Drag a ${ (q.sourceLabel||'value').toLowerCase().replace(/s$/,'') } into the Answer Area — or on a touch screen, <strong>tap</strong> one then <strong>tap</strong> a box. Tap a placed item to remove it.</div>`;
+
+  document.getElementById('questionContent').innerHTML = `
+    ${hint}
+    <div class="dde-wrap">
+      <div class="dde-source">
+        <div class="dde-pane-title">${q.sourceLabel || 'Values'}</div>
+        <div class="dde-chips">${chips}</div>
+      </div>
+      <div class="dde-divider"></div>
+      <div class="dde-answer">
+        <div class="dde-pane-title">Answer Area</div>
+        ${answerArea}
+      </div>
+    </div>`;
+}
+
+function ddEsc(v) { return String(v).replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
+
+let ddExamVal = '';
+function ddExamDragStart(e, v) { ddExamVal = v; e.dataTransfer.setData('text', v); ddTapSel = null; }
+function ddExamOver(e) { e.preventDefault(); e.currentTarget.classList.add('dde-over'); }
+function ddExamLeave(e) { e.currentTarget.classList.remove('dde-over'); }
+function ddExamDrop(e, targetId) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('dde-over');
+  if (!ddExamVal) return;
+  const q = questions[currentQ];
+  if (!q.userAnswers) q.userAnswers = {};
+  q.userAnswers[targetId] = ddExamVal;   // reuse allowed
+  ddExamVal = '';
+  renderQuestion();
+}
+function ddExamClear(targetId) {
+  const q = questions[currentQ];
+  if (q.userAnswers) delete q.userAnswers[targetId];
+  renderQuestion();
+}
+
+let ddTapSel = null; // { value, qi }
+function ddExamTapSource(v) {
+  if (ddTapSel && ddTapSel.qi === currentQ && ddTapSel.value === v) { ddTapSel = null; renderQuestion(); return; }
+  ddTapSel = { value: v, qi: currentQ };
+  renderQuestion();
+}
+function ddExamTapTarget(targetId) {
+  if (!ddTapSel || ddTapSel.qi !== currentQ) return;
+  const q = questions[currentQ];
+  if (!q.userAnswers) q.userAnswers = {};
+  q.userAnswers[targetId] = ddTapSel.value;
+  ddTapSel = null;
+  renderQuestion();
 }
 
 // ============================================================
