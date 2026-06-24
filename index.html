@@ -321,6 +321,11 @@
   .hotspot-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
   .hotspot-label { font-size: 13px; min-width: 180px; font-weight: 600; color: var(--ms-text); }
   .hotspot-select { border: 1px solid var(--ms-border); border-bottom: 1px solid var(--ms-text-2); padding: 6px 8px; font-size: 13px; background: var(--ms-bg); border-radius: var(--radius); min-width: 220px; cursor: pointer; color: var(--ms-text); font-family: inherit; }
+  .hotspot-code { font-family: "Cascadia Code", Consolas, "Courier New", monospace; font-size: 13px; line-height: 2.4; white-space: pre-wrap; color: var(--ms-text); background: transparent; margin: 8px 0 0; overflow-x: auto; }
+  .hotspot-select.inline-select { min-width: 0; width: auto; display: inline-block; vertical-align: middle; padding: 2px 6px; font-size: 12.5px; border-radius: 2px; margin: 0 2px; font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .hotspot-code { color: var(--xm-ink); }
+  .exam-mode .hotspot-select.inline-select { border: 1px solid #605e5c; border-radius: 2px; }
+  .exam-mode .hotspot-select.inline-select:focus { border-color: var(--xm-blue); outline: 1px solid var(--xm-blue); }
   .hotspot-select:focus { outline: 2px solid var(--ms-blue); outline-offset: -1px; border-color: var(--ms-blue); }
   .code-block { background: #1e1e1e; color: #d4d4d4; padding: 16px; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 12.5px; line-height: 1.6; border-radius: var(--radius); margin: 12px 0; overflow-x: auto; border: 1px solid #000; }
   .code-inline-drop { display: inline-block; border: 1px solid var(--ms-blue); border-radius: var(--radius); }
@@ -1872,7 +1877,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 22, topic: 2, discussions: 17,
+    id: 1000, topic: 2, discussions: 17,
     type: 'HOTSPOT',
     title: 'Tag Images as Photograph, Drawing, or Clipart',
     text: `<p>You have a library that contains thousands of images.</p>
@@ -1898,7 +1903,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 26, topic: 2, discussions: 7,
+    id: 1001, topic: 2, discussions: 7,
     type: 'DRAG DROP',
     title: 'Identify Company Names in Video Content',
     text: `<p>You need to analyze video content to identify any mentions of specific company names.</p>
@@ -2107,7 +2112,7 @@ const questions = [
     userChoices: []
   },
   {
-    id: 18, topic: 1, discussions: 9,
+    id: 1002, topic: 1, discussions: 9,
     type: 'HOTSPOT',
     title: 'Streaming Speech to Text with MP3 Encoding',
     text: `<p>You are developing a streaming Speech to Text solution that will use the Speech SDK and MP3 encoding.</p>
@@ -2428,7 +2433,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 29, topic: 2, discussions: 0,
+    id: 1003, topic: 2, discussions: 0,
     type: 'HOTSPOT',
     title: 'Computer Vision Brand Detection – Code Statements C# (Yes/No)',
     text: `<p>You develop a test method to verify the results retrieved from a call to the Computer Vision API. The call is used to analyze the existence of company logos in images. The call returns a collection of brands named <strong>brands</strong>.</p>
@@ -2511,7 +2516,7 @@ const questions = [
     userAnswers: {}
   },
   {
-    id: 2, topic: 0, discussions: 0,
+    id: 1004, topic: 0, discussions: 0,
     isCaseStudy: true,
     caseTitle: 'Contoso, Ltd.',
     type: 'HOTSPOT',
@@ -2575,7 +2580,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 3, topic: 0, discussions: 6,
+    id: 1005, topic: 0, discussions: 6,
     isCaseStudy: true,
     caseTitle: 'Wide World Importers',
     type: 'DRAG DROP',
@@ -2632,7 +2637,7 @@ const questions = [
     userSequence: [null, null, null, null]
   },
   {
-    id: 4, topic: 0, discussions: 7,
+    id: 1006, topic: 0, discussions: 7,
     isCaseStudy: true,
     caseTitle: 'Wide World Importers',
     type: 'HOTSPOT',
@@ -2678,7 +2683,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 5, topic: 0, discussions: 8,
+    id: 1007, topic: 0, discussions: 8,
     isCaseStudy: true,
     caseTitle: 'Wide World Importers',
     type: 'HOTSPOT',
@@ -2710,7 +2715,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 6, topic: 0, discussions: 0,
+    id: 1008, topic: 0, discussions: 0,
     isCaseStudy: true,
     caseTitle: 'Contoso, Ltd.',
     type: 'DRAG DROP',
@@ -2750,7 +2755,7 @@ const questions = [
     userSequence: [null, null, null]
   },
   {
-    id: 7, topic: 0, discussions: 51,
+    id: 1009, topic: 0, discussions: 51,
     isCaseStudy: true,
     caseTitle: 'Contoso, Ltd.',
     type: 'MULTIPLE CHOICE',
@@ -2783,7 +2788,7 @@ const questions = [
     userChoice: null
   },
   {
-    id: 8, topic: 0, discussions: 11,
+    id: 1010, topic: 0, discussions: 11,
     isCaseStudy: true,
     caseTitle: 'Contoso, Ltd.',
     type: 'MULTIPLE CHOICE',
@@ -2812,7 +2817,7 @@ const questions = [
   },
   // ── Added case studies (WWI autocomplete/adaptive card/roles + Contoso doc/KB/chatbot) ───
   {
-    id: 9, topic: 0, discussions: 7,
+    id: 1011, topic: 0, discussions: 7,
     isCaseStudy: true,
     caseTitle: 'Wide World Importers',
     type: 'MULTIPLE CHOICE',
@@ -2911,7 +2916,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 11, topic: 0, discussions: 21,
+    id: 1012, topic: 0, discussions: 21,
     isCaseStudy: true,
     caseTitle: 'Wide World Importers',
     type: 'HOTSPOT',
@@ -2947,7 +2952,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 12, topic: 0, discussions: 22,
+    id: 1013, topic: 0, discussions: 22,
     isCaseStudy: true,
     caseTitle: 'Contoso, Ltd.',
     type: 'MULTIPLE CHOICE',
@@ -2987,7 +2992,7 @@ const questions = [
     userChoices: []
   },
   {
-    id: 13, topic: 0, discussions: 33,
+    id: 1014, topic: 0, discussions: 33,
     isCaseStudy: true,
     caseTitle: 'Contoso, Ltd.',
     type: 'HOTSPOT',
@@ -3039,7 +3044,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 14, topic: 0, discussions: 39,
+    id: 1015, topic: 0, discussions: 39,
     isCaseStudy: true,
     caseTitle: 'Contoso, Ltd.',
     type: 'MULTIPLE CHOICE',
@@ -3071,7 +3076,7 @@ const questions = [
     userChoice: null
   },
   {
-    id: 15, topic: 0, discussions: 8,
+    id: 1016, topic: 0, discussions: 8,
     isCaseStudy: true,
     caseTitle: 'Contoso, Ltd.',
     type: 'MULTIPLE CHOICE',
@@ -3135,7 +3140,7 @@ const questions = [
     userChoice: null
   },
   {
-    id: 17, topic: 0, discussions: 31,
+    id: 1017, topic: 0, discussions: 31,
     isCaseStudy: true,
     caseTitle: 'Contoso, Ltd.',
     type: 'MULTIPLE CHOICE',
@@ -3172,7 +3177,7 @@ const questions = [
   },
   // ── Batch 5: Topic 2 / 3 / 4 ──────────────────────────────────
   {
-    id: 30, topic: 2, discussions: 0,
+    id: 1018, topic: 2, discussions: 0,
     type: 'DRAG DROP',
     title: 'Custom Vision Project Type & Domain for Packaging Defects',
     text: `<p>You have a factory that produces cardboard packaging for food products. The factory has intermittent internet connectivity.</p>
@@ -3199,7 +3204,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 32, topic: 2, discussions: 0,
+    id: 1019, topic: 2, discussions: 0,
     type: 'HOTSPOT',
     title: 'Interpret Custom Vision Performance Metrics',
     text: `<p>You are building a model to detect objects in images. The performance of the model based on training data shows: <strong>Precision 100.0%</strong>, <strong>Recall 25.0%</strong>, <strong>mAP 77.2%</strong> (Iteration 1, General domain, probability threshold 50%, overlap threshold 30%).</p>
@@ -3312,7 +3317,7 @@ const questions = [
     userSequence: [null, null, null]
   },
   {
-    id: 45, topic: 3, discussions: 0,
+    id: 1020, topic: 3, discussions: 0,
     type: 'HOTSPOT',
     title: 'Complete SSML express-as for a Custom Neural Voice',
     text: `<p>You are building a text-to-speech app that will use a custom neural voice. You need to create an SSML file. The voice profile must express a <strong>calm tone</strong> and imitate the voice of a <strong>young adult female</strong>.</p>
@@ -3342,7 +3347,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 49, topic: 3, discussions: 8,
+    id: 1021, topic: 3, discussions: 8,
     type: 'HOTSPOT',
     title: 'Text Translation REST URI with US Data Sovereignty',
     text: `<p>You are building an Azure web app named App1 that will translate text from English to Spanish.</p>
@@ -3420,7 +3425,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 5, topic: 4, discussions: 8,
+    id: 1022, topic: 4, discussions: 8,
     type: 'HOTSPOT',
     title: 'Knowledge Store Projection Types',
     text: `<p>You are creating an enrichment pipeline that will use Azure Cognitive Search. The knowledge store contains unstructured JSON data and scanned PDF documents that contain text.</p>
@@ -3446,7 +3451,7 @@ const questions = [
   },
   // ── Batch 6: Topic 8 (Azure AI Content Safety (now Content Safety in Foundry Tools)) ────────────────
   {
-    id: 5, topic: 8, discussions: 0,
+    id: 1023, topic: 8, discussions: 0,
     type: 'HOTSPOT',
     title: 'Content Filter Test — Protected Material Detection (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -3465,7 +3470,7 @@ const questions = [
     userChoice: null
   },
   {
-    id: 6, topic: 8, discussions: 0,
+    id: 1024, topic: 8, discussions: 0,
     type: 'HOTSPOT',
     title: 'Content Filter Test — Moderate Text Content (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -3484,7 +3489,7 @@ const questions = [
     userChoice: null
   },
   {
-    id: 7, topic: 8, discussions: 0,
+    id: 1025, topic: 8, discussions: 0,
     type: 'HOTSPOT',
     title: 'Content Filter Test — Monitor Online Activity (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -3503,7 +3508,7 @@ const questions = [
     userChoice: null
   },
   {
-    id: 8, topic: 8, discussions: 0,
+    id: 1026, topic: 8, discussions: 0,
     type: 'HOTSPOT',
     title: 'Content Filter Test — Safety Metaprompt (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -3522,7 +3527,7 @@ const questions = [
     userChoice: null
   },
   {
-    id: 9, topic: 8, discussions: 0,
+    id: 1027, topic: 8, discussions: 0,
     type: 'HOTSPOT',
     title: 'Content Safety — Moderate Image Content Code',
     text: `<p>You have an Azure subscription that contains an Azure AI Content Safety (now Content Safety in Foundry Tools) resource.</p>
@@ -3555,7 +3560,7 @@ const questions = [
     userSelections: {}
   },
   {
-    id: 10, topic: 8, discussions: 0,
+    id: 1028, topic: 8, discussions: 0,
     type: 'MULTIPLE CHOICE',
     title: 'Identify Offensive Terms in Documents (Minimize Effort)',
     text: `<p>You have an Azure subscription that contains an Azure AI Content Safety (now Content Safety in Foundry Tools) resource named CS1.</p>
@@ -3571,7 +3576,7 @@ const questions = [
     userChoice: null
   },
   {
-    id: 11, topic: 8, discussions: 0,
+    id: 1029, topic: 8, discussions: 0,
     type: 'HOTSPOT',
     title: 'Content Safety — Analyze Text SDK Code',
     text: `<p>You have an Azure subscription that contains an Azure AI Content Safety (now Content Safety in Foundry Tools) resource named CS1.</p>
@@ -3602,7 +3607,7 @@ response = client.AnalyzeText(request);</div>`,
   },
   // ── Batch 7: Topic 8 + Topic 7 ────────────────────────────────
   {
-    id: 1, topic: 8, discussions: 1,
+    id: 1030, topic: 8, discussions: 1,
     type: 'MULTIPLE CHOICE',
     title: 'Which Resource to Create First for Content Checks',
     text: `<p>You have an Azure subscription that contains an Azure OpenAI resource named AI1.</p>
@@ -3623,7 +3628,7 @@ response = client.AnalyzeText(request);</div>`,
     userChoice: null
   },
   {
-    id: 2, topic: 8, discussions: 6,
+    id: 1031, topic: 8, discussions: 6,
     type: 'MULTIPLE CHOICE',
     title: 'Expected Severity Output for a Circle Test Image',
     text: `<p>You have an Azure subscription that contains an Azure AI Content Safety (now Content Safety in Foundry Tools) resource named CS1.</p>
@@ -3644,7 +3649,7 @@ response = client.AnalyzeText(request);</div>`,
     userChoice: null
   },
   {
-    id: 3, topic: 8, discussions: 9,
+    id: 1032, topic: 8, discussions: 9,
     type: 'MULTIPLE CHOICE',
     multiSelect: true,
     title: 'Two Tools to Block Inappropriate Images (Minimize Effort)',
@@ -3667,7 +3672,7 @@ response = client.AnalyzeText(request);</div>`,
     userChoices: []
   },
   {
-    id: 4, topic: 8, discussions: 0,
+    id: 1033, topic: 8, discussions: 0,
     type: 'HOTSPOT',
     title: 'Content Safety — Analyze Text for Hate (curl URI)',
     text: `<p>You have an Azure subscription that contains an Azure AI Content Safety (now Content Safety in Foundry Tools) resource named CS1.</p>
@@ -3702,7 +3707,7 @@ response = client.AnalyzeText(request);</div>`,
     userSelections: {}
   },
   {
-    id: 21, topic: 7, discussions: 2,
+    id: 1034, topic: 7, discussions: 2,
     type: 'MULTIPLE CHOICE',
     title: 'Least-Privilege Role for Azure OpenAI Studio',
     text: `<p>You have an Azure subscription that contains an Azure OpenAI resource named AI1 and a user named User1.</p>
@@ -3729,7 +3734,7 @@ response = client.AnalyzeText(request);</div>`,
   },
   // ── Batch 8: Topic 8 + Topic 7 ────────────────────────────────
   {
-    id: 12, topic: 8, discussions: 3,
+    id: 1035, topic: 8, discussions: 3,
     type: 'MULTIPLE CHOICE',
     title: 'Block Questions That Circumvent Safety Features',
     text: `<p>You have an Azure subscription that contains an Azure OpenAI resource named AI1.</p>
@@ -3750,7 +3755,7 @@ response = client.AnalyzeText(request);</div>`,
     userChoice: null
   },
   {
-    id: 22, topic: 7, discussions: 0,
+    id: 1036, topic: 7, discussions: 0,
     type: 'HOTSPOT',
     title: 'Azure OpenAI On Your Data — Chat Playground Code',
     text: `<p>You have a chatbot that uses Azure OpenAI (now in Microsoft Foundry Models) to generate responses.</p>
@@ -3790,7 +3795,7 @@ response = client.AnalyzeText(request);</div>`,
     userSelections: {}
   },
   {
-    id: 23, topic: 7, discussions: 3,
+    id: 1037, topic: 7, discussions: 3,
     type: 'HOTSPOT',
     title: 'Chat Completion Definitions App — Code Statements (Yes/No)',
     text: `<p>You are building an app that will provide users with definitions of common AI terms. You create the following Python code.</p>
@@ -3822,7 +3827,7 @@ print(response['choices'][0]['message']['content'])<br>
   },
   // ── Batch 9: Topic 2 + Topic 3 ────────────────────────────────
   {
-    id: 6, topic: 3, discussions: 26,
+    id: 1038, topic: 3, discussions: 26,
     type: 'DRAG DROP',
     title: 'Retrain Custom Vision with Untagged Images (Minimize Time)',
     text: `<p>You train a Custom Vision model used in a mobile app. You receive 1,000 new images that do not have any associated data.</p>
@@ -3871,7 +3876,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 35, topic: 2, discussions: 11,
+    id: 1039, topic: 2, discussions: 11,
     type: 'MULTIPLE CHOICE',
     multiSelect: true,
     title: 'Categorize Image Type and Generate a Caption',
@@ -3894,7 +3899,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoices: []
   },
   {
-    id: 37, topic: 2, discussions: 17,
+    id: 1040, topic: 2, discussions: 17,
     type: 'DRAG DROP',
     title: 'Add New Products to a Custom Vision Classifier',
     text: `<p>You have an app that uses Azure AI and a custom trained classifier to identify products in images. You need to add new products to the classifier. The solution must minimize how long it takes to add the products and minimize development effort.</p>
@@ -3927,7 +3932,7 @@ print(response['choices'][0]['message']['content'])<br>
     userSequence: [null, null, null, null, null]
   },
   {
-    id: 38, topic: 2, discussions: 9,
+    id: 1041, topic: 2, discussions: 9,
     type: 'HOTSPOT',
     title: 'Azure AI Vision (now Azure Vision in Foundry Tools) analyze_image_in_stream Code (Yes/No)',
     text: `<p>You are developing an application that will use the Azure AI Vision (now Azure Vision in Foundry Tools) client library. The application has the following code.</p>
@@ -3956,7 +3961,7 @@ print(response['choices'][0]['message']['content'])<br>
     userSelections: {}
   },
   {
-    id: 5, topic: 3, discussions: 7,
+    id: 1042, topic: 3, discussions: 7,
     type: 'HOTSPOT',
     title: 'Speech Translation to Multiple Target Languages',
     text: `<p>You are developing a service that records lectures given in English (United Kingdom). You have a method named AppendToTranscriptFile that takes translated text and a language identifier.</p>
@@ -3993,7 +3998,7 @@ print(response['choices'][0]['message']['content'])<br>
     userSelections: {}
   },
   {
-    id: 1, topic: 3, discussions: 48,
+    id: 1043, topic: 3, discussions: 48,
     type: 'MULTIPLE CHOICE',
     title: 'Phrase List Implementation — Create a Pattern (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -4011,7 +4016,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 2, topic: 3, discussions: 13,
+    id: 1044, topic: 3, discussions: 13,
     type: 'MULTIPLE CHOICE',
     title: 'Add Flower Images — Smart Labeler Tool (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -4028,7 +4033,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 3, topic: 3, discussions: 6,
+    id: 1045, topic: 3, discussions: 6,
     type: 'MULTIPLE CHOICE',
     title: 'Add Flower Images — Extend & Retrain Existing Model (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -4045,7 +4050,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 4, topic: 3, discussions: 9,
+    id: 1046, topic: 3, discussions: 9,
     type: 'MULTIPLE CHOICE',
     title: 'Add Flower Images — Create a New Model (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -4063,7 +4068,7 @@ print(response['choices'][0]['message']['content'])<br>
   },
   // ── Batch 10: Topic 1 ─────────────────────────────────────────
   {
-    id: 1, topic: 1, discussions: 7,
+    id: 1047, topic: 1, discussions: 7,
     type: 'DRAG DROP',
     title: 'Programmatically Add a Phrase List to LUIS Models',
     text: `<p>You have 100 chatbots that each has its own Language Understanding model. Frequently, you must add the same phrases to each model.</p>
@@ -4095,7 +4100,7 @@ print(response['choices'][0]['message']['content'])<br>
     userSelections: {}
   },
   {
-    id: 2, topic: 1, discussions: 19,
+    id: 1048, topic: 1, discussions: 19,
     type: 'DRAG DROP',
     title: 'Run a LUIS Container with the Latest Deployable Version',
     text: `<p>You plan to use a Language Understanding application named app1 that is deployed to a container. app1 was developed by using a Language Understanding authoring resource named lu1.</p>
@@ -4125,7 +4130,7 @@ print(response['choices'][0]['message']['content'])<br>
     userSequence: [null, null, null]
   },
   {
-    id: 7, topic: 1, discussions: 23,
+    id: 1049, topic: 1, discussions: 23,
     type: 'DRAG DROP',
     title: 'Containerize Anomaly Detector (RBAC, No CLI Secrets)',
     text: `<p>You plan to use containerized versions of the Anomaly Detector API on local devices for testing and in on-premises datacenters. You need to ensure that the containerized deployments meet the following requirements:</p>
@@ -4159,7 +4164,7 @@ print(response['choices'][0]['message']['content'])<br>
     userSequence: [null, null, null, null]
   },
   {
-    id: 8, topic: 1, discussions: 6,
+    id: 1050, topic: 1, discussions: 6,
     type: 'HOTSPOT',
     title: 'Run a Text Analytics Sentiment Container with Docker',
     text: `<p>You plan to deploy a containerized version of an Azure Cognitive Services service that will be used for text analysis. You configure <strong>https://contoso.cognitiveservices.azure.com</strong> as the endpoint URI for the service, and you pull the latest version of the Text Analytics Sentiment Analysis container.</p>
@@ -4189,7 +4194,7 @@ print(response['choices'][0]['message']['content'])<br>
     userSelections: {}
   },
   {
-    id: 9, topic: 1, discussions: 35,
+    id: 1051, topic: 1, discussions: 35,
     type: 'MULTIPLE CHOICE',
     title: 'Create Free Computer Vision Resource (C#)',
     text: `<p>You have a C# method create_resource(client, resource_name, kind, account_tier, location) for creating Azure Cognitive Services resources programmatically.</p>
@@ -4209,7 +4214,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 14, topic: 1, discussions: 0,
+    id: 1052, topic: 1, discussions: 0,
     type: 'MULTIPLE CHOICE',
     title: 'Private Connectivity — Public Endpoint + Private Link (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -4227,7 +4232,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 15, topic: 1, discussions: 0,
+    id: 1053, topic: 1, discussions: 0,
     type: 'MULTIPLE CHOICE',
     title: 'Private Connectivity — Public Endpoint + IP Firewall (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -4245,7 +4250,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 16, topic: 1, discussions: 0,
+    id: 1054, topic: 1, discussions: 0,
     type: 'MULTIPLE CHOICE',
     title: 'Private Connectivity — Public Endpoint + NSG (Yes/No)',
     text: `<div class="series-note"><strong>Note:</strong> This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. After you answer a question in this section, you will NOT be able to return to it.</div>
@@ -4263,7 +4268,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 17, topic: 1, discussions: 0,
+    id: 1055, topic: 1, discussions: 0,
     type: 'MULTIPLE CHOICE',
     title: 'Predictive Maintenance — Detect Unusual Sensor Values',
     text: `<p>You plan to perform predictive maintenance. You collect IoT sensor data from 100 industrial machines for a year. Each machine has 50 different sensors that generate data at one-minute intervals. In total, you have 5,000 time series datasets.</p>
@@ -4305,7 +4310,7 @@ print(response['choices'][0]['message']['content'])<br>
   },
   // ── Azure AI Foundry (Microsoft Foundry) — terminology-updated set ───
   {
-    id: 30, topic: 7, discussions: 0, isFoundry: true,
+    id: 1056, topic: 7, discussions: 0, isFoundry: true,
     type: 'MULTIPLE CHOICE',
     title: 'Foundry: Resource Needed to Build & Deploy GenAI Apps',
     text: `<p>You are designing a generative AI solution. Your team will collaborate on prompts, deploy models, and manage connections to Azure AI Search and storage from a single collaborative workspace.</p>
@@ -4345,7 +4350,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 32, topic: 8, discussions: 0, isFoundry: true,
+    id: 1057, topic: 8, discussions: 0, isFoundry: true,
     type: 'MULTIPLE CHOICE',
     title: 'Foundry Agent Service: Create a Custom Agent',
     text: `<p>You need to build a custom AI agent that automates tool calling, securely manages conversation history using threads, and supports built-in tools such as file retrieval, code interpreter, Azure AI Search, and Bing grounding.</p>
@@ -4365,7 +4370,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 33, topic: 8, discussions: 0, isFoundry: true,
+    id: 1058, topic: 8, discussions: 0, isFoundry: true,
     type: 'MULTIPLE CHOICE',
     title: 'Foundry: Orchestrating Multiple Agents in Code',
     text: `<p>You are building a multi-agent solution. A primary orchestrator agent must coordinate several specialized agents and integrate existing business logic exposed as plugins (native functions, OpenAPI, and Model Context Protocol).</p>
@@ -4405,7 +4410,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 35, topic: 7, discussions: 0, isFoundry: true,
+    id: 1059, topic: 7, discussions: 0, isFoundry: true,
     type: 'MULTIPLE CHOICE',
     title: 'Foundry: Ground a Model on Enterprise Data (RAG)',
     text: `<p>You deploy a GPT model in <strong>Azure AI Foundry (Microsoft Foundry)</strong>. Responses must be grounded in your company's private documents so the model answers from that content and cites it, without retraining the model.</p>
@@ -4445,7 +4450,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 37, topic: 7, discussions: 0, isFoundry: true,
+    id: 1060, topic: 7, discussions: 0, isFoundry: true,
     type: 'MULTIPLE CHOICE',
     title: 'Foundry: Connecting a Project to Data & Services',
     text: `<p>In an <strong>Azure AI Foundry (Microsoft Foundry)</strong> project, your agent needs secure access to an Azure AI Search index, an Azure Storage account, and a Bing grounding resource.</p>
@@ -4465,7 +4470,7 @@ print(response['choices'][0]['message']['content'])<br>
     userChoice: null
   },
   {
-    id: 38, topic: 8, discussions: 0, isFoundry: true,
+    id: 1061, topic: 8, discussions: 0, isFoundry: true,
     type: 'MULTIPLE CHOICE',
     title: 'Foundry: Built-in Grounding Tool for Agents',
     text: `<p>Your Foundry agent must answer questions using fresh, public web results. Microsoft has deprecated raw Bing Search API endpoints; grounding is now encapsulated inside the agent platform.</p>
@@ -5059,7 +5064,7 @@ print(response['choices'][0]['message']['content'])<br>
     userSelections: {}
   },
   {
-    id: 9, topic: 4, discussions: 28,
+    id: 1062, topic: 4, discussions: 28,
     type: 'DRAG DROP',
     title: 'AI Search: Rotate a Compromised Query Key',
     text: `<p>You have a web app that uses Azure AI Search (formerly Azure Cognitive Search; now part of Microsoft Foundry).</p>
@@ -7836,12 +7841,31 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 905, topic: 7, discussions: 0, isExamTopics: true,
     type: 'HOTSPOT',
     title: 'Managed Identity + Azure OpenAI Responses API',
-    text: `<p><strong>HOTSPOT</strong> — A Python application (App1) integrates with a Microsoft Foundry project (Project1). App1 must authenticate by using a Microsoft Entra <strong>managed identity</strong> and send prompts to a deployed model by using the Azure OpenAI <strong>Responses API</strong>.</p>
-    <p>Complete the Python code by selecting the appropriate options.</p>`,
+    text: `<p><strong>HOTSPOT</strong> — You have a Python application named App1 that integrates with a Microsoft Foundry project named Project1.</p>
+    <p>You need to ensure that App1 meets the following requirements:</p>
+    <p>Authenticates by using a Microsoft Entra managed identity</p>
+    <p>Sends prompts to a deployed model by using the Azure OpenAI Responses API</p>
+    <p>How should you complete the Python code? To answer, select the appropriate options in the answer area.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
-    render: 'hotspot_generic',
-    solution: `• <strong>credential = </strong> <span class="correct-badge">DefaultAzureCredential()</span><br>
-    • <strong>response = openai_client.responses.</strong> <span class="correct-badge">create</span><br><br>
+    render: 'hotspot_code',
+    codeTemplate: `from azure.identity import DefaultAzureCredential
+from azure.ai.projects import AIProjectClient
+
+credential = {{credential}} ()
+
+project_client = AIProjectClient(
+    endpoint="https://contosoai.services.ai.azure.com/api/projects/project1",
+    credential=credential,
+)
+
+with project_client.get_openai_client() as openai_client:
+    response = openai_client.responses.{{method}} (
+        model="trail-guide-chat",
+        input="Create a 3-day hiking itinerary near Seattle.",
+    )
+    print(response.output_text)`,
+    solution: `• <strong>credential = </strong> <span class="correct-badge">DefaultAzureCredential</span>()<br>
+    • <strong>openai_client.responses.</strong> <span class="correct-badge">create</span>(<br><br>
     <em><code>DefaultAzureCredential</code> resolves a Microsoft Entra <strong>managed identity</strong> automatically (no keys), satisfying the auth requirement; <code>AzureKeyCredential</code> would use a key and <code>ClientSecretCredential</code> needs a stored secret. The <strong>Responses API</strong> is invoked with <code>responses.create(...)</code> to send a prompt and get a completion — <code>compact</code> and <code>retrieve</code> are not how you create a response.</em>`,
     dropdowns: {
       'credential': {
@@ -7849,7 +7873,7 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
         options: ['AzureKeyCredential', 'ClientSecretCredential', 'DefaultAzureCredential'],
         correct: 'DefaultAzureCredential'
       },
-      'responses-method': {
+      'method': {
         label: 'openai_client.responses.',
         options: ['compact', 'create', 'retrieve'],
         correct: 'create'
@@ -7892,12 +7916,13 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 907, topic: 7, discussions: 0, isExamTopics: true,
     type: 'HOTSPOT',
     title: 'Content Safety Image Moderation with Least-Privilege Storage Access',
-    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry project contains a customer-support agent built with the Foundry Agent Service. The agent uploads user screenshots to Azure Storage through a ticketing tool and receives a blob URL for additional reasoning.</p>
-    <p>You need image moderation during agent runs that <strong>prevents harmful content from being returned</strong>, and Azure AI Content Safety must access the images by <strong>blob URL</strong>. The solution must follow least privilege.</p>
-    <p>Select what to configure for Content Safety.</p>`,
+    text: `<p><strong>HOTSPOT</strong> — You have a Microsoft Foundry project that contains a customer support agent built by using the Foundry Agent Service.</p>
+    <p>The agent uploads user-provided screenshots to Azure Storage through a ticketing tool and receives a blob URL for additional reasoning.</p>
+    <p>You need to use image moderation during agent runs and prevent harmful content from being returned during runs. Azure AI Content Safety must access the images by using the blob URL. The solution must follow the principle of least privilege.</p>
+    <p>What should you configure for Content Safety? To answer, select the appropriate options in the answer area.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
     render: 'hotspot_generic',
-    solution: `• <strong>Guardrails:</strong> <span class="correct-badge">Select User input, Output, Tool response, and Tool call and set Action to Block</span><br>
+    solution: `• <strong>Guardrails:</strong> <span class="correct-badge">Select User input, Output, Tool response, and Tool call and set Action to Block.</span><br>
     • <strong>Storage access:</strong> <span class="correct-badge">A system-assigned managed identity that is assigned the Storage Blob Data Reader role</span><br><br>
     <em>To actually <strong>prevent</strong> harmful content (not just flag it) the action must be <strong>Block</strong>, and moderating the full run means covering user input, output, tool response, and tool call. For storage, Content Safety only needs to <strong>read</strong> the blob by URL, so a <strong>system-assigned managed identity</strong> with the <strong>Storage Blob Data Reader</strong> role is the least-privilege choice — account keys violate least privilege, the Queue role is the wrong data type, and Blob Data <em>Contributor</em> grants write access that isn't needed.</em>`,
     dropdowns: {
@@ -7907,9 +7932,9 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
           'Select Tool call and set Action to Block.',
           'Select User input and Output and set Action to Annotate.',
           'Select User input and Tool response and set Action to Annotate.',
-          'Select User input, Output, Tool response, and Tool call and set Action to Block'
+          'Select User input, Output, Tool response, and Tool call and set Action to Block.'
         ],
-        correct: 'Select User input, Output, Tool response, and Tool call and set Action to Block'
+        correct: 'Select User input, Output, Tool response, and Tool call and set Action to Block.'
       },
       'storage-access': {
         label: 'Storage access:',
@@ -7977,31 +8002,7 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     A and D are URLs (wrong type for an ID property). B sounds plausible but the property is the project's own ID, not a separate "custom speech project ID"; the deciding signal is the error text matching the <code>project</code> identifier.`,
     userChoice: null
   },
-  {
-    id: 910, topic: 8, discussions: 0, isExamTopics: true,
-    type: 'HOTSPOT',
-    title: 'YAML Workflow — Human Approval Gate',
-    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry project contains an agent named <strong>PaymentAgent</strong> with a function tool that issues customer refunds via an external API. You are creating a workflow in YAML that must <strong>pause for human approval</strong> and continue to the refund step <strong>only after approval is granted</strong>.</p>
-    <p>Complete the workflow definition by selecting the appropriate options.</p>`,
-    note: 'NOTE: Each correct selection is worth one point.',
-    render: 'hotspot_generic',
-    solution: `• <strong>approval step type:</strong> <span class="correct-badge">ask_question</span><br>
-    • <strong>execute_refund condition:</strong> <span class="correct-badge">approval == "approved"</span><br><br>
-    <em>The pause-for-human step is an <strong>ask_question</strong> node — it suspends the workflow and waits for input (basic_chat and data_transformation don't gate on human approval). The refund step then runs only when the approval result equals "approved", so its condition is <code>approval == "approved"</code> — not <code>true</code> (always runs) and not the unrelated propose_refund output check.</em>`,
-    dropdowns: {
-      'approval-type': {
-        label: 'approval → type:',
-        options: ['ask_question', 'basic_chat', 'data_transformation'],
-        correct: 'ask_question'
-      },
-      'refund-condition': {
-        label: 'execute_refund → condition:',
-        options: ['approval == "approved"', 'propose_refund.output != null', 'true'],
-        correct: 'approval == "approved"'
-      }
-    },
-    userSelections: {}
-  },
+
   {
     id: 911, topic: 3, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
@@ -8197,7 +8198,14 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 920, topic: 8, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'OpenAPI Tool — Wire the Connection for the API Key',
-    text: `<p>A Microsoft Foundry project named Project1 contains an OpenAPI tool that calls an external API, and a project connection named <strong>Connection1</strong> that stores the API key. When the agent calls the tool, the API returns <strong>401 unauthorized</strong> and traces show the API key header is <strong>NOT being sent</strong>. You must ensure the tool automatically includes the API key from Connection1 on all requests. What should you do?</p>`,
+    text: `<p>You have a Microsoft Foundry project named Project1 that contains the following:</p>
+    <ul>
+      <li>An OpenAPI tool that calls an external API</li>
+      <li>A project connection named Connection1 that stores the API key of the external API</li>
+    </ul>
+    <p>When an agent calls the OpenAPI tool, the API returns a 401 unauthorized error, and traces show that the API key header is NOT being sent.</p>
+    <p>You need to ensure that the OpenAPI tool automatically includes the API key from Connection1 on all requests.</p>
+    <p>What should you do?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8216,7 +8224,14 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 921, topic: 8, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Inspect a Single Run — Ordered LLM/Tool Sequence',
-    text: `<p>A Microsoft Foundry project contains a customer-support agent that calls an internal knowledge API tool before generating responses. Users report some requests take more than 15 seconds and some responses are incorrect even when the API returns the expected data. You must inspect <strong>individual agent runs</strong> to view the <strong>ordered sequence of LLM calls, tool invocations, and timing</strong>. Which observability capability should you use?</p>`,
+    text: `<p>You have a Microsoft Foundry project that contains a customer support agent. The agent calls an internal knowledge API tool before generating responses.</p>
+    <p>Users report the following issues:</p>
+    <ul>
+      <li>Some requests take more than 15 seconds to complete.</li>
+      <li>Some responses are incorrect, even when the knowledge API returns the expected data.</li>
+    </ul>
+    <p>You need to inspect individual agent runs to view the ordered sequence of large language model (LLM) calls, tool invocations, and timing information.</p>
+    <p>Which observability capability should you use?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8235,9 +8250,13 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 922, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Mitigate Hidden Image Instructions — Prompt Shield (Prompts)',
-    text: `<p>This question is part of a series that present the same scenario with different proposed solutions. Determine whether the solution meets the goal.</p>
-    <p>A multimodal generative model accepts image uploads and uses extracted image text to generate responses. Users can upload unsafe images and <strong>embed hidden instructions into images</strong> to manipulate the model. You need controls to mitigate the risk.</p>
-    <p><strong>Solution:</strong> You configure a <strong>prompt shield for user prompts</strong>. Does this meet the goal?</p>`,
+    text: `<p>Note: This section contains one or more sets of questions with the same scenario and problem. Each question presents a unique solution to the problem. You must determine whether the solution meets the stated goals. More than one solution in the set might solve the problem. It is also possible that none of the solutions in the set solve the problem.</p>
+    <p>After you answer a question in this section, you will NOT be able to return. As a result, these questions do not appear on the Review Screen.</p>
+    <p>You have a multimodal AI generative model that accepts image uploads and uses extracted image text to generate responses.</p>
+    <p>You discover that users can upload unsafe images and embed hidden instructions into images to manipulate the model.</p>
+    <p>You need to implement controls to mitigate the risk.</p>
+    <p><strong>Solution:</strong> You configure a prompt shield for user prompts.</p>
+    <p>Does this meet the goal?</p>`,
     note: '',
     render: 'mcq',
     options: ['A. Yes', 'B. No'],
@@ -8250,9 +8269,13 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 923, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Mitigate Hidden Image Instructions — Image Moderation',
-    text: `<p>This question is part of a series that present the same scenario with different proposed solutions. Determine whether the solution meets the goal.</p>
-    <p>A multimodal generative model accepts image uploads and uses extracted image text to generate responses. Users can upload unsafe images and embed hidden instructions into images to manipulate the model. You need controls to mitigate the risk.</p>
-    <p><strong>Solution:</strong> You configure <strong>image moderation to block unsafe content</strong> before processing the images. Does this meet the goal?</p>`,
+    text: `<p>Note: This section contains one or more sets of questions with the same scenario and problem. Each question presents a unique solution to the problem. You must determine whether the solution meets the stated goals. More than one solution in the set might solve the problem. It is also possible that none of the solutions in the set solve the problem.</p>
+    <p>After you answer a question in this section, you will NOT be able to return. As a result, these questions do not appear on the Review Screen.</p>
+    <p>You have a multimodal AI generative model that accepts image uploads and uses extracted image text to generate responses.</p>
+    <p>You discover that users can upload unsafe images and embed hidden instructions into images to manipulate the model.</p>
+    <p>You need to implement controls to mitigate the risk.</p>
+    <p><strong>Solution:</strong> You configure image moderation to block unsafe content before processing the images.</p>
+    <p>Does this meet the goal?</p>`,
     note: '',
     render: 'mcq',
     options: ['A. Yes', 'B. No'],
@@ -8265,9 +8288,13 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 924, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Mitigate Hidden Image Instructions — Prompt Shield (Documents)',
-    text: `<p>This question is part of a series that present the same scenario with different proposed solutions. Determine whether the solution meets the goal.</p>
-    <p>A multimodal generative model accepts image uploads and uses extracted image text to generate responses. Users can upload unsafe images and embed hidden instructions into images to manipulate the model. You need controls to mitigate the risk.</p>
-    <p><strong>Solution:</strong> You configure a <strong>prompt shield for documents</strong>. Does this meet the goal?</p>`,
+    text: `<p>Note: This section contains one or more sets of questions with the same scenario and problem. Each question presents a unique solution to the problem. You must determine whether the solution meets the stated goals. More than one solution in the set might solve the problem. It is also possible that none of the solutions in the set solve the problem.</p>
+    <p>After you answer a question in this section, you will NOT be able to return. As a result, these questions do not appear on the Review Screen.</p>
+    <p>You have a multimodal AI generative model that accepts image uploads and uses extracted image text to generate responses.</p>
+    <p>You discover that users can upload unsafe images and embed hidden instructions into images to manipulate the model.</p>
+    <p>You need to implement controls to mitigate the risk.</p>
+    <p><strong>Solution:</strong> You configure a prompt shield for documents.</p>
+    <p>Does this meet the goal?</p>`,
     note: '',
     render: 'mcq',
     options: ['A. Yes', 'B. No'],
@@ -8280,9 +8307,13 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 925, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Mitigate Hidden Image Instructions — Protected Material Detection',
-    text: `<p>This question is part of a series that present the same scenario with different proposed solutions. Determine whether the solution meets the goal.</p>
-    <p>A multimodal generative model accepts image uploads and uses extracted image text to generate responses. Users can upload unsafe images and embed hidden instructions into images to manipulate the model. You need controls to mitigate the risk.</p>
-    <p><strong>Solution:</strong> You configure <strong>protected material detection</strong>. Does this meet the goal?</p>`,
+    text: `<p>Note: This section contains one or more sets of questions with the same scenario and problem. Each question presents a unique solution to the problem. You must determine whether the solution meets the stated goals. More than one solution in the set might solve the problem. It is also possible that none of the solutions in the set solve the problem.</p>
+    <p>After you answer a question in this section, you will NOT be able to return. As a result, these questions do not appear on the Review Screen.</p>
+    <p>You have a multimodal AI generative model that accepts image uploads and uses extracted image text to generate responses.</p>
+    <p>You discover that users can upload unsafe images and embed hidden instructions into images to manipulate the model.</p>
+    <p>You need to implement controls to mitigate the risk.</p>
+    <p><strong>Solution:</strong> You configure protected material detection.</p>
+    <p>Does this meet the goal?</p>`,
     note: '',
     render: 'mcq',
     options: ['A. Yes', 'B. No'],
@@ -8387,7 +8418,14 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 929, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Model Type for Grounded, Deep-Reasoning Agent',
-    text: `<p>You plan to build a customer-support agent that must: provide accurate, context-aware responses <strong>grounded in internal product documentation</strong> in Azure AI Search; perform <strong>deep, multi-step reasoning across long contexts</strong>; and generate <strong>detailed natural-language responses</strong>. Which type of model should power the agent?</p>`,
+    text: `<p>You have a Microsoft Foundry project.</p>
+    <p>You plan to build a customer support solution that contains an agent. The solution must meet the following requirements:</p>
+    <ul>
+      <li>Provide accurate, context-aware responses grounded in internal product documentation stored in Azure AI Search.</li>
+      <li>Require deep, multi-step reasoning across long contexts.</li>
+      <li>Generate detailed natural language responses.</li>
+    </ul>
+    <p>Which type of model should you use to power the agent?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8487,7 +8525,11 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 933, topic: 1, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE', multiSelect: true,
     title: 'End-to-End Tracing Outside the Foundry Portal',
-    text: `<p>A Microsoft Foundry project contains a prompt agent used by a customer-support web app, invoked from a Python service that does <strong>NOT</strong> run in the Foundry portal. You must implement <strong>end-to-end tracing</strong> to capture latency breakdowns and exceptions across agent runs. Which two components can you use? (Select Two — each is a complete solution.)</p>`,
+    text: `<p>You have a Microsoft Foundry project that contains a prompt agent used by a customer support web app.</p>
+    <p>The agent is invoked from a Python service that does NOT run in the Foundry portal.</p>
+    <p>You need to implement end-to-end tracing to capture latency breakdowns and exceptions across agent runs.</p>
+    <p>Which two components can you use? Each correct answer presents a complete solution.</p>
+    <p>NOTE: Each correct selection is worth one point.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
     render: 'mcq',
     options: [
@@ -8507,7 +8549,15 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 934, topic: 8, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Cross-Session Continuity for a Support Case',
-    text: `<p>A customer-support agent uses the Foundry Agent Service. Customers return days later to continue the same case, and the agent must resume with <strong>full historical context</strong>: multi-turn continuity within a session, <strong>cross-session continuity</strong> for the same case, and access to the full interaction history (messages, tool calls, outputs), automatically reloaded each turn. What should you do?</p>`,
+    text: `<p>You have a customer support agent that uses the Microsoft Foundry Agent Service.</p>
+    <p>Sometimes, customers return to a session days later to continue the same support case, and the agent must resume with the full historical context. The agent must provide the following:</p>
+    <ul>
+      <li>Multi-turn continuity within the session</li>
+      <li>Cross-session continuity for the same case</li>
+      <li>Access to the full interaction history, including user messages, agent messages, tool calls, and tool outputs</li>
+    </ul>
+    <p>You need to ensure that the agent automatically reloads the complete history on each new turn.</p>
+    <p>What should you do?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8525,7 +8575,13 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 935, topic: 7, discussions: 0, isExamTopics: true,
     type: 'HOTSPOT',
     title: 'Stable Output with Maximum Reasoning',
-    text: `<p><strong>HOTSPOT</strong> — A deployed chat model's outputs are checked by an automated validation system against approved response patterns; small wording differences cause mismatches. You must update request parameters to <strong>improve output stability</strong> while <strong>maximizing reasoning quality</strong>:</p>
+    text: `<p><strong>HOTSPOT</strong></p>
+    <p>You have a Microsoft Foundry project that contains a deployed chat model.</p>
+    <p>You have a Python service that sends API requests to the model. The service is integrated with an automated validation system that compares generated outputs against approved response patterns.</p>
+    <p>Stakeholders report that small wording differences are causing validation mismatches.</p>
+    <p>You need to update the request parameters to improve output stability. The solution must maximize reasoning quality.</p>
+    <p>How should you complete the Python code? To answer, select the appropriate options in the answer area.</p>
+    <p>NOTE: Each correct selection is worth one point.</p>
     <pre style="font-size:12px">message = client.messages.create(
   model="deployment-name",
   messages=[{"role":"user","content":"Summarize the release notes in 3 bullet points."}],
@@ -8557,7 +8613,14 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 936, topic: 8, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Retrieval Approach — Multi-Chunk, Planning, Parallel',
-    text: `<p>A chat app uses a Foundry project with an Azure AI Search vectorized index. To connect to the index: complex questions must retrieve from <strong>multiple chunks</strong>; <strong>multi-turn conversations must influence retrieval planning</strong>; retrievals must <strong>run in parallel</strong> to reduce latency. Which retrieval approach should you use?</p>`,
+    text: `<p>You have a chat app in a Microsoft Foundry project and an Azure AI Search vectorized index.</p>
+    <p>You need to connect to the index to meet the following requirements:</p>
+    <ul>
+      <li>Complex questions must retrieve information from multiple chunks.</li>
+      <li>Multi-turn conversations must influence retrieval planning.</li>
+      <li>Retrievals must run in parallel to reduce latency.</li>
+    </ul>
+    <p>Which retrieval approach should you use?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8576,7 +8639,14 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 937, topic: 8, discussions: 0, isExamTopics: true,
     type: 'HOTSPOT',
     title: 'Foundry Capabilities — Preferences and In-Chat Grounding',
-    text: `<p><strong>HOTSPOT</strong> — You are planning a customer-support agent on the Foundry Agent Service that must <strong>retain user preferences across multiple conversations</strong> and <strong>enable users to provide contextual grounding by uploading documents during a chat</strong>. Select the appropriate capability for each requirement.</p>`,
+    text: `<p><strong>HOTSPOT</strong></p>
+    <p>You need to recommend a plan to create a customer support agent by using the Microsoft Foundry Agent Service. The agent must meet the following requirements:</p>
+    <ul>
+      <li>Retain user preferences across multiple conversations.</li>
+      <li>Enable users to provide contextual grounding by directly uploading documents during a chat.</li>
+    </ul>
+    <p>Which Foundry capability should you recommend for each requirement? To answer, select the appropriate options in the answer area.</p>
+    <p>NOTE: Each correct selection is worth one point.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
     render: 'hotspot_generic',
     solution: `• <strong>Retain preferences across conversations:</strong> <span class="correct-badge">Agent memory that uses persistent storage</span><br>
@@ -8600,7 +8670,9 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 938, topic: 1, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Improve Completeness in Application Logic',
-    text: `<p>A Microsoft Foundry agent generates summaries from retrieved policy documents. You must <strong>improve response completeness</strong>, and the solution <strong>must be implemented in the application-code logic before responses are returned</strong>. What should you do?</p>`,
+    text: `<p>You have a Microsoft Foundry project that contains an agent. The agent generates summaries from retrieved policy documents.</p>
+    <p>You need to improve response completeness. The solution must be implemented in the logic of the application code before responses are returned.</p>
+    <p>What should you do?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8638,7 +8710,12 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 940, topic: 1, discussions: 0, isExamTopics: true,
     type: 'HOTSPOT',
     title: 'CI/CD Evaluation Gate in GitHub Actions',
-    text: `<p><strong>HOTSPOT</strong> — A Microsoft Foundry agent uses a GitHub Actions workflow for CI/CD. You must <strong>automatically evaluate the agent when a pull request is created</strong> and <strong>prevent branches from merging if evaluation results do NOT meet the defined thresholds</strong>. Select the appropriate options.</p>`,
+    text: `<p><strong>HOTSPOT</strong></p>
+    <p>You have a Microsoft Foundry project that contains an agent.</p>
+    <p>You use a GitHub Actions workflow for CI/CD.</p>
+    <p>You need to configure the workflow to automatically evaluate the agent when a pull request (PR) is created and prevent branches from merging if the evaluation results do NOT meet the defined thresholds.</p>
+    <p>How should you configure the workflow? To answer, select the appropriate options in the answer area.</p>
+    <p>NOTE: Each correct selection is worth one point.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
     render: 'hotspot_generic',
     solution: `• <strong>Authentication method:</strong> <span class="correct-badge">An Azure Login action that uses OpenID Connect (OIDC)</span><br>
@@ -8662,8 +8739,13 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 941, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Completeness Series — Increase max_tokens',
-    text: `<p>This question is part of a series presenting the same scenario with different solutions. A Foundry agent generates summaries from retrieved policy documents. Users report some responses <strong>omit required regulatory clauses</strong>, even when present in the retrieved content. You must improve <strong>response completeness</strong>.</p>
-    <p><strong>Solution:</strong> You increase the value of the <code>max_tokens</code> parameter. Does this meet the goal?</p>`,
+    text: `<p>Note: This section contains one or more sets of questions with the same scenario and problem. Each question presents a unique solution to the problem. You must determine whether the solution meets the stated goals. More than one solution in the set might solve the problem. It is also possible that none of the solutions in the set solve the problem.</p>
+    <p>After you answer a question in this section, you will NOT be able to return. As a result, these questions do not appear on the Review Screen.</p>
+    <p>You have a Microsoft Foundry project that contains an agent. The agent generates summaries from retrieved policy documents.</p>
+    <p>Users report that some responses omit required regulatory clauses, even when the clauses are present in the retrieved content.</p>
+    <p>You need to improve response completeness.</p>
+    <p><strong>Solution:</strong> You increase the value of the <code>max_tokens</code> parameter.</p>
+    <p>Does this meet the goal?</p>`,
     note: '',
     render: 'mcq',
     options: ['A. Yes', 'B. No'],
@@ -8676,8 +8758,13 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 942, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Completeness Series — Reflection Pass',
-    text: `<p>Same scenario: a Foundry agent's summaries omit required regulatory clauses that exist in the retrieved content; you must improve completeness.</p>
-    <p><strong>Solution:</strong> You add a <strong>reflection pass</strong> that regenerates the response if the required clauses are missing. Does this meet the goal?</p>`,
+    text: `<p>Note: This section contains one or more sets of questions with the same scenario and problem. Each question presents a unique solution to the problem. You must determine whether the solution meets the stated goals. More than one solution in the set might solve the problem. It is also possible that none of the solutions in the set solve the problem.</p>
+    <p>After you answer a question in this section, you will NOT be able to return. As a result, these questions do not appear on the Review Screen.</p>
+    <p>You have a Microsoft Foundry project that contains an agent. The agent generates summaries from retrieved policy documents.</p>
+    <p>Users report that some responses omit required regulatory clauses, even when the clauses are present in the retrieved content.</p>
+    <p>You need to improve response completeness.</p>
+    <p><strong>Solution:</strong> You add a reflection pass that regenerates the response if the required clauses are missing.</p>
+    <p>Does this meet the goal?</p>`,
     note: '',
     render: 'mcq',
     options: ['A. Yes', 'B. No'],
@@ -8690,8 +8777,13 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 943, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Completeness Series — Increase temperature',
-    text: `<p>Same scenario: a Foundry agent's summaries omit required regulatory clauses that exist in the retrieved content; you must improve completeness.</p>
-    <p><strong>Solution:</strong> You increase the value of the <code>temperature</code> parameter. Does this meet the goal?</p>`,
+    text: `<p>Note: This section contains one or more sets of questions with the same scenario and problem. Each question presents a unique solution to the problem. You must determine whether the solution meets the stated goals. More than one solution in the set might solve the problem. It is also possible that none of the solutions in the set solve the problem.</p>
+    <p>After you answer a question in this section, you will NOT be able to return. As a result, these questions do not appear on the Review Screen.</p>
+    <p>You have a Microsoft Foundry project that contains an agent. The agent generates summaries from retrieved policy documents.</p>
+    <p>Users report that some responses omit required regulatory clauses, even when the clauses are present in the retrieved content.</p>
+    <p>You need to improve response completeness.</p>
+    <p><strong>Solution:</strong> You increase the value of the <code>temperature</code> parameter.</p>
+    <p>Does this meet the goal?</p>`,
     note: '',
     render: 'mcq',
     options: ['A. Yes', 'B. No'],
@@ -8704,8 +8796,13 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 944, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Completeness Series — Evaluation Flow with Threshold',
-    text: `<p>Same scenario: a Foundry agent's summaries omit required regulatory clauses that exist in the retrieved content; you must improve completeness.</p>
-    <p><strong>Solution:</strong> You run an <strong>evaluation flow that scores responses for completeness and blocks responses that fall below a defined threshold</strong>. Does this meet the goal?</p>`,
+    text: `<p>Note: This section contains one or more sets of questions with the same scenario and problem. Each question presents a unique solution to the problem. You must determine whether the solution meets the stated goals. More than one solution in the set might solve the problem. It is also possible that none of the solutions in the set solve the problem.</p>
+    <p>After you answer a question in this section, you will NOT be able to return. As a result, these questions do not appear on the Review Screen.</p>
+    <p>You have a Microsoft Foundry project that contains an agent. The agent generates summaries from retrieved policy documents.</p>
+    <p>Users report that some responses omit required regulatory clauses, even when the clauses are present in the retrieved content.</p>
+    <p>You need to improve response completeness.</p>
+    <p><strong>Solution:</strong> You run an evaluation flow that scores responses for completeness and blocks responses that fall below a defined threshold.</p>
+    <p>Does this meet the goal?</p>`,
     note: '',
     render: 'mcq',
     options: ['A. Yes', 'B. No'],
@@ -8718,7 +8815,15 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 945, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Built-in Mask-Based Inpainting Edit',
-    text: `<p>You are creating an image-editing workflow in a Foundry project that must: remove background objects via a <strong>mask-based inpainting edit</strong>; preserve original lighting/style; use <strong>built-in</strong> editing controls (not a custom model); and ensure edits apply <strong>exclusively inside the masked area</strong>. How should you configure the workflow?</p>`,
+    text: `<p>You are creating an image-editing workflow in a Microsoft Foundry project.</p>
+    <p>The workflow must meet the following requirements:</p>
+    <ul>
+      <li>Ensure that background objects can be removed by applying a mask-based inpainting edit.</li>
+      <li>Preserve the original lighting and style of the edited images.</li>
+      <li>Use the built-in image editing controls, NOT a custom model.</li>
+    </ul>
+    <p>You need to ensure that image edits apply exclusively inside the masked area.</p>
+    <p>How should you configure the workflow?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8737,7 +8842,10 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 946, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Remove Only a Logo from a Published Image',
-    text: `<p>A Foundry project generates product-marketing images from text prompts. After publishing, legal identifies a competitor's <strong>logo on a sign in the background</strong>. You must remove <strong>only the logo</strong> while preserving the rest of the image. What should you do?</p>`,
+    text: `<p>You have a Microsoft Foundry project that generates product marketing images from text prompts.</p>
+    <p>After publishing several images, the legal team at your company identifies a competitor's logo on a sign in the background of an image.</p>
+    <p>You need to remove only the logo, while preserving the rest of the image.</p>
+    <p>What should you do?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8756,7 +8864,12 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 947, topic: 4, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Content Understanding Analyzer — Layout + QR Codes',
-    text: `<p>A Foundry agent ingests scanned PDF vendor invoices with tables and embedded <strong>QR codes</strong>, and must <strong>preserve the PDF layout</strong> in the extracted output so downstream processing can reference sections and tables. Using Azure Content Understanding in Foundry Tools, you must extract content + layout elements and <strong>detect QR codes without deploying a language model</strong>. Which built-in analyzer should you use?</p>`,
+    text: `<p>You have a Microsoft Foundry project that contains an agent.</p>
+    <p>The agent ingests scanned PDF vendor invoices that contain tables and embedded QR codes.</p>
+    <p>The agent must preserve the PDF layout in the extracted output to ensure that downstream processing can reference sections and tables.</p>
+    <p>You plan to call Azure Content Understanding in Foundry Tools.</p>
+    <p>You need to extract content and layout elements and detect QR codes without requiring a language model deployment.</p>
+    <p>Which built-in analyzer should you use?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8775,7 +8888,10 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 948, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Preserve Product Identity in Generated Images',
-    text: `<p>A Foundry agent generates original images from <strong>user-supplied product photos</strong>. You must ensure the generated images <strong>maintain the product identity and visual characteristics</strong> of the provided photo. What should you do?</p>`,
+    text: `<p>You have a Microsoft Foundry project that contains an agent and an image generation model deployment.</p>
+    <p>The agent generates original images from user-supplied product photos.</p>
+    <p>You need to ensure that the generated images maintain the product identity and visual characteristics of the provided photo.</p>
+    <p>What should you do?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8794,7 +8910,12 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 949, topic: 7, discussions: 0, isExamTopics: true,
     type: 'HOTSPOT',
     title: 'Prompt Shields for Document Attacks',
-    text: `<p><strong>HOTSPOT</strong> — A Foundry agent accepts user-uploaded screenshots and uses a multimodal chat model; some screenshots contain potentially malicious embedded text. You must <strong>prevent a prompt-injection attack</strong> and ensure third-party content is treated as <strong>lower trust</strong>. Configure prompt shields for document attacks.</p>`,
+    text: `<p><strong>HOTSPOT</strong></p>
+    <p>You have a Microsoft Foundry project that contains an agent.</p>
+    <p>The agent accepts user-uploaded screenshots and uses a multimodal chat model.</p>
+    <p>Some screenshots contain potentially malicious embedded text.</p>
+    <p>You need to prevent a prompt injection attack and ensure that third-party content is treated as lower trust.</p>
+    <p>How should you configure prompt shields for document attacks? To answer, select the appropriate options in the answer area.</p>`,
     note: 'NOTE: Each correct selection is worth one point.',
     render: 'hotspot_generic',
     solution: `• <strong>Prompt shields action:</strong> <span class="correct-badge">Set action to block</span><br>
@@ -8837,7 +8958,11 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 951, topic: 7, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Protect Against Malicious Instructions in OCR Text',
-    text: `<p>App1 uses a Foundry multimodal deployment; it runs OCR on uploaded images and <strong>appends the OCR output to the prompt as additional context</strong>. Some images contain embedded text. You must <strong>prevent potentially malicious instructions from being processed</strong> by the model. What should you use?</p>`,
+    text: `<p>You have an app named App1 that uses a Microsoft Foundry multimodal model deployment.</p>
+    <p>App1 runs optical character recognition (OCR) on uploaded images and appends the OCR output to the prompt as additional context.</p>
+    <p>Some uploaded images contain embedded text.</p>
+    <p>You need to prevent potentially malicious instructions from being processed by the model.</p>
+    <p>What should you use?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8856,7 +8981,9 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 952, topic: 4, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Mixed-Format Docs to Structure-Preserving Markdown',
-    text: `<p>A Foundry agent must process <strong>mixed-format documents</strong> (scanned text, tables, multicolumn layouts). The extracted content must <strong>preserve document structure</strong> and be converted to <strong>Markdown</strong> for downstream reasoning. What should you configure <strong>first</strong>?</p>`,
+    text: `<p>You have a Microsoft Foundry project that contains an agent.</p>
+    <p>You need to process mixed-format documents that contain scanned text, tables, and multicolumn layouts. The extracted content must preserve the document structure and be converted into the Markdown format for downstream reasoning.</p>
+    <p>What should you configure first?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8875,7 +9002,10 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 953, topic: 4, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'OCR + Layout + Template-Generalizing Extraction, No Training',
-    text: `<p>An application processes scanned PDF invoices with varied layouts and multipage tables. An OCR pipeline extracts totals and invoice numbers but is often wrong because document structure is ignored. You need OCR, layout analysis, and <strong>template-generalizing field extraction</strong>, with <strong>NO custom-model training</strong> and minimal admin effort. What should you include?</p>`,
+    text: `<p>You have an application that processes scanned PDF invoices. The invoices have varied layouts and include multipage tables.</p>
+    <p>You have a pipeline that uses optical character recognition (OCR) and extracts totals and invoice numbers. The results are often incorrect because the document structure is ignored.</p>
+    <p>You need to implement a solution that provides OCR, layout analysis, and template-generalizing field extraction. The solution must NOT require training a custom model. The solution must minimize administrative effort.</p>
+    <p>What should you include in the solution?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8893,7 +9023,12 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 954, topic: 4, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'RAG Ingestion — Structure-Aware Chunks with Page Metadata',
-    text: `<p>A Foundry agent's knowledge source is built from Blob Storage documents, including <strong>digitally scanned PDFs with multipage tables</strong>. The current ingestion extracts only plain text, losing table structure, headings, and page-number metadata, and users ask questions needing specific table rows across pages. You must configure ingestion that performs OCR, preserves tables/headings as <strong>structure-aware chunks</strong>, and stores <strong>page-number metadata</strong> with each chunk. How should you configure the ingestion job?</p>`,
+    text: `<p>You have a Microsoft Foundry project that contains an agent.</p>
+    <p>The agent uses a knowledge source built from documents stored in Azure Blob Storage. The documents include digitally scanned PDFs that contain multipage tables.</p>
+    <p>You have an ingestion job that extracts only plain text, causing loss of table structure, headings, and page-number metadata.</p>
+    <p>Users frequently ask questions that require the retrieval of specific table rows across the pages.</p>
+    <p>You need to configure an ingestion job for a Retrieval Augmented Generation (RAG) pipeline that performs optical character recognition (OCR) on scanned PDFs, preserves tables and headings as structure-aware chunks, and stores page-number metadata with each chunk.</p>
+    <p>How should you configure the ingestion job?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -8912,7 +9047,12 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     id: 955, topic: 4, discussions: 0, isExamTopics: true,
     type: 'MULTIPLE CHOICE',
     title: 'Extract Images for the Built-in OCR Skill',
-    text: `<p>A Foundry agent uses Azure AI Search as retriever. You will ingest PDFs into an Azure AI Search index so the agent can ground responses in <strong>text and embedded images</strong>, with citations to source files. You must ensure that during indexing, <strong>images are extracted into a structure usable as input for the built-in OCR skill</strong>. Which indexing approach should you use?</p>`,
+    text: `<p>You have a Microsoft Foundry project that contains an agent.</p>
+    <p>The agent uses Azure AI Search as the retriever.</p>
+    <p>You plan to ingest PDF into an Azure AI Search index to ensure that the agent can ground responses in texts in both documents and embedded images.</p>
+    <p>Users require citations that link to the source files.</p>
+    <p>You need to ensure that during indexing, the images are extracted into a structure that can be used as input for the built-in optical character recognition (OCR) skill.</p>
+    <p>Which indexing approach should you use?</p>`,
     note: '',
     render: 'mcq',
     options: [
@@ -9123,9 +9263,86 @@ Header: <strong>[ Dropdown 2 ]</strong></div>`,
     <strong>Groundedness metrics</strong> measure how well responses are supported by the retrieved content — the direct signal for whether the updated retrieved content is degrading answer accuracy.<br><br>
     A (indexer status) shows pipeline health, not answer quality. B (latency) is performance. C (prediction drift) tracks input/model distribution change, not grounding of generated answers against retrieved text.`,
     userChoice: null
+  },
+  {
+    id: 965, topic: 3, discussions: 2, isExamTopics: true,
+    type: 'MULTIPLE CHOICE',
+    title: 'Custom Speech Model — project Property for STT REST API',
+    text: `<p>You have a Microsoft Foundry project that contains an agent. The agent uses <strong>Azure Speech</strong> in Foundry Tools.</p>
+    <p>You fine-tune a baseline <strong>speech to text</strong> model for the <strong>en-US</strong> locale and publish the model.</p>
+    <p>The agent calls the <strong>Speech to text REST API</strong> and returns an error message indicating that the <strong>project ID is invalid</strong>.</p>
+    <p>You need to set the <code>project</code> property to the correct ID. To what should you set the <code>project</code> property?</p>`,
+    note: '',
+    render: 'mcq',
+    options: [
+      'A. the project URL',
+      'B. the custom speech project ID',
+      'C. the project ID',
+      'D. the custom speech endpoint URL'
+    ],
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — the custom speech project ID</strong><br><br>
+    Fine-tuned (custom) speech to text models live inside a <strong>Custom Speech project</strong>. When the Speech to text REST API references a custom model, the <code>project</code> property must be set to the <strong>GUID of that Custom Speech project</strong>. The "project ID is invalid" error means the value supplied is not a valid Custom Speech project ID.<br><br>
+    A (project URL) and D (custom speech endpoint URL) are URLs, not the project identifier the <code>project</code> property expects. C (the project ID) refers to the <strong>Foundry</strong> project ID — the wrong project; the custom model is scoped to its own Custom Speech project, so the Foundry project ID will be rejected.`,
+    userChoice: null
+  },
+  {
+    id: 966, topic: 7, discussions: 0, isExamTopics: true,
+    type: 'HOTSPOT',
+    title: 'YAML Workflow — Human-in-the-Loop Refund Approval',
+    text: `<p>You have a Microsoft Foundry project that contains an agent named <strong>PaymentAgent</strong>. PaymentAgent includes a function tool that issues customer refunds by using an external API.</p>
+    <p>You are creating a workflow in <strong>YAML</strong>. You need to ensure that the workflow <strong>pauses for human approval</strong> and continues with the refund step <strong>only after approval is granted</strong>.</p>
+    <p>How should you complete the workflow definition? Select the appropriate options in the answer area.</p>
+    <pre style="background:#f3f2f1;border:1px solid #d2d0ce;border-radius:2px;padding:10px;font-family:Consolas,'Courier New',monospace;font-size:13px;line-height:1.5;overflow-x:auto;white-space:pre">steps:
+  - id: propose_refund
+    type: agent
+    agent: PaymentAgent
+  - id: approval
+    type: <strong>[ Select 1 ]</strong>
+  - id: execute_refund
+    type: agent
+    agent: PaymentAgent
+    condition: <strong>[ Select 2 ]</strong></pre>`,
+    note: 'NOTE: Each correct selection is worth one point.',
+    render: 'hotspot_generic',
+    solution: `• <strong>approval &rarr; type:</strong> <span class="correct-badge">ask_question</span><br>
+    • <strong>execute_refund &rarr; condition:</strong> <span class="correct-badge">approval == "approved"</span><br><br>
+    <em>The <code>ask_question</code> step type pauses the workflow and waits for a human response before the next step runs — this is the human-in-the-loop gate. <code>basic_chat</code> and <code>data_transformation</code> do not pause for approval.<br><br>
+    Gating the refund on <code>approval == "approved"</code> ensures <code>execute_refund</code> runs only when the human granted approval. <code>true</code> would always run the refund (no gate at all), and <code>propose_refund.output != null</code> only checks that the earlier proposal produced output — it does not verify that a human approved.</em>`,
+    dropdowns: {
+      'approval-type': {
+        label: 'approval → type:',
+        options: ['ask_question', 'basic_chat', 'data_transformation'],
+        correct: 'ask_question'
+      },
+      'refund-condition': {
+        label: 'execute_refund → condition:',
+        options: ['approval == "approved"', 'propose_refund.output != null', 'true'],
+        correct: 'approval == "approved"'
+      }
+    },
+    userSelections: {}
   }
 
 ];
+
+// ============================================================
+// AI-103 ExamTopics sequential numbering
+// The ExamTopics view labels questions #1..#N under "Topic 1 - Exam A",
+// not by internal question id. Build a stable id -> sequential number map
+// in array order (which already follows the official #1..#65 sequence).
+// ============================================================
+var ET103_SEQ = (function () {
+  var m = {};
+  var n = 0;
+  for (var i = 0; i < questions.length; i++) {
+    if (questions[i].isExamTopics) {
+      n++;
+      m[questions[i].id] = n;
+    }
+  }
+  return m;
+})();
 
 // ============================================================
 // STATE
@@ -9837,7 +10054,7 @@ function buildNav() {
     }
     return `<div class="nav-item ${p===pos?'active':''}${lockCls} st-${questionStatus(q.id)}" id="nav-${qi}" onclick="goTo(${p})">
       <div class="nav-dot"></div>
-      Q${q.id} ${q.topic ? `· T${q.topic}` : ''}
+      ${q.isExamTopics ? `Q${ET103_SEQ[q.id] || q.id} · A` : `Q${q.id} ${q.topic ? `· T${q.topic}` : ''}`}
     </div>`;
   }).join('');
 }
@@ -10258,8 +10475,15 @@ function renderQuestion() {
   // Authentic Microsoft/Pearson VUE exam look is applied only to ExamTopics questions.
   const examUIEl = document.getElementById('examUI');
   if (examUIEl) examUIEl.classList.toggle('exam-mode', !!q.isExamTopics);
-  document.getElementById('qId').textContent = `Question #${q.id}`;
-  document.getElementById('qTopic').innerHTML = `${domainBadge(q)} ${sourceBadge(q)} ${q.topic ? `<span class="topic-tag">Topic ${q.topic}</span>` : ''}`;
+  if (q.isExamTopics) {
+    // AI-103 ExamTopics: sequential #1..#N under "Topic 1 - Exam A"
+    var etNum = ET103_SEQ[q.id] || q.id;
+    document.getElementById('qId').textContent = `Question #${etNum}`;
+    document.getElementById('qTopic').innerHTML = `${domainBadge(q)} ${sourceBadge(q)} <span class="topic-tag">Topic 1 - Exam A</span>`;
+  } else {
+    document.getElementById('qId').textContent = `Question #${q.id}`;
+    document.getElementById('qTopic').innerHTML = `${domainBadge(q)} ${sourceBadge(q)} ${q.topic ? `<span class="topic-tag">Topic ${q.topic}</span>` : ''}`;
+  }
   document.getElementById('discCount').textContent = q.discussions || 0;
   document.getElementById('flagBtn').className = `flag-btn${flagged.has(currentQ)?' flagged':''}`;
 
@@ -10316,6 +10540,7 @@ function renderQuestion() {
     hotspot_q58: renderQ58,
     hotspot_q60: renderQ60,
     hotspot_generic: renderHotspotGeneric,
+    hotspot_code: renderHotspotCode,
     dragdrop_exam: renderDragDropExam,
     hotspot_q13: renderQ13,
     hotspot_q12: renderQ12,
@@ -10718,6 +10943,28 @@ function renderHotspotGeneric() {
         </div>
       `).join('')}
     </div>
+  `;
+}
+
+// HOTSPOT with dropdowns embedded INLINE inside a Python/code block
+// (matches the exam layout where you pick values within the code itself).
+// Schema: render:'hotspot_code', codeTemplate (with {{key}} tokens),
+//         dropdowns:{ key:{ label, options, correct } }, userSelections:{}
+function renderHotspotCode() {
+  const q = questions[currentQ];
+  if (!q.userSelections) q.userSelections = {};
+  let code = q.codeTemplate
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  Object.entries(q.dropdowns).forEach(([key, dd]) => {
+    const sel = `<select class="hotspot-select inline-select" onchange="setSelection('${key}',this.value)">
+      <option value="">-- Select --</option>
+      ${dd.options.map(o => `<option value="${o}" ${q.userSelections[key]===o?'selected':''}>${o}</option>`).join('')}
+    </select>`;
+    code = code.replace('{{' + key + '}}', sel);
+  });
+  document.getElementById('questionContent').innerHTML = `
+    <div class="answer-area-label">Answer Area</div>
+    <pre class="hotspot-code">${code}</pre>
   `;
 }
 
