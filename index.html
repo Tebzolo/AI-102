@@ -511,6 +511,15 @@
   .mc-option.selected { background: #deecf9; border-color: var(--ms-blue); box-shadow: inset 0 0 0 1px var(--ms-blue); }
   .mc-option.correct-highlight { background: var(--ms-green-bg); border-color: var(--ms-green); box-shadow: inset 0 0 0 1px var(--ms-green); }
   .mc-option.wrong-highlight { background: var(--ms-red-bg); border-color: var(--ms-red); box-shadow: inset 0 0 0 1px var(--ms-red); }
+  .mc-correct-tick { margin-left: auto; align-self: center; color: var(--ms-green); font-weight: 700; font-size: 12px; white-space: nowrap; }
+  /* Reveal highlights for hotspot dropdowns */
+  .hotspot-row.hs-correct { background: var(--ms-green-bg); border-radius: var(--radius); box-shadow: inset 0 0 0 1px var(--ms-green); }
+  .hotspot-row.hs-wrong { background: var(--ms-red-bg); border-radius: var(--radius); box-shadow: inset 0 0 0 1px var(--ms-red); }
+  .hs-answer { color: var(--ms-green); font-weight: 700; font-size: 12px; margin-left: 8px; white-space: nowrap; }
+  /* Reveal highlights for drag/drop targets */
+  .dde-target.dde-correct { background: var(--ms-green-bg); border-color: var(--ms-green); box-shadow: inset 0 0 0 1px var(--ms-green); }
+  .dde-target.dde-wrong { background: var(--ms-red-bg); border-color: var(--ms-red); box-shadow: inset 0 0 0 1px var(--ms-red); }
+  .dde-answer { color: var(--ms-green); font-weight: 700; font-size: 11px; margin-left: 8px; white-space: nowrap; }
   .mc-option input[type=radio], .mc-option input[type=checkbox] { accent-color: var(--ms-blue); width: 16px; height: 16px; }
 
   /* ════════════════════════════════════════════════════════════════
@@ -9413,7 +9422,15 @@ let flagged = new Set();      // holds master indices
 let examStarted = false;
 let reviewMode = false;
 let studyMode = false;      // study mode: answers always revealed, timer paused
+let solutionRevealed = false; // set when "View Solution" is clicked for the current question
 let caseStudyCollapsed = false;
+
+// True when the correct answer should be highlighted in the question body:
+// study mode, review mode, or the solution has been revealed (but never live-exam).
+function answersRevealed() {
+  if (stageMode && !reviewMode && !studyMode) return false; // never mid-live-exam
+  return studyMode || reviewMode || solutionRevealed;
+}
 
 // ============================================================
 // SECTIONS
@@ -10099,6 +10116,7 @@ function goTo(p) {
   pos = p;
   currentQ = activeQuestions[pos];
   csActiveTab = 0;
+  solutionRevealed = false;
   renderQuestion();
   if (coachOpen) coachIntro();
 }
@@ -10115,6 +10133,7 @@ function navigate(dir) {
     pos = next;
     currentQ = activeQuestions[pos];
     csActiveTab = 0;
+    solutionRevealed = false;
     renderQuestion();
     if (coachOpen) coachIntro();
     return;
@@ -10124,6 +10143,7 @@ function navigate(dir) {
     pos = next;
     currentQ = activeQuestions[pos];
     csActiveTab = 0;
+    solutionRevealed = false;
     renderQuestion();
     if (coachOpen) coachIntro();
   }
@@ -10529,6 +10549,17 @@ function renderQuestion() {
   `;
 
   // Render specific question type
+  renderActiveQuestionBody();
+
+  updateNav();
+  if (reviewMode || studyMode) showSolution();
+}
+
+// Dispatch just the question-type body renderer for the current question.
+// Used by renderQuestion() and re-used by showSolution() to repaint the body
+// with the correct answer highlighted, without re-running the whole frame.
+function renderActiveQuestionBody() {
+  const q = questions[currentQ];
   const renderers = {
     dragdrop_q4: renderQ4,
     dragdrop_q23: renderQ23,
@@ -10552,9 +10583,6 @@ function renderQuestion() {
     casestudy_sequence: () => renderSequence(currentQ)
   };
   if (renderers[q.render]) renderers[q.render]();
-
-  updateNav();
-  if (reviewMode || studyMode) showSolution();
 }
 
 // ============================================================
@@ -10929,19 +10957,29 @@ function renderQ12() {
 function renderHotspotGeneric() {
   const q = questions[currentQ];
   if (!q.userSelections) q.userSelections = {};
+  const reveal = answersRevealed();
   const entries = Object.entries(q.dropdowns);
   document.getElementById('questionContent').innerHTML = `
     <div class="answer-area-label">Answer Area</div>
     <div class="hotspot-area">
-      ${entries.map(([key, dd]) => `
-        <div class="hotspot-row">
+      ${entries.map(([key, dd]) => {
+        const picked = q.userSelections[key];
+        const correctOk = reveal && dd.correct != null && picked === dd.correct;
+        const wrongPick = reveal && dd.correct != null && picked && picked !== dd.correct;
+        const rowCls = `hotspot-row${correctOk?' hs-correct':''}${wrongPick?' hs-wrong':''}`;
+        return `
+        <div class="${rowCls}">
           <div class="hotspot-label">${dd.label || key}</div>
           <select class="hotspot-select" onchange="setSelection('${key}',this.value)">
             <option value="">-- Select --</option>
-            ${dd.options.map(o => `<option value="${o}" ${q.userSelections[key]===o?'selected':''}>${o}</option>`).join('')}
+            ${dd.options.map(o => {
+              const star = reveal && o === dd.correct ? '  ✓' : '';
+              return `<option value="${o}" ${picked===o?'selected':''}>${o}${star}</option>`;
+            }).join('')}
           </select>
-        </div>
-      `).join('')}
+          ${reveal && dd.correct != null ? `<span class="hs-answer">Correct: <strong>${dd.correct}</strong></span>` : ''}
+        </div>`;
+      }).join('')}
     </div>
   `;
 }
@@ -10991,11 +11029,16 @@ function renderDragDropExam() {
     </div>`;
   }).join('');
 
+  const reveal = answersRevealed();
+  const correctMap = q.correctAnswers || {};
   const targetBox = (t, inline) => {
     const val = q.userAnswers[t.id];
     const filled = val != null;
+    const want = correctMap[t.id];
+    const correctOk = reveal && want != null && val === want;
+    const wrongPick = reveal && want != null && filled && val !== want;
     // When armed, every target is a valid tap destination → show it.
-    return `<span class="dde-target${filled?' filled':''}${inline?' inline':''}${armed?' dde-armed':''}"
+    return `<span class="dde-target${filled?' filled':''}${inline?' inline':''}${armed?' dde-armed':''}${correctOk?' dde-correct':''}${wrongPick?' dde-wrong':''}"
       id="dde-${t.id}"
       ondragover="ddExamOver(event)" ondragleave="ddExamLeave(event)"
       ondrop="ddExamDrop(event,'${t.id}')"
@@ -11003,6 +11046,7 @@ function renderDragDropExam() {
       ${filled ? `<span class="dde-val">${val}</span>
         <button class="dde-x" onclick="event.stopPropagation();ddExamClear('${t.id}')" title="Remove" aria-label="Remove">×</button>`
         : `<span class="dde-placeholder">${t.placeholder || 'Configuration'}</span>`}
+      ${reveal && want != null ? `<span class="dde-answer">✓ ${want}</span>` : ''}
     </span>`;
   };
 
@@ -11137,15 +11181,23 @@ function renderMCQ() {
   const q = questions[currentQ];
   const multi = !!q.multiSelect;
   if (multi && !Array.isArray(q.userChoices)) q.userChoices = [];
+  const reveal = answersRevealed();
+  const correctSet = new Set(
+    multi ? (q.correctOptions || []) : (q.correctOption ? [q.correctOption] : [])
+  );
   const optionsHtml = `
     ${q.isCaseStudy ? `<div class="q-text">${q.text}</div>${q.note ? `<div class="q-note">${q.note}</div>` : ''}` : ''}
     <div class="mc-options">
       ${q.options.map(opt => {
         const letter = opt.trim().charAt(0);
         const sel = multi ? q.userChoices.includes(letter) : q.userChoice === letter;
-        return `<div class="mc-option ${sel?'selected':''}" onclick="selectChoice('${letter}')">
+        const isCorrect = reveal && correctSet.has(letter);
+        const isWrongPick = reveal && sel && !correctSet.has(letter);
+        const cls = `mc-option ${sel?'selected':''}${isCorrect?' correct-highlight':''}${isWrongPick?' wrong-highlight':''}`;
+        return `<div class="${cls}" onclick="selectChoice('${letter}')">
           <input type="${multi?'checkbox':'radio'}" name="mc-${q.id}" ${sel?'checked':''} style="margin-top:2px" onclick="event.stopPropagation();selectChoice('${letter}')">
           <span>${opt}</span>
+          ${isCorrect?'<span class="mc-correct-tick">✓ Correct</span>':''}
         </div>`;
       }).join('')}
     </div>
@@ -11460,6 +11512,10 @@ function showSolution() {
   panel.style.display = 'block';
   body.innerHTML = q.solution;
   body.classList.add('show');
+  solutionRevealed = true;
+  // Re-render the question body so the correct answer is highlighted in green.
+  const cc = document.getElementById('questionContent');
+  if (cc) renderActiveQuestionBody();
   // Auto-scroll only on an explicit click, not on every study/review re-render.
   if (!studyMode && !reviewMode) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
