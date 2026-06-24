@@ -232,7 +232,7 @@
   .drag-drop-area { display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
   .values-panel, .answer-panel { flex: 1; min-width: 200px; }
   .panel-title { font-weight: 600; font-size: 12px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--ms-border); color: var(--ms-text-2); text-transform: uppercase; letter-spacing: 0.5px; }
-  .drag-item { background: var(--ms-panel-2); border: 1px solid var(--ms-border); padding: 8px 12px; margin-bottom: 6px; cursor: grab; font-size: 13px; border-radius: var(--radius); user-select: none; transition: all 0.12s; }
+  .drag-item { background: var(--ms-panel-2); border: 1px solid var(--ms-border); padding: 8px 12px; margin-bottom: 6px; cursor: grab; font-size: 13px; border-radius: var(--radius); user-select: none; -webkit-user-select: none; touch-action: none; transition: all 0.12s; }
   /* ── Exam-style two-pane drag & drop ── */
   .dde-wrap { display: grid; grid-template-columns: 1fr auto 1.1fr; gap: 0; margin-top: 14px; align-items: start; }
   .dde-source { padding-right: 18px; }
@@ -240,7 +240,7 @@
   .dde-answer { padding-left: 18px; }
   .dde-pane-title { font-size: 14px; font-weight: 700; color: var(--ms-text); margin-bottom: 12px; }
   .dde-chips { display: flex; flex-direction: column; gap: 10px; }
-  .dde-chip { display: flex; align-items: center; gap: 9px; border: 1px solid var(--ms-border); background: #fff; border-radius: 3px; padding: 10px 12px; min-height: 44px; font-size: 14px; cursor: grab; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: all .12s; color: var(--ms-text); box-sizing: border-box; }
+  .dde-chip { display: flex; align-items: center; gap: 9px; border: 1px solid var(--ms-border); background: #fff; border-radius: 3px; padding: 10px 12px; min-height: 44px; font-size: 14px; cursor: grab; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; touch-action: none; transition: all .12s; color: var(--ms-text); box-sizing: border-box; }
   .dde-chip:hover { border-color: var(--ms-blue); background: var(--ms-panel-2); }
   .dde-chip:active { cursor: grabbing; }
   .dde-chip.dde-sel { border-color: var(--ms-blue); background: #deecf9; box-shadow: 0 0 0 2px var(--ms-blue); }
@@ -307,7 +307,7 @@
   /* SEQUENCE */
   .sequence-area { display: flex; gap: 24px; flex-wrap: wrap; }
   .seq-actions, .seq-answer { flex: 1; min-width: 200px; }
-  .seq-item { background: var(--ms-panel-2); border: 1px solid var(--ms-border); padding: 9px 12px; margin-bottom: 6px; cursor: grab; font-size: 13px; border-radius: var(--radius); user-select: none; }
+  .seq-item { background: var(--ms-panel-2); border: 1px solid var(--ms-border); padding: 9px 12px; margin-bottom: 6px; cursor: grab; font-size: 13px; border-radius: var(--radius); user-select: none; -webkit-user-select: none; touch-action: none; }
   .seq-item:hover { background: #deecf9; border-color: var(--ms-blue); }
   .seq-item.placed { opacity: 0.45; cursor: default; background: var(--ms-panel); border-color: var(--ms-border-lt); }
   .seq-slot { border: 1px dashed var(--ms-blue); min-height: 38px; padding: 4px; margin-bottom: 6px; border-radius: var(--radius); background: var(--ms-panel-2); display: flex; align-items: center; position: relative; }
@@ -8460,7 +8460,7 @@ with project_client.get_openai_client() as openai_client:
     }
 }`,
     targets: [
-      { id: 'key', label: 'Key', placeholder: 'Value' },
+      { id: 'key', label: 'Key', placeholder: 'Key' },
       { id: 'value', label: 'Value', placeholder: 'Value' }
     ],
     correctAnswers: {
@@ -10569,7 +10569,7 @@ function renderQ4() {
         <div class="values-panel">
           <div class="panel-title">Values</div>
           <div id="valuesPool">
-            ${values.map(v => `<div class="drag-item" draggable="true" data-value="${v}" id="val-${v.replace(',','-')}" ondragstart="dragStart(event,'${v}')">${v}</div>`).join('')}
+            ${values.map(v => `<div class="drag-item" data-value="${v}" id="val-${v.replace(',','-')}">${v}</div>`).join('')}
           </div>
         </div>
         <div class="answer-panel" style="flex:2">
@@ -10695,7 +10695,7 @@ function renderCaseStudySkillset() {
     <div class="values-panel" style="margin-top:18px">
       <div class="panel-title">Services</div>
       <div id="valuesPoolCS" style="display:flex;flex-wrap:wrap;gap:8px">
-        ${q.services.map(s => `<div class="drag-item" draggable="true" data-value="${s}" id="valcs-${s.replace(/ /g,'-')}" ondragstart="dragStart(event,'${s.replace(/'/g,"\\'")}')">${s}</div>`).join('')}
+        ${q.services.map(s => `<div class="drag-item" data-value="${s}" id="valcs-${s.replace(/ /g,'-')}">${s}</div>`).join('')}
       </div>
     </div>`;
   document.getElementById('questionContent').innerHTML = caseStudyShell(q, questionHtml);
@@ -10717,7 +10717,7 @@ function renderQ23() {
       <div class="values-panel">
         <div class="panel-title">Services</div>
         <div id="valuesPool23">
-          ${services.map(s => `<div class="drag-item" draggable="true" data-value="${s}" id="val23-${s.replace(/ /g,'-')}" ondragstart="dragStart(event,'${s}')">${s}</div>`).join('')}
+          ${services.map(s => `<div class="drag-item" data-value="${s}" id="val23-${s.replace(/ /g,'-')}">${s}</div>`).join('')}
         </div>
       </div>
       <div class="answer-panel">
@@ -10752,7 +10752,7 @@ function renderSequence(qi) {
       <div class="seq-actions">
         <div class="panel-title">Actions</div>
         ${q.actions.map((a,i) => `
-          <div class="seq-item ${placed.has(a)?'placed':''}" draggable="${placed.has(a)?'false':'true'}" data-value="${a}" id="seqact-${qi}-${i}" ondragstart="seqDragStart(event,'${a.replace(/'/g,"\\'")}',${qi})">${a}</div>
+          <div class="seq-item ${placed.has(a)?'placed':''}" data-value="${a}" id="seqact-${qi}-${i}">${a}</div>
         `).join('')}
       </div>
       <div class="seq-answer">
@@ -10984,8 +10984,7 @@ function renderDragDropExam() {
 
   const chips = q.dragPool.map(v => {
     const sel = armed && ddTapSel.value === v;
-    return `<div class="dde-chip${sel?' dde-sel':''}" draggable="true"
-      ondragstart="ddExamDragStart(event,'${ddEsc(v)}')"
+    return `<div class="dde-chip${sel?' dde-sel':''}" data-value="${ddEsc(v)}"
       onclick="ddExamTapSource('${ddEsc(v)}')">
       <span class="dde-grip" aria-hidden="true">⠿</span><span class="dde-chip-text">${v}</span>
       ${sel?'<span class="dde-chip-cue">tap a target →</span>':''}
@@ -11308,6 +11307,140 @@ document.addEventListener('click', function (e) {
   // tap elsewhere (not a remove button) clears selection
   if (tapSel && !e.target.closest('.remove-btn')) clearTapSel();
 }, true);
+
+// ============================================================
+// UNIFIED POINTER DRAG (mouse + touch). Native HTML5 drag does
+// not fire on touch devices and is flaky in some Chrome setups,
+// so we implement dragging with Pointer Events for ALL drag UIs:
+//   .drag-item  -> .drop-zone          (value-to-target)
+//   .seq-item   -> .seq-slot           (ordering)
+//   .dde-chip   -> .dde-target         (ExamTopics drag/drop)
+// A drag commits the same data change the tap path would; a click
+// with no movement falls through to the tap handler above.
+// ============================================================
+(function () {
+  const DRAG_THRESHOLD = 6; // px before a press becomes a drag
+  let pd = null;            // active pointer-drag state
+  let ghost = null;
+
+  function srcInfo(el) {
+    if (el.classList.contains('dde-chip')) return { kind: 'dde', value: (el.querySelector('.dde-chip-text')?.textContent ?? el.getAttribute('data-value') ?? '') };
+    if (el.classList.contains('seq-item') && !el.classList.contains('placed')) {
+      const qi = parseInt((el.id.match(/^seqact-(\d+)-/) || [])[1], 10);
+      return { kind: 'seq', value: el.getAttribute('data-value'), qi: isNaN(qi) ? currentQ : qi };
+    }
+    if (el.classList.contains('drag-item') && !el.classList.contains('placed')) {
+      return { kind: 'drag', value: el.getAttribute('data-value') };
+    }
+    return null;
+  }
+
+  function makeGhost(el, x, y) {
+    ghost = el.cloneNode(true);
+    const r = el.getBoundingClientRect();
+    Object.assign(ghost.style, {
+      position: 'fixed', left: '0', top: '0', width: r.width + 'px',
+      pointerEvents: 'none', zIndex: '99999', opacity: '0.9',
+      transform: `translate(${x - pd.offX}px, ${y - pd.offY}px)`,
+      boxShadow: '0 6px 20px rgba(0,0,0,0.25)', margin: '0'
+    });
+    ghost.classList.add('drag-ghost');
+    document.body.appendChild(ghost);
+  }
+
+  function targetUnder(x, y) {
+    if (ghost) ghost.style.display = 'none';
+    const el = document.elementFromPoint(x, y);
+    if (ghost) ghost.style.display = '';
+    if (!el) return null;
+    if (pd.src.kind === 'dde') return el.closest('.dde-target');
+    if (pd.src.kind === 'seq') return el.closest('.seq-slot');
+    return el.closest('.drop-zone');
+  }
+
+  function clearHover() {
+    document.querySelectorAll('.over,.dde-over').forEach(e => e.classList.remove('over', 'dde-over'));
+  }
+
+  function commitDrop(src, tgt) {
+    const q = questions[src.kind === 'seq' ? src.qi : currentQ];
+    if (src.kind === 'dde') {
+      const id = tgt.id.replace(/^dde-/, '');
+      if (!q.userAnswers) q.userAnswers = {};
+      q.userAnswers[id] = src.value;
+    } else if (src.kind === 'seq') {
+      const m = tgt.id.match(/^seq-slot-(\d+)-(\d+)$/);
+      if (!m) return;
+      const slot = parseInt(m[2], 10);
+      q.userSequence = q.userSequence.map(v => v === src.value ? null : v);
+      q.userSequence[slot] = src.value;
+    } else {
+      const zoneId = tgt.id.replace(/^drop-/, '');
+      if (!q.userAnswers) q.userAnswers = {};
+      Object.keys(q.userAnswers).forEach(k => { if (q.userAnswers[k] === src.value) delete q.userAnswers[k]; });
+      q.userAnswers[zoneId] = src.value;
+    }
+  }
+
+  document.addEventListener('pointerdown', function (e) {
+    if (e.button && e.button !== 0) return; // primary button / touch / pen only
+    const el = e.target.closest('.drag-item, .seq-item, .dde-chip');
+    if (!el) return;
+    const info = srcInfo(el);
+    if (!info) return;
+    const r = el.getBoundingClientRect();
+    pd = { el, src: info, startX: e.clientX, startY: e.clientY,
+           offX: e.clientX - r.left, offY: e.clientY - r.top,
+           dragging: false, pointerId: e.pointerId };
+  }, true);
+
+  document.addEventListener('pointermove', function (e) {
+    if (!pd) return;
+    const dx = e.clientX - pd.startX, dy = e.clientY - pd.startY;
+    if (!pd.dragging) {
+      if (Math.hypot(dx, dy) < DRAG_THRESHOLD) return;
+      pd.dragging = true;
+      clearTapSel();
+      if (typeof ddTapSel !== 'undefined') ddTapSel = null;
+      makeGhost(pd.el, e.clientX, e.clientY);
+      pd.el.style.opacity = '0.4';
+      document.body.style.userSelect = 'none';
+    }
+    e.preventDefault();
+    if (ghost) ghost.style.transform = `translate(${e.clientX - pd.offX}px, ${e.clientY - pd.offY}px)`;
+    clearHover();
+    const tgt = targetUnder(e.clientX, e.clientY);
+    if (tgt) tgt.classList.add(pd.src.kind === 'dde' ? 'dde-over' : 'over');
+  }, { passive: false, capture: true });
+
+  function endDrag(e) {
+    if (!pd) return;
+    const wasDragging = pd.dragging;
+    const tgt = wasDragging ? targetUnder(e.clientX, e.clientY) : null;
+    if (ghost) { ghost.remove(); ghost = null; }
+    if (pd.el) pd.el.style.opacity = '';
+    document.body.style.userSelect = '';
+    clearHover();
+    const local = pd; pd = null;
+    if (wasDragging) {
+      if (tgt) { commitDrop(local.src, tgt); renderQuestion(); }
+      // Dragging consumed the gesture: stop the trailing click so the
+      // tap handler doesn't re-toggle selection.
+      const kill = ev => { ev.stopPropagation(); ev.preventDefault(); document.removeEventListener('click', kill, true); };
+      document.addEventListener('click', kill, true);
+      setTimeout(() => document.removeEventListener('click', kill, true), 350);
+    }
+  }
+  document.addEventListener('pointerup', endDrag, true);
+  document.addEventListener('pointercancel', function () {
+    if (!pd) return;
+    if (ghost) { ghost.remove(); ghost = null; }
+    if (pd.el) pd.el.style.opacity = '';
+    document.body.style.userSelect = '';
+    clearHover();
+    pd = null;
+  }, true);
+})();
 
 // Hotspot
 function setSelection(key, value) {
