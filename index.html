@@ -467,14 +467,19 @@
   /* CASE STUDY — exam split-screen (left scenario / right question) */
   .cs-intro { background: var(--ms-panel); border: 1px solid var(--ms-border); border-left: 3px solid var(--ms-blue); border-radius: var(--radius); padding: 12px 16px; font-size: 12.5px; line-height: 1.6; color: var(--ms-text-2); margin-bottom: 14px; }
   .cs-intro strong { color: var(--ms-text); }
-  .cs-split { display: flex; gap: 0; border: 1px solid var(--ms-border); border-radius: var(--radius); overflow: hidden; min-height: 420px; }
-  .cs-left { width: 46%; min-width: 280px; display: flex; flex-direction: column; border-right: 1px solid var(--ms-border); background: var(--ms-bg); }
-  .cs-right { flex: 1; display: flex; flex-direction: column; background: var(--ms-bg); min-width: 300px; }
-  .cs-pane-title { background: var(--ms-panel); border-bottom: 1px solid var(--ms-border); padding: 8px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--ms-text-2); display: flex; align-items: center; gap: 6px; }
-  .cs-tabs { display: flex; flex-wrap: wrap; background: var(--ms-panel-2); border-bottom: 1px solid var(--ms-border); padding: 0 6px; gap: 2px; }
-  .cs-tab { padding: 8px 12px; font-size: 11.5px; font-weight: 600; color: var(--ms-text-2); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; white-space: nowrap; font-family: inherit; transition: color 0.12s; }
-  .cs-tab:hover { color: var(--ms-text); }
-  .cs-tab.active { color: var(--ms-blue); border-bottom-color: var(--ms-blue); }
+  .cs-shell { display: flex; gap: 0; border: 1px solid var(--ms-border); border-radius: var(--radius); overflow: hidden; min-height: 440px; }
+  .cs-nav { width: 230px; min-width: 200px; display: flex; flex-direction: column; border-right: 1px solid var(--ms-border); background: var(--ms-panel); padding: 0 0 10px; }
+  .cs-nav-title { background: var(--ms-panel-2); border-bottom: 1px solid var(--ms-border); padding: 10px 14px; font-size: 12px; font-weight: 700; color: var(--ms-text); }
+  .cs-question-btn { display: block; width: calc(100% - 16px); margin: 10px 8px 4px; padding: 9px 12px; font-size: 12.5px; font-weight: 700; text-align: left; color: #fff; background: var(--ms-blue); border: none; border-radius: var(--radius); cursor: pointer; font-family: inherit; transition: background 0.12s; }
+  .cs-question-btn:hover { background: var(--ms-blue-dk, #005a9e); }
+  .cs-question-btn.active { box-shadow: inset 0 0 0 2px rgba(255,255,255,0.5); }
+  .cs-nav-sep { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ms-text-3); padding: 12px 14px 4px; }
+  .cs-nav-item { display: block; width: 100%; padding: 8px 14px 8px 18px; font-size: 12px; font-weight: 500; text-align: left; color: var(--ms-blue); background: none; border: none; border-left: 3px solid transparent; cursor: pointer; font-family: inherit; white-space: normal; line-height: 1.35; transition: all 0.12s; }
+  .cs-nav-item:hover { background: var(--ms-panel-2); text-decoration: underline; }
+  .cs-nav-item.active { background: var(--ms-panel-2); border-left-color: var(--ms-blue); font-weight: 700; color: var(--ms-text); }
+  .cs-content { flex: 1; display: flex; flex-direction: column; background: var(--ms-bg); min-width: 300px; }
+  .cs-pane-head { background: var(--ms-panel); border-bottom: 1px solid var(--ms-border); padding: 8px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--ms-text-2); }
+  .cs-info-pane, .cs-q-pane { display: flex; flex-direction: column; flex: 1; min-height: 0; }
   .cs-scenario { padding: 16px 18px; font-size: 12.5px; line-height: 1.7; color: var(--ms-text); overflow-y: auto; flex: 1; max-height: 520px; }
   .cs-scenario h3 { font-size: 12.5px; color: var(--ms-blue); margin: 16px 0 5px; font-weight: 700; text-transform: none; }
   .cs-scenario h3:first-child { margin-top: 0; }
@@ -482,12 +487,14 @@
   .cs-scenario li { margin-bottom: 4px; }
   .cs-scenario p { margin-bottom: 7px; }
   .cs-scenario .code-block { font-size: 11.5px; }
-  .cs-section-block { display: none; }
-  .cs-section-block.active { display: block; }
+  .cs-return-btn { margin: 8px 18px 16px; align-self: flex-start; padding: 8px 16px; font-size: 12.5px; font-weight: 700; color: #fff; background: var(--ms-blue); border: none; border-radius: var(--radius); cursor: pointer; font-family: inherit; }
+  .cs-return-btn:hover { background: var(--ms-blue-dk, #005a9e); }
   .cs-question { padding: 16px 18px; overflow-y: auto; flex: 1; max-height: 560px; }
   @media (max-width: 760px) {
-    .cs-split { flex-direction: column; }
-    .cs-left { width: 100%; border-right: none; border-bottom: 1px solid var(--ms-border); }
+    .cs-shell { flex-direction: column; }
+    .cs-nav { width: 100%; min-width: 0; border-right: none; border-bottom: 1px solid var(--ms-border); }
+    .cs-nav-item { display: inline-block; width: auto; border-left: none; border-bottom: 2px solid transparent; }
+    .cs-nav-item.active { border-left: none; border-bottom-color: var(--ms-blue); }
   }
 
   /* SKILLSET PIPELINE */
@@ -641,10 +648,12 @@
   .exam-mode .case-study-header:hover { background: #edebe9; }
   .exam-mode .case-study-body { background: #fff; color: var(--xm-ink); }
   .exam-mode .case-study-body h3 { color: var(--xm-blue); }
-  .exam-mode .cs-tabs { background: #f3f2f1; border-bottom-color: var(--xm-line); }
-  .exam-mode .cs-tab { color: var(--xm-ink-2); font-family: "Segoe UI", system-ui, sans-serif; }
-  .exam-mode .cs-tab:hover { color: var(--xm-ink); }
-  .exam-mode .cs-tab.active { color: var(--xm-blue); border-bottom-color: var(--xm-blue); }
+  .exam-mode .cs-nav { background: #f3f2f1; border-right-color: var(--xm-line); }
+  .exam-mode .cs-nav-title { background: #edebe9; color: var(--xm-ink); border-bottom-color: var(--xm-line); }
+  .exam-mode .cs-nav-item { color: var(--xm-blue); font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .cs-nav-item.active { color: var(--xm-ink); border-left-color: var(--xm-blue); background: #edebe9; }
+  .exam-mode .cs-question-btn, .exam-mode .cs-return-btn { background: var(--xm-blue); font-family: "Segoe UI", system-ui, sans-serif; }
+  .exam-mode .cs-pane-head { background: #f3f2f1; color: var(--xm-ink-2); border-bottom-color: var(--xm-line); font-family: "Segoe UI", system-ui, sans-serif; }
 
   /* Solution & discussion panels keep their semantic colors but adopt Segoe */
   .exam-mode .solution-body, .exam-mode .discussion-body { font-family: "Segoe UI", system-ui, sans-serif; color: var(--xm-ink); }
@@ -755,11 +764,11 @@
     .hotspot-label { min-width: unset; font-size: 12px; }
     .hotspot-select { min-width: unset; width: 100%; font-size: 13px; }
 
-    /* ── CASE STUDY SPLIT ── */
-    .cs-split { flex-direction: column; min-height: auto; }
-    .cs-left { width: 100%; border-right: none; border-bottom: 1px solid var(--ms-border); max-height: 240px; overflow-y: auto; }
-    .cs-right { min-width: unset; }
-    .cs-scenario { max-height: 220px; }
+    /* ── CASE STUDY (mobile) ── */
+    .cs-shell { flex-direction: column; min-height: auto; }
+    .cs-nav { width: 100%; min-width: 0; border-right: none; border-bottom: 1px solid var(--ms-border); }
+    .cs-content { min-width: unset; }
+    .cs-scenario { max-height: 300px; }
     .cs-question { max-height: none; }
 
     /* ── BOTTOM NAV ── */
@@ -7992,25 +8001,7 @@ with project_client.get_openai_client() as openai_client:
     B (threads/runs alone) gives conversation state but no deterministic branching engine. C (group chat) is non-deterministic, model-driven turn-taking. D (custom app code) maximizes, not minimizes, development effort.`,
     userChoice: null
   },
-  {
-    id: 909, topic: 3, discussions: 0, isExamTopics: true,
-    type: 'MULTIPLE CHOICE',
-    title: 'Custom Speech REST API — project Property',
-    text: `<p>A Microsoft Foundry project contains an agent that uses Azure Speech in Foundry Tools. You fine-tune a baseline speech-to-text model for the <code>en-us</code> locale and publish it. The agent calls the Speech-to-text REST API and returns an error that the <strong>project ID is invalid</strong>. You must set the <code>project</code> property to the correct ID. To what should you set it?</p>`,
-    note: '',
-    render: 'mcq',
-    options: [
-      'A. the project URL',
-      'B. the custom speech project ID',
-      'C. the project ID',
-      'D. the custom speech endpoint URL'
-    ],
-    correctOption: 'C',
-    solution: `<strong>Correct Answer: C — the project ID</strong><br><br>
-    The error names the <strong>project ID</strong> specifically, and the <code>project</code> property expects the <strong>GUID/identifier of the project</strong> — not a URL and not the custom-speech sub-project label. Set it to the project's ID.<br><br>
-    A and D are URLs (wrong type for an ID property). B sounds plausible but the property is the project's own ID, not a separate "custom speech project ID"; the deciding signal is the error text matching the <code>project</code> identifier.`,
-    userChoice: null
-  },
+
 
   {
     id: 911, topic: 3, discussions: 0, isExamTopics: true,
@@ -8288,9 +8279,9 @@ with project_client.get_openai_client() as openai_client:
     note: '',
     render: 'mcq',
     options: ['A. Yes', 'B. No'],
-    correctOption: 'A',
-    solution: `<strong>Correct Answer: A — Yes</strong><br><br>
-    The risk has two parts; this solution addresses the <strong>"unsafe images"</strong> part. <strong>Image moderation</strong> (Content Safety for images) inspects and <strong>blocks unsafe content before processing</strong>, which is a valid mitigating control for the harmful-image vector. (A complete defense would add a document prompt shield for the hidden-instruction vector, but as a control that meets the stated goal of mitigating the risk, image moderation qualifies.)`,
+    correctOption: 'B',
+    solution: `<strong>Correct Answer: B — No</strong><br><br>
+    The stated risk has <strong>two parts</strong>: (1) <strong>unsafe images</strong>, and (2) <strong>hidden instructions embedded in images</strong> (indirect prompt injection). <strong>Image moderation</strong> (Azure AI Content Safety for images) classifies images for visually unsafe categories (hate, violence, sexual, self-harm) and blocks those pictures — addressing part 1 only. It does <strong>not</strong> read, detect, or neutralize hidden text instructions: a benign-looking image (for example, a screenshot) can carry injected instructions in its text and pass image moderation untouched, leaving part 2 wide open. Because the goal is to mitigate <em>the risk</em> (both parts) and each item in this set is a <strong>single</strong> control, image moderation alone does not meet the goal. A complete defense pairs image moderation (for unsafe images) with a <strong>prompt shield for documents</strong> (for the injection vector, ideally with Spotlighting).`,
     userChoice: null
   },
   {
@@ -8309,7 +8300,7 @@ with project_client.get_openai_client() as openai_client:
     options: ['A. Yes', 'B. No'],
     correctOption: 'B',
     solution: `<strong>Correct Answer: B — No</strong><br><br>
-    A prompt shield for <strong>documents</strong> is the right tool for the <strong>hidden-instruction (indirect injection)</strong> vector — but on its own it does <strong>not</strong> address the <strong>unsafe-image</strong> part of the stated risk, so as a complete control for "mitigate the risk" it falls short. The series treats this single-control solution as not meeting the full goal; image moderation is the option scored as meeting it.`,
+    The stated risk has <strong>two parts</strong>: (1) <strong>unsafe images</strong>, and (2) <strong>hidden instructions embedded in images</strong> (indirect prompt injection). A <strong>prompt shield for documents</strong> is the correct tool for part 2 — it inspects embedded/third-party content for injected instructions and treats it as lower trust — but on its own it does <strong>nothing</strong> about the unsafe-image vector in part 1. Because the goal is to "mitigate <em>the risk</em>" (both parts) and each item in this set is a <strong>single</strong> control, no one control here fully meets the goal. As the preamble allows, it is possible that none of the solutions in the set solve the problem — a complete defense pairs a document prompt shield (for injection, ideally with Spotlighting) <em>with</em> image moderation (for unsafe images).`,
     userChoice: null
   },
   {
@@ -9343,13 +9334,15 @@ with project_client.get_openai_client() as openai_client:
 // ============================================================
 var ET103_SEQ = (function () {
   var m = {};
-  var n = 0;
+  // Number AI-103 ExamTopics questions sequentially 1..N in ascending id order,
+  // so the displayed "Question #k" is always clean and contiguous regardless of
+  // where each item sits in the questions array.
+  var ids = [];
   for (var i = 0; i < questions.length; i++) {
-    if (questions[i].isExamTopics) {
-      n++;
-      m[questions[i].id] = n;
-    }
+    if (questions[i].isExamTopics) ids.push(questions[i].id);
   }
+  ids.sort(function (a, b) { return a - b; });
+  for (var j = 0; j < ids.length; j++) { m[ids[j]] = j + 1; }
   return m;
 })();
 
@@ -9615,7 +9608,7 @@ function startTodaysExam() {
   reviewMode = false;
   flagged.clear();
   caseStudyCollapsed = false;
-  csActiveTab = 0;
+  csActiveTab = -1;
   activeQuestions.forEach(i => resetQuestion(questions[i]));
   // Full paper: real exam allows ~100 minutes. Scale with length, min 60 min.
   timeLeft = Math.max(3600, activeQuestions.length * 110);
@@ -9808,7 +9801,7 @@ function startAI102Filtered(domainKey) {
   reviewMode = false;
   flagged.clear();
   caseStudyCollapsed = false;
-  csActiveTab = 0;
+  csActiveTab = -1;
   stageMode = false;
   activeQuestions.forEach(i => resetQuestion(questions[i]));
   timeLeft = Math.max(300, activeQuestions.length * 90);
@@ -9930,7 +9923,7 @@ function startExamTopicsFiltered(kind, value) {
   reviewMode = false;
   flagged.clear();
   caseStudyCollapsed = false;
-  csActiveTab = 0;
+  csActiveTab = -1;
   stageMode = false;
   activeQuestions.forEach(i => resetQuestion(questions[i]));
   timeLeft = Math.max(300, activeQuestions.length * 90);
@@ -9952,7 +9945,7 @@ function startSection(key) {
   reviewMode = false;
   flagged.clear();
   caseStudyCollapsed = false;
-  csActiveTab = 0;
+  csActiveTab = -1;
   stageMode = false;
   // reset answers for this section's questions
   activeQuestions.forEach(i => resetQuestion(questions[i]));
@@ -9983,7 +9976,7 @@ function startDomain(domainKey) {
   reviewMode = false;
   flagged.clear();
   caseStudyCollapsed = false;
-  csActiveTab = 0;
+  csActiveTab = -1;
   stageMode = false;
   activeQuestions.forEach(i => resetQuestion(questions[i]));
   timeLeft = Math.max(300, activeQuestions.length * 90);
@@ -10115,7 +10108,7 @@ function goTo(p) {
   }
   pos = p;
   currentQ = activeQuestions[pos];
-  csActiveTab = 0;
+  csActiveTab = -1;
   solutionRevealed = false;
   renderQuestion();
   if (coachOpen) coachIntro();
@@ -10132,7 +10125,7 @@ function navigate(dir) {
     if (next >= st.end) return;
     pos = next;
     currentQ = activeQuestions[pos];
-    csActiveTab = 0;
+    csActiveTab = -1;
     solutionRevealed = false;
     renderQuestion();
     if (coachOpen) coachIntro();
@@ -10142,7 +10135,7 @@ function navigate(dir) {
   if (next >= 0 && next < activeQuestions.length) {
     pos = next;
     currentQ = activeQuestions[pos];
-    csActiveTab = 0;
+    csActiveTab = -1;
     solutionRevealed = false;
     renderQuestion();
     if (coachOpen) coachIntro();
@@ -10209,7 +10202,7 @@ function confirmSeal() {
   sealedUpTo = st.start;
   pos = st.start;
   currentQ = activeQuestions[pos];
-  csActiveTab = 0;
+  csActiveTab = -1;
   buildNav();
   renderQuestion();
 }
@@ -10651,7 +10644,7 @@ function renderQ4() {
 // ============================================================
 // Case Study – exam split-screen shell (left scenario tabs / right question)
 // ============================================================
-const CS_INTRO = `<strong>This is a case study.</strong> Case studies are not timed separately. You can use as much exam time as you would like to complete each case. To answer the questions, you will need to reference information provided in the case study. Each question is independent of the other questions in this case study. Use the tabs on the left to explore the scenario, then answer the question on the right.`;
+const CS_INTRO = `<strong>This is a case study.</strong> Case studies are not timed separately from other exam sections. You can use as much exam time as you would like to complete each case study. However, there might be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided.<br><br>To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study.<br><br><strong>To start the case study —</strong> To display the first question in this case study, select the <strong>Question</strong> button. Use the menu on the left to reference information such as business requirements, the existing environment, and problem statements. When you are ready to answer a question, select the <strong>Question</strong> button to return to the question.`;
 
 // split the scenario HTML into {title, html} sections by <h3>
 function csSections(html) {
@@ -10666,34 +10659,42 @@ function csSections(html) {
 
 function caseStudyShell(q, questionHtml) {
   const sections = csSections(q.caseStudy);
-  const allHtml = sections.map(s => `<h3>${s.title}</h3>${s.html}`).join('');
-  const tabs = [{ title: 'All Information', html: allHtml }, ...sections];
-  const active = (typeof csActiveTab === 'number' && csActiveTab < tabs.length) ? csActiveTab : 0;
+  // Left menu items: each scenario section, plus an "All Information" overview.
+  // The right pane shows the selected section, OR the question when the
+  // "Question" item is active (csActiveTab === -1 or default for a fresh open).
+  const menu = [{ title: 'All Information', html: sections.map(s => `<h3>${s.title}</h3>${s.html}`).join('') }, ...sections];
+  // csActiveTab semantics: -1 (or undefined) = show the Question; 0..n = show menu[i].
+  const onQuestion = !(typeof csActiveTab === 'number' && csActiveTab >= 0);
+  const active = onQuestion ? -1 : Math.min(csActiveTab, menu.length - 1);
+
   return `
     <div class="cs-intro">${CS_INTRO}</div>
-    <div class="cs-split">
-      <div class="cs-left">
-        <div class="cs-pane-title">📘 Case Study — ${q.caseTitle}</div>
-        <div class="cs-tabs">
-          ${tabs.map((t, i) => `<button class="cs-tab ${i===active?'active':''}" onclick="csSwitchTab(${i})">${t.title}</button>`).join('')}
-        </div>
-        <div class="cs-scenario">
-          ${tabs.map((t, i) => `<div class="cs-section-block ${i===active?'active':''}" id="cs-sec-${i}">${i===0 ? t.html : `<h3>${t.title}</h3>${t.html}`}</div>`).join('')}
-        </div>
+    <div class="cs-shell">
+      <div class="cs-nav">
+        <div class="cs-nav-title">${q.caseTitle || 'Case Study'}</div>
+        <button class="cs-question-btn ${onQuestion ? 'active' : ''}" onclick="csShowQuestion()">▸ Question</button>
+        <div class="cs-nav-sep">Case study information</div>
+        ${menu.map((t, i) => `<button class="cs-nav-item ${i===active ? 'active' : ''}" onclick="csSwitchTab(${i})">${t.title}</button>`).join('')}
       </div>
-      <div class="cs-right">
-        <div class="cs-pane-title">Question</div>
-        <div class="cs-question">${questionHtml}</div>
+      <div class="cs-content">
+        ${onQuestion
+          ? `<div class="cs-q-pane"><div class="cs-pane-head">Question</div><div class="cs-question">${questionHtml}</div></div>`
+          : `<div class="cs-info-pane"><div class="cs-pane-head">${active===0 ? 'All Information' : menu[active].title}</div>
+             <div class="cs-scenario">${active===0 ? menu[0].html : `<h3>${menu[active].title}</h3>${menu[active].html}`}</div>
+             <button class="cs-return-btn" onclick="csShowQuestion()">Return to Question ▸</button></div>`}
       </div>
     </div>
   `;
 }
 
-let csActiveTab = 0;
+let csActiveTab = -1; // -1 = show the Question (default on opening a case study)
 function csSwitchTab(i) {
   csActiveTab = i;
-  document.querySelectorAll('.cs-tab').forEach((el, idx) => el.classList.toggle('active', idx === i));
-  document.querySelectorAll('.cs-section-block').forEach((el, idx) => el.classList.toggle('active', idx === i));
+  if (typeof renderActiveQuestionBody === 'function') renderActiveQuestionBody();
+}
+function csShowQuestion() {
+  csActiveTab = -1;
+  if (typeof renderActiveQuestionBody === 'function') renderActiveQuestionBody();
 }
 
 // ============================================================
