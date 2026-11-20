@@ -75,7 +75,7 @@
   .review-list { display: flex; flex-direction: column; gap: 6px; max-height: 320px; overflow-y: auto; }
   .rev-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--ms-border); border-radius: var(--radius); cursor: pointer; font-size: 12px; transition: all .12s; }
   .rev-row:hover { border-color: var(--ms-blue); background: var(--ms-panel-2); }
-  .rev-num { font-weight: 700; min-width: 34px; }
+  .rev-num { font-weight: 700; min-width: 84px; }
   .rev-type { color: var(--ms-text-3); text-transform: uppercase; letter-spacing: .4px; font-size: 10px; }
   .rev-status { margin-left: auto; font-weight: 600; }
   .rev-status.ok { color: var(--ms-green); }
@@ -821,7 +821,7 @@
 
     /* ── REVIEW LIST ── */
     .rev-row { padding: 8px 10px; font-size: 11px; }
-    .rev-num { min-width: 26px; }
+    .rev-num { min-width: 72px; }
   }
 
   /* Very small phones */
@@ -838,6 +838,18 @@
     .start-card-header h1 { font-size: 15px; }
     .mc-option { font-size: 12px; padding: 9px 10px; }
   }
+
+  .nav-group-head { position: sticky; top: 0; z-index: 1; padding: 6px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: #777; background: #f5f5f5; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+  .series-badge { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 3px; background: #f0ad4e; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .4px; vertical-align: middle; }
+  /* WHY-CORRECT explanation box (ExamTopics palette) */
+  .why-box { margin-top: 14px; border: 1px solid #d6e9c6; border-left: 4px solid #5cb85c; background: #f3faf1; border-radius: 3px; padding: 10px 14px; color: #333; font-size: 14px; line-height: 1.6; }
+  .why-box .why-title { font-weight: 700; color: #3c763d; margin-bottom: 4px; }
+  .why-box .why-ans { font-weight: 700; color: #3c763d; }
+  .why-box .why-refs { margin-top: 8px; padding-top: 6px; border-top: 1px dashed #d6e9c6; font-size: 13px; }
+  .why-box .why-refs a { color: #337ab7; text-decoration: none; }
+  .why-box .why-refs a:hover { color: #286090; text-decoration: underline; }
+  .why-box.why-pending { border-color: #ddd; border-left-color: #999; background: #fafafa; }
+  .why-box.why-pending .why-title { color: #777; }
 </style>
 </head>
 <body>
@@ -4530,7 +4542,7 @@ function buildTodaysExam(exam) {
   // OnVUE flow: case studies form a sealed block at the START of the paper.
   const cs = chosen.filter(i => questions[i].isCaseStudy);
   const rest = shuffle(chosen.filter(i => !questions[i].isCaseStudy));
-  return [...cs, ...rest];
+  return [...cs, ...orderByType(rest)];
 }
 
 // ── OnVUE sealed-section flow state (Today's Exam only) ──────────────
@@ -4646,11 +4658,13 @@ function renderExamBlock(exam) {
 
 function examTypeOf(q) {
   if (q.isCaseStudy) return 'case';
+  if (isSeriesQ(q)) return 'series';
   if (q.render === 'selfcheck') return /DRAG/i.test(q.type || '') ? 'dragdrop' : 'hotspot';
   return etTypeOf(q);
 }
 const EXAM_TYPE_DESC = {
   case:     'Scenario-based questions with the case study in a side panel.',
+  series:   'Same scenario, different solution each time. Answer Yes or No; some sets have no correct solution.',
   mcq:      'Single- and multi-select questions, auto-scored.',
   dragdrop: 'Match or order items. Image-based items are self-marked.',
   hotspot:  'Answer-area selections and Yes/No grids.'
@@ -4708,7 +4722,7 @@ function startExamFiltered(exam, kind, value) {
   if (!idx.length) return;
   const label = kind === 'type' ? ET_TYPE_DEFS[value].name : examDefs(exam)[value].name;
   currentSection = 'x:' + exam + ':' + kind + ':' + value;
-  activeQuestions = idx;
+  activeQuestions = orderByType(idx);
   pos = 0;
   currentQ = activeQuestions[0];
   reviewMode = false;
@@ -4762,8 +4776,13 @@ function resetProgress() {
 }
 
 // Classify a question by its interaction TYPE.
+// "Series" questions carry Microsoft's standard notice: same scenario repeated with a
+// different proposed solution each time; once answered you cannot return to them.
+const SERIES_RE = /part of a series of questions that present the same scenario/i;
+function isSeriesQ(q) { return !q.isCaseStudy && (SERIES_RE.test(q.text || '') || SERIES_RE.test(q.note || '')); }
 function etTypeOf(q) {
   if (q.isCaseStudy) return 'case';
+  if (isSeriesQ(q)) return 'series';
   if (q.render === 'hotspot_yesno' || q.statements) return 'hotspot';
   const isDrag = /DRAG\s*DROP/i.test(q.text || '') || /\bdrag\b/i.test(q.title || '');
   if (q.dropdowns) return isDrag ? 'dragdrop' : 'hotspot';
@@ -4773,17 +4792,18 @@ function etTypeOf(q) {
 
 const ET_TYPE_DEFS = {
   case:     { name: 'Case Studies',    icon: '📁', color: '#8661c5', desc: 'Scenario-based, multi-question sets sharing a case panel.' },
+  series:   { name: 'Series (Yes/No)', icon: '🔁', color: '#f0ad4e', desc: 'Same scenario repeated with a different proposed solution; answer Yes or No.' },
   mcq:      { name: 'Multiple Choice', icon: '☑️', color: '#0067b8', desc: 'Single- and multi-select questions.' },
   dragdrop: { name: 'Drag & Drop',     icon: '🔀', color: '#d83b01', desc: 'Match/order items by dragging into targets.' },
   hotspot:  { name: 'Hotspot',         icon: '🎯', color: '#107c10', desc: 'Dropdown selections and Yes/No grids.' }
 };
-const ET_TYPE_ORDER = ['case', 'mcq', 'dragdrop', 'hotspot'];
+const ET_TYPE_ORDER = ['case', 'series', 'mcq', 'dragdrop', 'hotspot'];
 
 // ── MS-102 browser: by question type and by official MS-102 domain ──
 
 function startSection(key) {
   currentSection = key;
-  activeQuestions = indicesForSection(key);
+  activeQuestions = orderByType(indicesForSection(key));
   pos = 0;
   currentQ = activeQuestions[0];
   reviewMode = false;
@@ -4814,7 +4834,7 @@ function startDomain(domainKey) {
   questions.forEach((q, i) => { if (domainOf(q) === domainKey) idx.push(i); });
   if (!idx.length) return;
   currentSection = 'dom:' + domainKey;
-  activeQuestions = shuffle(idx);
+  activeQuestions = orderByType(shuffle(idx));
   pos = 0;
   currentQ = activeQuestions[0];
   reviewMode = false;
@@ -4897,8 +4917,24 @@ function updateTimer() {
 // ============================================================
 // NAV
 // ============================================================
+// ── Grouped numbering ───────────────────────────────────────────
+// Every set is ordered by question type (case studies, series, multiple choice,
+// drag & drop, hotspot) and numbered 1..N in that order, so numbers run in
+// groups instead of following the original source numbering.
+function typeRank(q) { const r = ET_TYPE_ORDER.indexOf(examTypeOf(q)); return r < 0 ? 99 : r; }
+function orderByType(idx) {
+  return idx.map((qi, n) => [qi, n]).sort((a, b) => (typeRank(questions[a[0]]) - typeRank(questions[b[0]])) || (a[1] - b[1])).map(x => x[0]);
+}
+function qNum(qi) { const p = activeQuestions.indexOf(qi); return p < 0 ? null : p + 1; }
+function groupName(q) { const d = ET_TYPE_DEFS[examTypeOf(q)]; return d ? d.name : ''; }
+function groupCount() { return new Set(activeQuestions.map(qi => examTypeOf(questions[qi]))).size; }
+
 function buildNav() {
   const nav = document.getElementById('navItems');
+  const multiGroup = groupCount() > 1;
+  const gTotals = {};
+  activeQuestions.forEach(qi => { const g = examTypeOf(questions[qi]); gTotals[g] = (gTotals[g] || 0) + 1; });
+  let lastGroup = null;
   nav.innerHTML = activeQuestions.map((qi, p) => {
     const q = questions[qi];
     let lockCls = '';
@@ -4907,9 +4943,15 @@ function buildNav() {
       if (p < st.start) lockCls = ' sealed';
       else if (p >= st.end) lockCls = ' locked';
     }
-    return `<div class="nav-item ${p===pos?'active':''}${lockCls} st-${questionStatus(q.id)}" id="nav-${qi}" onclick="goTo(${p})">
+    const g = examTypeOf(q);
+    let head = '';
+    if (multiGroup && g !== lastGroup) {
+      head = `<div class="nav-group-head">${groupName(q)} · ${gTotals[g]}</div>`;
+      lastGroup = g;
+    }
+    return head + `<div class="nav-item ${p===pos?'active':''}${lockCls} st-${questionStatus(q.id)}" id="nav-${qi}" onclick="goTo(${p})">
       <div class="nav-dot"></div>
-      ${q.isMS102Guide ? `Q${q.ms102n}` : q.isMS102 ? `Q${MS102_SEQ[q.id] || q.id}` : q.isAB650Learn ? `Q${AB650LEARN_SEQ[q.id] || q.id}` : q.isAB650 ? `Q${AB650_SEQ[q.id] || q.id}` : `Q${DP700_SEQ[q.id] || q.id}`}
+      Question ${p + 1}
     </div>`;
   }).join('');
 }
@@ -4999,7 +5041,7 @@ function openSectionReview() {
     const ans = isAnswered(qi);
     const flg = flagged.has(qi);
     rows.push(`<div class="rev-row" onclick="reviewGoTo(${p})">
-      <span class="rev-num">Q${p - st.start + 1}</span>
+      <span class="rev-num">Question ${p + 1}</span>
       <span class="rev-type">${q.type}</span>
       <span class="rev-status ${ans?'ok':'miss'}">${ans?'Answered':'Unanswered'}</span>
       ${flg?'<span class="rev-flag">⚑ Flagged</span>':''}
@@ -5364,6 +5406,13 @@ function renderQuestion() {
     document.getElementById('qId').textContent = `Question #${q.id}`;
     document.getElementById('qTopic').innerHTML = `${domainBadge(q)} ${sourceBadge(q)}`;
   }
+  { // grouped numbering: Question #n follows the set order (grouped by type)
+    const n = qNum(currentQ);
+    if (n) {
+      document.getElementById('qId').textContent = `Question #${n}`;
+      if (groupCount() > 1) document.getElementById('qTopic').insertAdjacentHTML('beforeend', ` <span class="topic-tag">${groupName(q)}</span>`);
+    }
+  }
   document.getElementById('discCount').textContent = q.discussions || 0;
   document.getElementById('flagBtn').className = `flag-btn${flagged.has(currentQ)?' flagged':''}`;
 
@@ -5395,7 +5444,7 @@ function renderQuestion() {
 
   const body = document.getElementById('qBody');
   body.innerHTML = `
-    <div class="q-type-badge">${q.type}${q.hard ? ' <span class="hard-badge">HARD · 2026</span>' : ''}</div>
+    <div class="q-type-badge">${q.type}${isSeriesQ(q) ? ' <span class="series-badge">SERIES</span>' : ''}${q.hard ? ' <span class="hard-badge">HARD · 2026</span>' : ''}</div>
     ${q.isCaseStudy ? '' : `<div class="q-text">${q.text}</div>${q.note ? `<div class="q-note">${q.note}</div>` : ''}`}
     <div id="questionContent"></div>
     <div class="solution-panel" id="solutionPanel" style="display:none">
@@ -6348,6 +6397,163 @@ function reviewExam() {
   buildNav();
   renderQuestion();
 }
+</script>
+
+<script>
+// ============================================================
+// "WHY THIS IS CORRECT" explanations
+// Shown under the solution for every question. Authored rationales live in
+// WHY_CORRECT (keyed by question id); items without one fall back to a
+// short box that states the verified answer and its text.
+// ============================================================
+const WHY_CORRECT = {
+  5001: 'Microsoft 365 confirms you own a domain by asking you to publish a <strong>TXT</strong> record (or an MX record) at your DNS host and then checking for it. An A record only maps a name to an IP address, HINFO describes host hardware/OS and is not used for verification, and a PTR record is reverse lookup. Only TXT proves ownership.',
+  5009: 'The <strong>Service Support Administrator</strong> role can view service health and advisories and open and manage Microsoft support requests. Message Center Reader can only read Message center posts, Reports Reader only sees usage reports, and Compliance Administrator manages compliance features, none of which grant access to service health advisories.',
+  5012: 'A hybrid deployment needs a <strong>publicly routable, verifiable domain</strong>. contoso.local is non-routable, so it cannot be verified in Microsoft 365 and cannot be used for user sign-in names. Buying a custom domain lets you verify it, add it as a UPN suffix and sync identities. A forest rename or external trust is unnecessary, and a third-party X.509 certificate is not needed to prepare the tenant.',
+  5013: 'Group-based role assignment requires a group with <strong>assigned (static) membership</strong>, because dynamic membership groups cannot be role-assignable. For access to an enterprise application, security groups are the standard supported group type. Together that makes a <strong>security group with assigned membership</strong> the correct choice.',
+  5014: 'Alert policies are driven by events in the <strong>audit log</strong>. Until auditing is enabled, activities such as an Exchange Online admin privilege elevation are not recorded, so the alert has nothing to trigger on. Insider risk and communication compliance policies serve different purposes, and usage analytics only provides adoption reports.',
+  5016: 'Users who exceed sending limits are blocked and listed under <strong>Restricted entities</strong>, which is managed in the <strong>Microsoft Defender portal</strong> (Email &amp; collaboration &gt; Review). Removing the user there unblocks sending. The other admin centers do not expose that list.',
+  5017: "A <strong>new Safe Links policy</strong> can be scoped to specific users or groups, so you can target only the research department and leave everyone else untouched. Safe Links is the feature that checks URLs in email, Office documents and Teams at click time. The global settings apply tenant-wide, and DLP policies detect and protect content, they do not block unsafe hyperlinks.",
+  5020: "The <strong>configuration analyzer</strong> in the Microsoft Defender portal compares your current policy settings, including Safe Links, against the Standard and Strict recommended baselines and shows the gaps. Secure Score gives improvement actions but does not do a side-by-side policy comparison, and Purview and Identity Protection cover other areas.",
+  5023: "Protection for files in <strong>Teams, OneDrive and SharePoint</strong> comes from the <strong>Safe Attachments global setting</strong> (Turn on Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams). Anti-malware and anti-phishing policies protect email, and Safe Links protects URLs, so neither stops users opening malicious files in those workloads.",
+  5026: "The Defender portal Incidents page correlates alerts from the Microsoft Defender products, which includes <strong>Microsoft Defender for Identity</strong>. Microsoft Sentinel, Defender for Cloud and Azure Arc are Azure services and are not alert sources for that Incidents page in this scenario.",
+  5027: "Pass-through authentication needs users to sign in with a name that matches a verified cloud domain. contoso.local is non-routable, so you must <strong>add a custom domain name</strong> in Entra (E), <strong>add a matching UPN suffix</strong> in Active Directory Domains and Trusts (C), and <strong>change each user logon name</strong> to use that suffix (F). Installing the authentication agent and configuring an authentication method come later, during or after Azure AD Connect setup, and the email attribute is not what is used for sign-in.",
+  5030: "The minimum is <strong>4</strong> policies. One policy can require both MFA and a compliant device for sign-ins from outside the corporate network, because grant controls can be combined. Then you need a block policy for locations outside the United States and Canada, a block policy for R&amp;D on Android and iOS, and one policy that blocks App1 for everyone except finance. Each has different users, conditions or targets, so they cannot be merged further.",
+  5033: "MFA for one application is enforced with a <strong>Conditional Access policy</strong> that targets App1 as the cloud app and requires multi-factor authentication. The legacy per-user MFA service settings and the modern authentication toggle apply tenant-wide or per user, not to a single application, and the Enterprise applications Users settings do not enforce MFA.",
+  5037: "A <strong>DLP policy</strong> can find content containing sensitive info types such as PII in Teams and SharePoint and report on it through activity explorer and alerts. A retention policy only keeps or deletes content, an alert policy reacts to activities, and a Defender for Cloud Apps policy is not the Purview tool for scanning PII in these Microsoft 365 workloads.",
+  5040: "When a DLP policy covers all locations, the conditions that work across them include <strong>sensitive info types</strong>. Content search queries are not DLP conditions, and the others are not available for every location at once.",
+  5041: "Retention policies for these workloads cannot all be combined: <strong>Teams</strong> needs its own policy, <strong>Exchange Online</strong> needs its own, and <strong>SharePoint and OneDrive</strong> can share a third. That gives a minimum of <strong>3</strong> policies to retain data for two years.",
+  5043: "Defining sensitive data from existing samples is what a <strong>trainable classifier</strong> does, and automatically blocking external sharing of matching content in SharePoint and email is done by a <strong>DLP policy</strong>. A sensitive info type is pattern based rather than sample based, an insider risk policy detects risky user activity, and an adaptive scope only targets users or sites.",
+  5048: "<strong>No.</strong> IdFix finds and helps fix directory attribute errors, but exporting accounts does not change anything. The accounts are missing because the OU is probably outside the sync scope, so you would need to include that OU in Azure AD Connect filtering.",
+  5049: "<strong>No.</strong> The Azure AD credentials in Azure AD Connect are only used to authenticate the connector. Connect Health already shows successful syncs, so credentials are not the problem. The 10 accounts are missing because their OU is not in the sync scope.",
+  5050: "<strong>No.</strong> An outbound synchronization rule affects how objects are exported to Entra ID, but the accounts are not being picked up from the OU in the first place. The fix is to include that OU in the Azure AD Connect domain/OU filtering and run a sync.",
+  5053: "A tenant can contain up to <strong>5 onmicrosoft.com domains</strong> that can be used for email addresses, so the answer key gives 5.",
+  5055: "The users are <strong>synced from on-premises Active Directory</strong>, so the city attribute must be changed at the source. Run the <strong>Get-ADUser and Set-ADUser</strong> cmdlets from PowerShell on a domain controller. Graph cmdlets and Cloud Shell cannot edit attributes that are mastered on-premises, and Cloud Shell does not have the AD module.",
+  5059: "<strong>Privileged Identity Management (PIM)</strong> provides just-in-time, time-bound role activation, such as eight hours, and can require approval before activation. Identity Protection detects risk, Verified ID handles verifiable credentials, and Conditional Access controls sign-in conditions, not role assignment duration.",
+  5063: "<strong>PIM</strong> lets you make users eligible for the Exchange Administrator role and set the maximum activation duration, for example five hours. Conditional Access, communication compliance, Identity Protection and dynamic groups do not give time-limited role assignment.",
+  5064: "The <strong>Message center</strong> (in the admin center and the Microsoft 365 Admin mobile app) announces upcoming and recent service updates and changes. Service health reports incidents and advisories, and the Products blade lists subscriptions, so neither tells you which apps were updated.",
+  5066: "Per the answer key, Microsoft Purview Privileged Access Management supports <strong>Exchange Online only</strong> for privileged access in this question. Community votes were split with another option, so verify against current Microsoft Learn documentation before relying on this.",
+  5070: "Defender for Endpoint Plan 1, included with Microsoft 365 E3, provides <strong>security reports</strong> and <strong>attack surface reduction (ASR) rules</strong>. Advanced hunting and the other features listed here are part of Plan 2.",
+  5071: "Per the answer key, alerts in the Defender portal are retained for <strong>3 months</strong>. Community votes were split with 6 months, so confirm the current retention period on Microsoft Learn.",
+  5072: "The compromised users report in the Defender portal can export up to the <strong>last 30 days</strong>, so 30 days is the longest range for this report.",
+  5080: "<strong>IdFix</strong> scans the directory for errors that block synchronization (duplicates, invalid characters, formatting) and you fix them with <strong>Edit</strong>. Clicking Complete does not apply the fixes, forcing a delta sync does not resolve the underlying errors, and manually editing hundreds of accounts is slow. Edit is the fast way to resolve sync failures.",
+  5084: "If a risky or blocked sign-in happens while travelling, <strong>self-service password reset (SSPR)</strong> lets the user remediate it without an admin, because completing a password reset with MFA clears the user risk. Exclusion groups and named locations would weaken the policy for these users, and the MFA registration policy only forces registration.",
+  5085: "Outlook on the web signs in with the <strong>UPN</strong>. The user is trying to sign in with user1@marketing.contoso.com, but the UPN is user1@contoso.com, and an alternate email address does not act as a sign-in name. Changing the UPN to match the address the user types fixes sign-in. MFA registration and a password reset do not change which name is accepted.",
+  5088: "<strong>Pass-through authentication</strong> validates passwords against on-premises AD at sign-in, so the on-premises password policies are enforced, and it works with SSPR. Password hash sync validates against a hash in the cloud instead of enforcing on-premises policy at sign-in. Seamless SSO and Identity Protection are not sync or authentication methods that satisfy both requirements.",
+  5089: "The risk policy blocks the VDI because its shared egress IP looks risky. Adding the VDI egress IP range as a <strong>trusted (named) location</strong> lowers false-positive sign-in risk for that traffic. Tenant restrictions and network connectivity settings do not affect risk detection, and a policy exclusion would remove protection for those users entirely.",
+  5092: "<strong>Pass-through authentication</strong> checks each sign-in against on-premises Active Directory, so on-premises logon-hour restrictions are honoured. With password hash sync, authentication happens in the cloud against a hash and logon hours are not enforced.",
+  5093: "Only one active Azure AD Connect sync server can export to a tenant at a time. The right design for fast recovery is <strong>one active server plus one in staging mode</strong>, which can be promoted if the active server fails. A single server can sync multiple forests, so extra active servers are neither supported nor needed.",
+  5097: "Users can override a DLP rule, for example by reporting a false positive, only when <strong>user overrides</strong> are allowed in the rule. Turning that option off stops them bypassing the policy. Actions, exceptions and incident reports do not control the override option.",
+  5102: "A custom <strong>sensitive information type</strong> uses a pattern (regex) to detect formatted values such as the customer ID, and DLP can then use that type as a condition. Sensitivity and retention labels classify or retain content and do not detect patterns on their own.",
+  5103: "Only <strong>Mark items as a regulatory record</strong> prevents the label from being removed once applied. A normal record label can still be removed by admins, while regulatory records make the label and retention settings immutable. The other options only set or extend retention.",
+  5106: "<strong>No.</strong> The SharePoint Administrator role manages SharePoint, not Defender for Office 365 policies. Managing those policies for Teams, SharePoint and OneDrive requires a security role such as Security Administrator.",
+  5107: "<strong>Yes.</strong> The <strong>Security Administrator</strong> role includes permissions to manage Microsoft Defender for Office 365 settings and policies, including the protection for Teams, SharePoint and OneDrive.",
+  5108: "<strong>No.</strong> Exchange Administrator manages Exchange Online, not Defender for Office 365 policies for Teams, SharePoint and OneDrive. A security role such as Security Administrator is needed.",
+  5112: "<strong>No.</strong> Teams Administrator manages Teams settings, not Defender for Office 365 policies. A security role such as Security Administrator is needed.",
+  5115: "Group-based licensing is configured on the group in the <strong>Microsoft Entra admin center</strong> (Licenses on the Voice group), so members receive the Business Voice add-on automatically. Assigning from the Licenses page is per user, and the Microsoft 365 admin center group settings option does not provide this automatic group assignment in the answer key.",
+  5116: "The Endpoint Security Manager role can be assigned to groups of type <strong>mail-enabled security, Microsoft 365 and security</strong>. Distribution groups cannot be used for role assignment. Community votes were split with the security-only option, so verify against current documentation.",
+  5118: "Service health notification emails are set up by customizing the <strong>Service health settings</strong> in the Microsoft 365 admin center (Email), where you add the personal addresses and pick Exchange Online. Contacts, inbox rules and technical contact details do not send service health alerts.",
+  5120: "User names in usage reports are hidden by default. In <strong>Org settings for Reports</strong>, you clear the option to display concealed names so reports show who activated Microsoft 365 Apps and on how many devices.",
+  5122: "Domain verification emails go to the contact on the domain registration, the WHOIS contact, so you change the <strong>contact information at the domain registrar</strong>. A TXT record is a different verification method, changing a global admin does not affect it, and NS records control name resolution.",
+  5125: "<strong>Basic discovery</strong> means onboarded devices only passively observe network traffic and discover devices they communicate with directly, without actively probing the network. Standard discovery actively polls, exclusions only hide devices, and a network assessment job scans specific ranges.",
+  5131: "To get Server1 back in Connect Health you can <strong>re-register the agent with Register-AzureADConnectHealthSyncAgent</strong> (A) or <strong>reinstall the agent</strong> on the server (C), which registers it again. Connect-AzureAD only signs in, and service startup types do not re-add a removed server.",
+  5133: "The <strong>Microsoft 365 Admin mobile app</strong> shows service health and advisories and can send alerts to a phone. Authenticator, Company Portal and the Intune app are for sign-in approval, enrolment and device management.",
+  5137: "<strong>Azure Monitor workbooks</strong> use Log Analytics, which supports KQL and can retain data for a year or more. Defender security reports, endpoint analytics and usage analytics do not offer KQL querying with that retention.",
+  5149: "Before syncing, the on-premises UPN suffix must match the verified cloud domain. The forest uses contoso.local, so you first <strong>add contoso.com as a UPN suffix</strong> in Active Directory Domains and Trusts, and then update users. You cannot verify a non-routable .local domain, and MX records do not affect sync.",
+  5150: "Identity Protection detects <strong>anonymous IP address</strong> on a first sign-in because it needs no history. Atypical travel and unfamiliar sign-in properties need a learned baseline of the user's normal activity, which does not exist after one day, so only the anonymous IP risk is detected. Community votes were split with option E.",
+  5154: "<strong>Password protection</strong> in the Entra admin center lets you add a custom banned password list, for example Contoso, so passwords containing it are rejected. Conditional Access and risk policies do not evaluate password content, and the Microsoft 365 admin center password policy only sets expiry.",
+  5155: "<strong>No.</strong> Pass-through authentication depends on on-premises Active Directory being reachable at sign-in, so users could not authenticate if AD became unavailable. Password hash synchronization is what meets that requirement.",
+  5156: "<strong>No</strong> per the answer key. Password hash synchronization lets users sign in when AD is down, but Entra password protection only blocks banned or weak words. It does not set a 10-character minimum, which Entra does not let you set above its fixed minimum. Community votes were split, so check this one against Learn.",
+  5157: "<strong>No.</strong> Pass-through authentication needs on-premises Active Directory to validate every sign-in, so users cannot authenticate if AD is unavailable. Password protection does not fix that.",
+  5158: "<strong>Yes.</strong> Password hash synchronization keeps working when AD is unavailable because authentication is done in the cloud, and the length rule set in the Default Domain Policy is enforced when passwords are set on-premises, so synced passwords meet the 10-character requirement.",
+  5160: "<strong>Azure AD Conditional Access</strong> can require MFA for a specific set of users or a location, so it can enforce MFA only for the branch office. Password protection, device configuration profiles and compliance policies do not enforce MFA by location.",
+  5161: "<strong>Yes.</strong> The 10 accounts are missing because their OU is outside the sync scope. Modifying the <strong>filtering settings</strong> in Azure AD Connect to include that OU, and syncing, brings the accounts into Entra ID.",
+  5163: "The <strong>Security Reader</strong> role can view Identity Protection risky users, so it is the least-privileged role that meets the need. Global Administrator, Owner and User Administrator give far more access than required.",
+  5165: "Only the <strong>Microsoft Authenticator app</strong> supports passwordless sign-in on all of these platforms (Android, iOS, Windows and macOS). Windows Hello is Windows only, and FIDO2 keys need hardware and are not supported across every device and browser here.",
+  5169: "Adding the corporate network as a <strong>named location</strong> (trusted) reduces false positive impossible travel and sign-in risk detections for users on that network. Exclusion groups would remove protection, and MFA or user risk policies do not address the false positives.",
+  5170: "Mail-enabled contacts are created in the <strong>Microsoft 365 admin center</strong> (Contacts). SharePoint, Entra and Purview portals are not where contacts are created.",
+  5172: "<strong>Password hash synchronization</strong> is needed for Identity Protection leaked credential detection, and <strong>single sign-on</strong> (Seamless SSO) minimizes credential prompts for domain-joined users. Pass-through authentication does not provide leaked-credential detection.",
+  5176: "<strong>Live Response</strong> opens a remote shell on the device where you can run PowerShell scripts and collect forensic data. Collect investigation package gathers a fixed package, Go hunt starts advanced hunting, and Automated Investigation runs automatically without custom scripts.",
+  5178: "Quarantine notification frequency is controlled in the <strong>global settings for quarantine policies</strong>, where you can set notifications to be sent more often, for example every 24 hours. Community votes were split, so verify the option name in your tenant.",
+  5179: "An <strong>alert</strong> created from detections can send an email to administrators when the activity is detected. Vulnerability notification rules, incident assignment filters and incident notification rules relate to incidents or vulnerabilities, not a specific sign-in detection alert.",
+  5180: "To block devices by machine risk score, you first create an Intune <strong>device compliance policy</strong> that requires a maximum risk level, and then use Conditional Access to enforce it. Configuration and EDR policies do not evaluate risk for access.",
+  5182: "The Built-in protection preset applies <strong>Safe Attachments</strong> and <strong>Safe Links</strong> protection by default. Anti-malware, anti-phishing and anti-spam come from the Standard and Strict presets or the default policies.",
+  5187: "To block a malicious URL with Defender for Endpoint you <strong>enable custom network indicators</strong> (B) and <strong>create an indicator</strong> for the URL or domain (D). Web content filtering is for categories, and the other options do not block a specific site.",
+  5190: "Unusual usage patterns are detected by anomaly detection in <strong>Defender for Cloud Apps</strong>, which you manage from the <strong>Microsoft 365 Defender portal</strong>. Community votes were split with Purview, so confirm in your tenant.",
+  5191: "Adoption Score gets device and software metrics through <strong>Endpoint analytics</strong>, which must be enabled. Privileged access, support integration and the network connectivity test are not the source of those metrics.",
+  5194: "Sensitivity labels in Word for the web require <strong>sensitivity label support for files in SharePoint and OneDrive</strong> to be enabled. Without it, only desktop apps show labels, even if labels are already published.",
+  5198: "After installing and registering the network scanner, you <strong>create an assessment job</strong> that tells it what to scan. Intune connection, Threat Experts and onboarding packages are unrelated to running the scan.",
+  5199: "An <strong>alert policy</strong> can notify you when a specific activity happens, such as a Full Access permission being added to a mailbox by a user in a given group. An audit search only lets you look at past events, and DLP and insider risk policies do not alert on permission changes.",
+  5200: "To be emailed about high-severity incidents you create an <strong>incident notification rule</strong> in the Defender portal. Community votes preferred this answer over an alert policy. Custom detection rules create alerts, and threat policies protect rather than notify.",
+  5203: "<strong>Advanced hunting</strong> with a query and a custom <strong>detection rule</strong> generates an alert when matching activity appears. DLP and audit search are Purview tools, and a suppression rule hides alerts instead of creating them.",
+  5208: "A <strong>retention policy</strong> applied to the site keeps data for 10 years, and a <strong>DLP policy</strong> applied to the site blocks sharing outside the organization. Sensitive info types and labels do not on their own enforce both requirements.",
+  5209: "Whether a DLP rule blocks content shared in a channel with external members depends on the rule conditions and actions, such as restricting access when shared with people outside the organization. Editing the <strong>policy rules of DLP1</strong> is the fix. Community votes were split, so this relies on the exhibit.",
+  5210: "The <strong>Set headers</strong> action is only available for DLP policies applied to <strong>Exchange email</strong>, because it adds or modifies message headers. OneDrive, SharePoint and Teams do not have message headers.",
+  5213: "Per the answer key, a <strong>DLP policy</strong> in Purview can detect sharing from the HR SharePoint site and send an incident notification to the HR manager. Community votes preferred an alert policy for sharing activity, so verify which fits your tenant before relying on this.",
+  5214: "With Allow or block file enabled, you create a <strong>file indicator</strong> for File1.exe set to Block and remediate. Suppression rules hide alerts, and device configuration profiles do not block specific files.",
+  5217: "<strong>Start-ManagedFolderAssistant</strong> forces the Managed Folder Assistant to process the mailbox now, so the published retention label becomes available to User1 right away instead of waiting for the normal cycle. The other cmdlets are not Exchange Online or are unrelated.",
+  5218: "Before turning on an auto-labeling policy you should <strong>run it in simulation mode</strong> to see which items would match and fine tune it. Only after reviewing simulation results do you turn the policy on.",
+  5220: "Endpoint DLP policies apply to <strong>Windows 10 (and newer) devices</strong> and to macOS. Android and iOS are not Endpoint DLP devices, so among these options only Windows 10 applies.",
+  5222: "Email is not blocked because the DLP policy is not applied to the Exchange location, so the fix is to add or enable the <strong>locations of the DLP policy</strong> for email. SharePoint is already blocked, so the rule conditions work.",
+  5224: "After a preservation lock, a retention policy can be made stricter but not weaker. You can <strong>add locations</strong> (A) and <strong>extend the duration</strong> (D). You cannot remove locations, reduce the duration, or disable or delete the policy.",
+  5226: "A <strong>SecOps mailbox</strong> is the designated place for security teams to receive unfiltered mail, so Defender for Office 365 takes no filtering action on messages delivered to it. Retention, mail flow rules and litigation hold do not bypass filtering the same way.",
+  5228: "To block delivery only to external recipients while still delivering to internal ones, you modify the <strong>policy rule actions</strong> (for example, restrict access or encrypt for external recipients only). Conditions only decide what content matches.",
+  5229: "The user was blocked after sending to too many recipients, which is controlled by outbound limits in the <strong>anti-spam policies</strong> (outbound spam policy). Safe Attachments, anti-phishing and anti-malware do not set sending limits.",
+  5235: "<strong>No.</strong> The Teams Administrator role manages Teams, not Defender for Office 365 policies, so SecAdmin1 would still need a security role such as Security Administrator.",
+  5239: "Among these options only <strong>Security Administrator</strong> can view Identity Protection risky users. Compliance Administrator, Service Administrator and User Administrator cannot, so Security Administrator is the correct role here.",
+  5240: "<strong>Security Reader</strong> can view Identity Protection risky users and is read-only, so it satisfies least privilege. Compliance Administrator, Reports Reader and User Administrator do not provide that access.",
+  5241: "Mail contacts are created in the <strong>Exchange admin center</strong> (Contacts). Teams, Intune and Defender portals are not where contacts are created.",
+  5246: "Leaked credential detection requires <strong>password hash synchronization</strong>, because Identity Protection compares synced hashes with known leaked credentials. Pass-through authentication does not give it hashes, and security defaults do not enable it.",
+  5249: "Azure AD Connect needs outbound access to additional Microsoft service endpoints, not only *.microsoft.com and *.office.com. The best fix is to <strong>modify the firewall allow list</strong> to include the required domains. Syncs only need outbound traffic, so inbound lists, staging mode and sync options do not solve it.",
+  5250: "Adding the VDI egress addresses as a <strong>trusted location</strong> reduces false risk detections from the single US location, while still keeping the sign-ins protected by Identity Protection and Conditional Access. ExpressRoute and satellite geography do not change risk detection.",
+  5252: "<strong>Access reviews</strong> let group owners recertify guest membership on a schedule, such as every 30 days. Expiration, retention and Conditional Access policies do not prompt owners to revalidate membership.",
+  5255: "Seamless SSO relies on the browser sending Kerberos credentials, so you must add the Azure AD sign-in URL to the <strong>Intranet zone</strong> with Group Policy. Joining computers to Azure AD, a Conditional Access policy or a staging server is not required.",
+  5256: "The accounts are synced from on-premises, so the city attribute must be changed in Active Directory. Using <strong>Active Directory Administrative Center</strong> on-premises edits the source attribute and sync carries it to Entra ID. Cloud Shell or Graph cmdlets cannot change attributes mastered on-premises.",
+  5257: "Because the users are <strong>synced from on-premises AD</strong>, the attribute must be changed there using Get-ADUser and Set-ADUser on a domain controller. Cloud shells and the Azure portal cannot edit attributes owned by on-premises AD.",
+  5261: "To block devices based on risk score, first create an Intune <strong>device compliance policy</strong> that sets the maximum allowed machine risk level, and then enforce it with Conditional Access. A configuration or EDR policy does not evaluate risk for access."
+};
+const WHY_LEARN = {"5001": [["Add DNS records to connect your domain (TXT verification)", "https://learn.microsoft.com/en-us/office365/admin/get-help-with-domains/create-dns-records-at-any-dns-hosting-provider"]], "5122": [["Create a custom domain in Microsoft 365 (verification options)", "https://learn.microsoft.com/en-us/training/modules/add-custom-domain-microsoft-365/5-create"]], "5017": [["Set up Safe Links policies in Microsoft Defender for Office 365", "https://learn.microsoft.com/en-us/defender-office-365/safe-links-policies-configure"]], "5023": [["Turn on Safe Attachments for SharePoint, OneDrive, and Microsoft Teams", "https://learn.microsoft.com/en-us/defender-office-365/safe-attachments-for-spo-odfb-teams-configure"]], "5089": [["Conditional Access: Network assignment (named and trusted locations)", "https://learn.microsoft.com/entra/identity/conditional-access/location-condition"]], "5169": [["Conditional Access: Network assignment (named and trusted locations)", "https://learn.microsoft.com/entra/identity/conditional-access/location-condition"]], "5250": [["Conditional Access: Network assignment (named and trusted locations)", "https://learn.microsoft.com/entra/identity/conditional-access/location-condition"]], "5059": [["Configure Privileged Identity Management (role settings)", "https://learn.microsoft.com/en-us/training/modules/examine-privileged-identity-management/3-configure-privileged-identity-management"]], "5063": [["Configure Privileged Identity Management (role settings)", "https://learn.microsoft.com/en-us/training/modules/examine-privileged-identity-management/3-configure-privileged-identity-management"]], "5103": [["Learn about records management (regulatory records)", "https://learn.microsoft.com/en-us/purview/records-management"]], "5012": [["Prepare a nonroutable domain for directory synchronization", "https://learn.microsoft.com/en-us/microsoft-365/enterprise/prepare-a-non-routable-domain-for-directory-synchronization"]], "5027": [["Prepare a nonroutable domain for directory synchronization", "https://learn.microsoft.com/en-us/microsoft-365/enterprise/prepare-a-non-routable-domain-for-directory-synchronization"], ["Prepare for directory synchronization (UPN suffixes, IdFix)", "https://learn.microsoft.com/en-us/training/modules/prepare-synchronization-microsoft-365/3-prepare-directory-synchronization"]], "5149": [["Prepare a nonroutable domain for directory synchronization", "https://learn.microsoft.com/en-us/microsoft-365/enterprise/prepare-a-non-routable-domain-for-directory-synchronization"]], "5080": [["Prepare for directory synchronization (UPN suffixes, IdFix)", "https://learn.microsoft.com/en-us/training/modules/prepare-synchronization-microsoft-365/3-prepare-directory-synchronization"]], "5048": [["Prepare for directory synchronization (UPN suffixes, IdFix)", "https://learn.microsoft.com/en-us/training/modules/prepare-synchronization-microsoft-365/3-prepare-directory-synchronization"]], "5161": [["Prepare for directory synchronization (UPN suffixes, IdFix)", "https://learn.microsoft.com/en-us/training/modules/prepare-synchronization-microsoft-365/3-prepare-directory-synchronization"]], "5088": [["Choose the right authentication method for Microsoft Entra hybrid identity", "https://learn.microsoft.com/azure/active-directory/hybrid/choose-ad-authn"]], "5092": [["Choose the right authentication method for Microsoft Entra hybrid identity", "https://learn.microsoft.com/azure/active-directory/hybrid/choose-ad-authn"]], "5172": [["Choose the right authentication method for Microsoft Entra hybrid identity", "https://learn.microsoft.com/azure/active-directory/hybrid/choose-ad-authn"]], "5246": [["Choose the right authentication method for Microsoft Entra hybrid identity", "https://learn.microsoft.com/azure/active-directory/hybrid/choose-ad-authn"]], "5155": [["Choose the right authentication method for Microsoft Entra hybrid identity", "https://learn.microsoft.com/azure/active-directory/hybrid/choose-ad-authn"], ["Build resilience in your hybrid architecture", "https://learn.microsoft.com/en-us/Entra/architecture/resilience-in-hybrid"]], "5156": [["Choose the right authentication method for Microsoft Entra hybrid identity", "https://learn.microsoft.com/azure/active-directory/hybrid/choose-ad-authn"], ["Build resilience in your hybrid architecture", "https://learn.microsoft.com/en-us/Entra/architecture/resilience-in-hybrid"]], "5157": [["Choose the right authentication method for Microsoft Entra hybrid identity", "https://learn.microsoft.com/azure/active-directory/hybrid/choose-ad-authn"], ["Build resilience in your hybrid architecture", "https://learn.microsoft.com/en-us/Entra/architecture/resilience-in-hybrid"]], "5158": [["Choose the right authentication method for Microsoft Entra hybrid identity", "https://learn.microsoft.com/azure/active-directory/hybrid/choose-ad-authn"], ["Build resilience in your hybrid architecture", "https://learn.microsoft.com/en-us/Entra/architecture/resilience-in-hybrid"]], "5125": [["Device discovery overview (basic vs standard)", "https://learn.microsoft.com/en-us/defender-endpoint/device-discovery"]], "5176": [["Microsoft Defender for Endpoint on Windows (live response, indicators)", "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-windows"]], "5187": [["Microsoft Defender for Endpoint on Windows (live response, indicators)", "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-windows"]], "5214": [["Microsoft Defender for Endpoint on Windows (live response, indicators)", "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-endpoint-windows"]], "5037": [["Create and manage DLP policies", "https://learn.microsoft.com/en-us/training/modules/m365-compliance-information-prevent-data-loss/create-manage-dlp-policies"]], "5097": [["Create and manage DLP policies", "https://learn.microsoft.com/en-us/training/modules/m365-compliance-information-prevent-data-loss/create-manage-dlp-policies"]], "5222": [["Create and manage DLP policies", "https://learn.microsoft.com/en-us/training/modules/m365-compliance-information-prevent-data-loss/create-manage-dlp-policies"]], "5228": [["Create and manage DLP policies", "https://learn.microsoft.com/en-us/training/modules/m365-compliance-information-prevent-data-loss/create-manage-dlp-policies"]]};
+(function () {
+  const origShow = window.showSolution;
+  const plain = h => String(h || '').replace(/<img[^>]*>/g, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  function correctLetters(q) {
+    if (q.correctOptions && q.correctOptions.length) return [].concat(q.correctOptions);
+    if (q.correctOption) return [q.correctOption];
+    if (q.mostVoted) return String(q.mostVoted).split('');
+    return [];
+  }
+  function optText(q, letter) {
+    const o = (q.options || []).find(x => x.trim().charAt(0) === letter);
+    return o ? o.replace(/^[A-Z]\.\s*/, '') : '';
+  }
+  window.showSolution = function () {
+    origShow.apply(this, arguments);
+    const q = questions[currentQ];
+    const body = document.getElementById('solutionBody');
+    if (!q || !body) return;
+    const old = body.querySelector('.why-box');
+    if (old) old.remove();
+    const authored = WHY_CORRECT[q.id];
+    // Already has a full written rationale in its own solution text
+    if (!authored && plain(q.solution).length >= 250) return;
+    let html;
+    if (authored) {
+      html = `<div class="why-box"><div class="why-title">Why this is the correct answer</div>${authored}</div>`;
+    } else {
+      const L = correctLetters(q);
+      const txt = L.map(l => optText(q, l) ? `${l}. ${optText(q, l)}` : l).join('; ');
+      if (!L.length) return;
+      html = `<div class="why-box why-pending"><div class="why-title">Why this is the correct answer</div>` +
+        `<span class="why-ans">Correct: ${txt}</span><br>A written rationale has not been added for this question yet.</div>`;
+    }
+    const refs = WHY_LEARN[q.id];
+    if (refs && refs.length) {
+      const links = refs.map(r => `<a href="${r[1]}" target="_blank" rel="noopener noreferrer">${r[0]}</a>`).join('<br>');
+      html = html.slice(0, -6) + `<div class="why-refs"><strong>Microsoft Learn:</strong><br>${links}</div></div>`;
+    }
+    body.insertAdjacentHTML('beforeend', html);
+  };
+})();
 </script>
 </body>
 </html>
